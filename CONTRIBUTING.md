@@ -1,0 +1,8 @@
+- Move.Promotion should not be automatic
+- Bad moves (NoMoreCastle, Let enemy to hit my figure, tie)
+- 50 moves -> tie (The 50-move draw rule, which today states that a draw can be claimed if no capture is made and no pawn is moved for 50 consecutive moves), 2 king +[knight | bishop] -> tie
+- CLSCompliant(false) -> CLSCompliant(true) + eliminate warnings
+- Fix tests -> Lvl5 AI
+- WPF UI
+- UWP UI?
+- WebAPI interface + UI (https://github.com/Mortens4444/Chess maybe?)

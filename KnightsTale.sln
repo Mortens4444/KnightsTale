@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32328.378
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KnightsTaleUci", "KnightsTale\KnightsTaleUci.csproj", "{7CFA565E-323B-401C-9CBB-9EF4B5EBB1FF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chess", "Chess\Chess.csproj", "{2ADCBDC3-4563-4CC2-8587-2B1068981C8E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chess.Test", "Chess.Test\Chess.Test.csproj", "{EBB15A53-C36E-450C-BA75-C169DE0B8118}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chess.WinForms", "Chess.WinForms\Chess.WinForms.csproj", "{492886DC-3530-439B-8703-4161D7883A3A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chess.Console", "Chess.Console\Chess.Console.csproj", "{CBBBA076-22FB-40A3-99FC-569E24D6B6DB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{58B39860-5D88-49DF-8272-3C27FD7B6E59}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		CONTRIBUTING.md = CONTRIBUTING.md
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chess.Wpf", "Chess.Wpf\Chess.Wpf.csproj", "{3278E363-CBD8-4077-8094-988BDADDEB17}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7CFA565E-323B-401C-9CBB-9EF4B5EBB1FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CFA565E-323B-401C-9CBB-9EF4B5EBB1FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CFA565E-323B-401C-9CBB-9EF4B5EBB1FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CFA565E-323B-401C-9CBB-9EF4B5EBB1FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2ADCBDC3-4563-4CC2-8587-2B1068981C8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2ADCBDC3-4563-4CC2-8587-2B1068981C8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2ADCBDC3-4563-4CC2-8587-2B1068981C8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2ADCBDC3-4563-4CC2-8587-2B1068981C8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBB15A53-C36E-450C-BA75-C169DE0B8118}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBB15A53-C36E-450C-BA75-C169DE0B8118}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBB15A53-C36E-450C-BA75-C169DE0B8118}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBB15A53-C36E-450C-BA75-C169DE0B8118}.Release|Any CPU.Build.0 = Release|Any CPU
+		{492886DC-3530-439B-8703-4161D7883A3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{492886DC-3530-439B-8703-4161D7883A3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{492886DC-3530-439B-8703-4161D7883A3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{492886DC-3530-439B-8703-4161D7883A3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBBBA076-22FB-40A3-99FC-569E24D6B6DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBBBA076-22FB-40A3-99FC-569E24D6B6DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBBBA076-22FB-40A3-99FC-569E24D6B6DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBBBA076-22FB-40A3-99FC-569E24D6B6DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3278E363-CBD8-4077-8094-988BDADDEB17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3278E363-CBD8-4077-8094-988BDADDEB17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3278E363-CBD8-4077-8094-988BDADDEB17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3278E363-CBD8-4077-8094-988BDADDEB17}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9721477F-1111-404D-A78F-5232267758A4}
+	EndGlobalSection
+EndGlobal
