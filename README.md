@@ -1,9 +1,9 @@
-# Knight''s Tale
+# Knight's Tale
 
-##Chess
+## Chess
 The game engine.
 
-##Chess.Console
+## Chess.Console
 Console application to play a game.
 
 help
@@ -21,11 +21,11 @@ load
 save
 	Save a game.
 
-##Chess.Test
+## Chess.Test
 Tests for the game.
 
-##Chess.WinForms
+## Chess.WinForms
 Graphical interface to play the chess game.
 
-##KnightsTaleUci
+## KnightsTaleUci
 UCI (Universal Chess Interface)
