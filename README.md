@@ -25,7 +25,10 @@ save
 Tests for the game.
 
 ## Chess.WinForms
-Graphical interface to play the chess game.
+Graphical interface to play the chess game created with Windows.Forms framework.
+
+## Chess.Wpf
+Graphical interface to play the chess game created with Windows Presentation Foundation framework.
 
 ## KnightsTaleUci
 UCI (Universal Chess Interface)

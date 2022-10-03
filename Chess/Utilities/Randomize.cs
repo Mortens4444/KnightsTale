@@ -5,7 +5,7 @@ namespace Chess.Utilities
 {
     public static class Randomize
     {
-        private static RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create("MoveChooser");
+        private static RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
 
         public static int Next(int maxValue)
         {
