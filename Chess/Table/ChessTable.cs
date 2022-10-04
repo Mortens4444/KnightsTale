@@ -30,6 +30,7 @@ namespace Chess.Table
             var ranks = Utils.GetEnumValues<Rank>().ToList();
             ranks.Sort(new ReverseRankSorter());
             Ranks = ranks;
+            TurnControl = new TurnControl(this);
             SetupTable();
         }
 
@@ -62,7 +63,7 @@ namespace Chess.Table
             Squares[Column.G, Rank._8].State = SquareState.BlackKnight;
             Squares[Column.H, Rank._8].State = SquareState.BlackRookCanCastle;
 
-            TurnControl = new TurnControl(this);
+            TurnControl.Reset();
         }
 
         private void InitializeSquares()

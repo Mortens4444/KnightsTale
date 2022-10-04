@@ -14,8 +14,13 @@ namespace Chess.Rules.Turns
 
         public TurnControl(ChessTable chessTable)
         {
-            white = true;
             this.chessTable = chessTable;
+            Reset();
+        }
+
+        public void Reset()
+        {
+            white = true;
         }
 
         public bool IsWhiteTurn()

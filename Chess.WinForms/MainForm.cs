@@ -34,9 +34,9 @@ namespace Chess.WinForms
         private void TsmiNewGame_Click(object sender, EventArgs e)
         {
             chessGame.ChessTable.SetupTable();
-            pBoard.Invalidate();
             lvMoves.Items.Clear();
             rtbMessage.Text = String.Empty;
+            GetNextMove();
         }
 
         private void TsmiLoadGame_Click(object sender, EventArgs e)
@@ -135,10 +135,7 @@ namespace Chess.WinForms
             {
                 var level = (Level)Enum.Parse(typeof(Level), levelText);
                 whiteArtificalIntelligence = LevelToArtificalIntelligenceConverter.GetArtificalIntelligence(level);
-                if (chessGame.ChessTable.TurnControl.IsWhiteTurn())
-                {
-                    GetNextMove(whiteArtificalIntelligence, chessGame.ChessTable.Squares.GetWhiteKingSquare);
-                }
+                GetNextMove();
             }
         }
 
@@ -149,20 +146,22 @@ namespace Chess.WinForms
             {
                 var level = (Level)Enum.Parse(typeof(Level), levelText);
                 blackArtificalIntelligence = LevelToArtificalIntelligenceConverter.GetArtificalIntelligence(level);
-                if (chessGame.ChessTable.TurnControl.IsBlackTurn())
-                {
-                    GetNextMove(blackArtificalIntelligence, chessGame.ChessTable.Squares.GetBlackKingSquare);
-                }
+                GetNextMove();
             }
         }
 
         private void TurnControl_TurnChanged(object? sender, TurnControlEventArgs e)
         {
-            if (e.IsWhiteTurn)
+            GetNextMove();
+        }
+
+        private void GetNextMove()
+        {
+            if (chessGame.ChessTable.TurnControl.IsWhiteTurn())
             {
                 GetNextMove(whiteArtificalIntelligence, chessGame.ChessTable.Squares.GetWhiteKingSquare);
             }
-            else
+            if (chessGame.ChessTable.TurnControl.IsBlackTurn())
             {
                 GetNextMove(blackArtificalIntelligence, chessGame.ChessTable.Squares.GetBlackKingSquare);
             }
