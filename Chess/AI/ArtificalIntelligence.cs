@@ -34,22 +34,15 @@ namespace Chess.AI
             }
             var whiteFiguresValue = chessTable.Squares.GetWhiteFiguresValue(figureValueCalculator.FigureValueCalculationMode);
             var blackFiguresValue = chessTable.Squares.GetBlackFiguresValue(figureValueCalculator.FigureValueCalculationMode);
-            if (chessTable.Squares[myMove.ValidMove.To].State.HasWhiteFigure())
+            
+            var diff = chessTable.Squares[myMove.ValidMove.To].State.HasWhiteFigure() ?
+                whiteFiguresValue - blackFiguresValue :
+                blackFiguresValue - whiteFiguresValue;
+            if (diff < 0)
             {
-                var diff = whiteFiguresValue - blackFiguresValue;
-                if (diff < 0)
-                {
-                    goodMoves.Add(new MoveWithGainInfo(myMove.ValidMove, Math.Abs(diff))); // Tie (white losing)
-                }
+                goodMoves.Add(new MoveWithGainInfo(myMove.ValidMove, Math.Abs(diff))); // Tie (but it seems a possible good move)
             }
-            else
-            {
-                var diff = blackFiguresValue - whiteFiguresValue;
-                if (diff < 0)
-                {
-                    goodMoves.Add(new MoveWithGainInfo(myMove.ValidMove, Math.Abs(diff))); // Tie (black losing)
-                }
-            }
+
             return false;
         }
 
@@ -66,37 +59,56 @@ namespace Chess.AI
             }
         }
 
-        public static void CheckMoves(ChessTable chessTable, FigureValueCalculator figureValueCalculator, IList<MoveWithGainInfo> goodMoves, IEnumerable<MoveWithDestinationSquareInfo> moves, Func<ChessTable, Move> moveProvider, bool breakOnCheckMate)
+        public static MoveDecisionHelper GetGoodMoves(ChessTable chessTable, FigureValueCalculator figureValueCalculator, Func<ChessTable, Move> enemyMoveProvider, bool breakOnCheckMate, Func<Move, bool> movePreFilterPredicate = null)
         {
-            Contract.Requires(chessTable != null && moveProvider != null && goodMoves != null);
+            Contract.Requires(chessTable != null);
 
-            if (moves != null && moves.Any())
+            var validMoves = chessTable.GetValidMoves();
+            if (!validMoves.Any())
             {
-                foreach (var move in moves)
-                {
-                    move.ValidMove.Execute(chessTable);
-                    chessTable.TurnControl.ChangeTurn(false);
+                return new MoveDecisionHelper(validMoves, new List<MoveWithGainInfo>());
+            }
 
-                    var enemyMove = moveProvider(chessTable);
-                    if (enemyMove == null)
+            var movesToConsider = movePreFilterPredicate == null ? validMoves : validMoves.Where(movePreFilterPredicate);
+
+            var goodMovesWithGainInfo = ArtificalIntelligence.GetGoodMoves(chessTable, figureValueCalculator, movesToConsider, enemyMoveProvider, breakOnCheckMate);
+            return new MoveDecisionHelper(validMoves, goodMovesWithGainInfo);
+        }
+
+        private static IList<MoveWithGainInfo> GetGoodMoves(ChessTable chessTable, FigureValueCalculator figureValueCalculator, IEnumerable<Move> movesToConsider, Func<ChessTable, Move> enemyMoveProvider, bool breakOnCheckMate)
+        {
+            Contract.Requires(chessTable != null && enemyMoveProvider != null);
+
+            IEnumerable<MoveWithDestinationSquareInfo> moves = movesToConsider
+                .Select(validMove => new MoveWithDestinationSquareInfo { ValidMove = validMove, To = chessTable.Squares[validMove.To] });
+
+            var goodMovesWithGainInfo = new List<MoveWithGainInfo>();
+            foreach (var move in moves)
+            { 
+                move.ValidMove.Execute(chessTable);
+                chessTable.TurnControl.ChangeTurn(false);
+
+                var enemyMove = enemyMoveProvider(chessTable);
+                if (enemyMove == null)
+                {
+                    if (CheckWhenEnemyHasNoMove(chessTable, figureValueCalculator, move, goodMovesWithGainInfo))
                     {
-                        if (CheckWhenEnemyHasNoMove(chessTable, figureValueCalculator, move, goodMoves))
+                        if (breakOnCheckMate)
                         {
-                            if (breakOnCheckMate)
-                            {
-                                break;
-                            }
+                            break;
                         }
                     }
-                    else
-                    {
-                        AddGoodMove(chessTable, figureValueCalculator, goodMoves, move, enemyMove);
-                    }
-
-                    move.ValidMove.Rollback(chessTable);
-                    chessTable.TurnControl.ChangeTurn(false);
                 }
+                else
+                {
+                    AddGoodMove(chessTable, figureValueCalculator, goodMovesWithGainInfo, move, enemyMove);
+                }
+
+                move.ValidMove.Rollback(chessTable);
+                chessTable.TurnControl.ChangeTurn(false);
             }
+
+            return goodMovesWithGainInfo;
         }
     }
 }

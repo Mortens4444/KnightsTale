@@ -7,9 +7,9 @@ using System.Linq;
 
 namespace Chess.AI
 {
-    public class Lvl3_NoMoreMoronMoves : IArtificalIntelligence
+    public class Lvl3_NoMoreMoronMoves : IArtificalIntelligence, IMoveChooser
     {
-        private static readonly List<MoveType> GoodMoveTypes = new List<MoveType> { MoveType.Hit, MoveType.Promotion, MoveType.Castle, MoveType.EnPassant, MoveType.Check };
+        private static readonly List<MoveType> GoodMoveTypes = new List<MoveType> { MoveType.Hit, MoveType.Promotion, MoveType.Castle, MoveType.EnPassant };
 
         public Level Level { get; } = Level.Level_3;
 
@@ -22,30 +22,16 @@ namespace Chess.AI
             lvl2_CarefulKamikazeMoves = new Lvl2_CarefulKamikazeMoves(figureValueCalculationMode);
         }
 
-        public MoveDecisionHelper GetMoves(ChessTable chessTable)
+        public MoveDecisionHelper GetMoveDecisionHelper(ChessTable chessTable)
         {
-            Contract.Requires(chessTable != null);
-
-            var goodMovesWithGainInfo = new List<MoveWithGainInfo>();
-            var validMoves = chessTable.GetValidMoves();
-            if (!validMoves.Any())
-            {
-                return new MoveDecisionHelper(validMoves, new List<MoveWithGainInfo>());
-            }
-
-            var allGoodMoves = validMoves
-                .Where(validMove => GoodMoveTypes.Contains(validMove.MoveType))
-                .Select(validMove => new MoveWithDestinationSquareInfo { ValidMove = validMove, To = chessTable.Squares[validMove.To] });
-
-            ArtificalIntelligence.CheckMoves(chessTable, figureValueCalculator, goodMovesWithGainInfo, allGoodMoves, lvl2_CarefulKamikazeMoves.GetMove, true);
-            return new MoveDecisionHelper(validMoves, goodMovesWithGainInfo);
+            return ArtificalIntelligence.GetGoodMoves(chessTable, figureValueCalculator, lvl2_CarefulKamikazeMoves.GetMove, true, validMove => validMove.IsEnemyInCheck || validMove.IsEnemyInCheckMate || GoodMoveTypes.Contains(validMove.MoveType));
         }
 
         public Move GetMove(ChessTable chessTable)
         {
             Contract.Requires(chessTable != null);
 
-            var moveDecisionHelper = GetMoves(chessTable);
+            var moveDecisionHelper = GetMoveDecisionHelper(chessTable);
             if (moveDecisionHelper.GoodMovesWithGain.Any())
             {
                 var bestHit = moveDecisionHelper.GoodMovesWithGain.OrderByDescending(goodMove => figureValueCalculator.GetValue(goodMove.Move.CapturedFigure)).FirstOrDefault();
@@ -65,7 +51,7 @@ namespace Chess.AI
                 validMove.Execute(chessTable);
                 chessTable.TurnControl.ChangeTurn(false);
 
-                var enemyMoveDecisionHelper = lvl2_CarefulKamikazeMoves.GetMoves(chessTable);
+                var enemyMoveDecisionHelper = lvl2_CarefulKamikazeMoves.GetMoveDecisionHelper(chessTable);
                 var enemyGoodMoves = enemyMoveDecisionHelper.GoodMovesWithGain.Select(enemyGoodMoveWithGain => enemyGoodMoveWithGain.Move);
 
                 if (enemyMoveDecisionHelper.GoodMovesWithGain.Any(enemyGoodMoveWithGain => enemyGoodMoveWithGain.Gain > 0))

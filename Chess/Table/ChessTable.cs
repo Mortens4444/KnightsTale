@@ -160,6 +160,24 @@ namespace Chess.Table
             return result;
         }
 
+        public bool HasValidMove(SquareState squareState)
+        {
+            var figures =
+                squareState.HasWhiteFigure() ? Squares.GetAllWhiteFigureSquares() :
+                squareState.HasBlackFigure() ? Squares.GetAllBlackFigureSquares() :
+                throw new InvalidOperationException($"{nameof(squareState)} should contain a figure.");
+
+            foreach (var figure in figures)
+            {
+                if (validMoveProvider.HasValidMove(this, figure))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public IList<Move> GetValidMoves(IEnumerable<Square> figures)
         {
             Contract.Requires(figures != null);
@@ -167,7 +185,7 @@ namespace Chess.Table
             var result = new List<Move>();
             foreach (var figure in figures)
             {
-                result.AddRange(validMoveProvider.GetValidMoves(this, figure));
+                result.AddRange(validMoveProvider.GetValidMoves(this, figure, true));
             }
 
             return result;
@@ -178,6 +196,11 @@ namespace Chess.Table
             var kingSquare = Squares[square].State.HasWhiteFigure() ?
                 Squares.GetBlackKingSquare() :
                 Squares.GetWhiteKingSquare();
+            return IsInCheck(kingSquare);
+        }
+
+        public bool IsInCheck(Square kingSquare)
+        {
             return kingSquare.IsInCheck(this);
         }
     }

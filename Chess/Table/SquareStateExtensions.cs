@@ -113,19 +113,6 @@ namespace Chess.Table
             return (SquareInfoAttribute)attributes[0];
         }
 
-        public static MoveType GetMoveType(this SquareState squareState)
-        {
-            if (squareState.IsEmpty())
-            {
-                return MoveType.Relocation;
-            }
-            if (squareState.HasKing())
-            {
-                return MoveType.Check;
-            }
-            return MoveType.Hit;
-        }
-
         public static string ToString(this SquareState squareState, SquareInfoMode squareInfoMode)
         {
             var squareInfo = squareState.GetSquareInfo();

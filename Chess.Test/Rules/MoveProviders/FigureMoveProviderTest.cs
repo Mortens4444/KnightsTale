@@ -21,7 +21,7 @@ namespace Chess.Test.Rules.MoveProviders
         public void GetValidMoves(string chessTableResourceName, string from, params string[] validMoveDestinations)
         {
             var chessTable = ResourceLoader.GetChessTable(chessTableResourceName);
-            var validMoves = FigureMoveProvider.GetValidMoves(chessTable, from);
+            var validMoves = FigureMoveProvider.GetValidMoves(chessTable, from, true);
             var expected = validMoveDestinations.Select(validMoveDestination => new Move(from, validMoveDestination));
             CollectionAssert.AreEquivalent(expected, validMoves);
             Assert.Pass();

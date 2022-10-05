@@ -11,5 +11,10 @@
             Move = move;
             Gain = gain;
         }
+
+        public override string ToString()
+        {
+            return $"{Move} - {Gain}";
+        }
     }
 }

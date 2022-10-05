@@ -28,7 +28,7 @@ namespace Chess.AI
             }
             var hitMoves = validMoves
                 .Where(validMove => validMove.MoveType == MoveType.Hit | validMove.MoveType == MoveType.EnPassant)
-                .Select(validMove => new { ValidMove = validMove, To = chessTable.Squares[validMove.To] });
+                .Select(validMove => new MoveWithDestinationSquareInfo { ValidMove = validMove, To = chessTable.Squares[validMove.To] });
             if (hitMoves.Any())
             {
                 var bestHit = hitMoves.OrderByDescending(hitMove => figureValueCalculator.GetValue(hitMove.To.State)).First();

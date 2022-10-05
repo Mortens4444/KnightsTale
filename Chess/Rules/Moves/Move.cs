@@ -14,6 +14,10 @@ namespace Chess.Rules.Moves
         public SquareState CapturedFigure { get; private set; }
 
         public bool NoMoreCastle { get; private set; }
+        
+        public bool IsEnemyInCheck { get; set; }
+
+        public bool IsEnemyInCheckMate { get; set; }
 
         public MoveType MoveType { get; private set; }
 
@@ -86,7 +90,7 @@ namespace Chess.Rules.Moves
                 fromSquare.State = fromSquare.State.NoCastle();
                 NoMoreCastle = true;
             }
-            if (MoveType == MoveType.Hit || MoveType == MoveType.Check || MoveType == MoveType.CheckMate)
+            if (MoveType == MoveType.Hit || IsEnemyInCheck || IsEnemyInCheckMate)
             {
                 Hit(chessTable);
             }
@@ -112,8 +116,6 @@ namespace Chess.Rules.Moves
                     Promotion(chessTable);
                     break;
                 case MoveType.Hit:
-                case MoveType.Check:
-                case MoveType.CheckMate:
                     break;
                 default:
                     throw new NotImplementedException();
@@ -223,8 +225,6 @@ namespace Chess.Rules.Moves
                         SquareState.WhitePawn : SquareState.BlackPawn;
                     break;
                 case MoveType.Hit:
-                case MoveType.Check:
-                case MoveType.CheckMate:
                     toSquare.State = CapturedFigure;
                     break;
                 case MoveType.Unknown:

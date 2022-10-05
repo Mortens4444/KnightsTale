@@ -15,6 +15,7 @@ namespace Chess.Test.AI
         [TestCase("Chess.Test.Resources.ChessTableState - NoMoronMoves 2.cgs", typeof(Lvl4_NoMoreMoronMoves), "F1 - B1", "F1 - D1", "F1 - G1", "F1 - H1", "F1 - F5")]
         [TestCase("Chess.Test.Resources.ChessTableState - BestMoveForBlack.cgs", typeof(Lvl4_NoMoreMoronMoves), "D7 - C5")]
         [TestCase("Chess.Test.Resources.ChessTableState - BestMoveForBlack 2.cgs", typeof(Lvl4_NoMoreMoronMoves), "B3 - A3")]
+        [TestCase("Chess.Test.Resources.ChessTableState - Reveal Check.cgs", typeof(Lvl4_NoMoreMoronMoves), "H5 - E8")]
         public void MoveChooseTest(string chessTableResourceName, Type artificalIntelligenceType, params string[] expectedChoosenMoves)
         {
             var chessTable = ResourceLoader.GetChessTable(chessTableResourceName);
@@ -27,7 +28,7 @@ namespace Chess.Test.AI
             }
             else
             {
-                Assert.IsTrue(expectedChoosenMoves.Any(expectedChoosenMove => expectedChoosenMove == move?.ToString()));
+                Assert.Contains(move, expectedChoosenMoves);
             }
         }
     }

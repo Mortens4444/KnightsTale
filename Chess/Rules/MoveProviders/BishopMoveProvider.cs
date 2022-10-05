@@ -14,7 +14,7 @@ namespace Chess.Rules.MoveProviders
             
             var result = new List<Move>();
 
-            Square destination = null;
+            Square destination;
             int modifier = 1;
             Rank rank;
             Column column;
@@ -34,7 +34,6 @@ namespace Chess.Rules.MoveProviders
                 }
             } while (!destination?.State.HasFigure() ?? false);
 
-            destination = null;
             modifier = 1;
             do
             {
@@ -53,7 +52,6 @@ namespace Chess.Rules.MoveProviders
             } while (!destination?.State.HasFigure() ?? false);
 
             modifier = 1;
-            destination = null;
             do
             {
                 column = from.Column - modifier;
@@ -71,7 +69,6 @@ namespace Chess.Rules.MoveProviders
             } while (!destination?.State.HasFigure() ?? false);
 
             modifier = 1;
-            destination = null;
             do
             {
                 column = from.Column + modifier;

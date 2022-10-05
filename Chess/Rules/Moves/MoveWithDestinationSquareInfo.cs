@@ -7,5 +7,10 @@ namespace Chess.Rules.Moves
         public Move ValidMove { get; set; }
 
         public Square To { get; set; }
+
+        public override string ToString()
+        {
+            return $"{ValidMove} - {To.State}";
+        }
     }
 }

@@ -7,10 +7,8 @@ using System.Linq;
 
 namespace Chess.AI
 {
-    public class Lvl4_NoMoreMoronMoves : IArtificalIntelligence
+    public class Lvl4_NoMoreMoronMoves : IArtificalIntelligence, IMoveChooser
     {
-        private static readonly List<MoveType> GoodMoveTypes = new List<MoveType> { MoveType.Hit, MoveType.Promotion, MoveType.Castle, MoveType.EnPassant, MoveType.Check };
-
         public Level Level { get; } = Level.Level_4;
 
         private readonly FigureValueCalculator figureValueCalculator;
@@ -22,30 +20,16 @@ namespace Chess.AI
             lvl3_NoMoreMoronMoves = new Lvl3_NoMoreMoronMoves(figureValueCalculationMode);
         }
 
-        public MoveDecisionHelper GetMoves(ChessTable chessTable)
+        public MoveDecisionHelper GetMoveDecisionHelper(ChessTable chessTable)
         {
-            Contract.Requires(chessTable != null);
-
-            var goodMoves = new List<MoveWithGainInfo>();
-            var validMoves = chessTable.GetValidMoves();
-            if (!validMoves.Any())
-            {
-                return new MoveDecisionHelper(validMoves, new List<MoveWithGainInfo>());
-            }
-
-            var allGoodMoves = validMoves
-                .Where(validMove => GoodMoveTypes.Contains(validMove.MoveType))
-                .Select(validMove => new MoveWithDestinationSquareInfo { ValidMove = validMove, To = chessTable.Squares[validMove.To] });
-
-            ArtificalIntelligence.CheckMoves(chessTable, figureValueCalculator, goodMoves, allGoodMoves, lvl3_NoMoreMoronMoves.GetMove, true);
-            return new MoveDecisionHelper(validMoves, goodMoves);
+            return ArtificalIntelligence.GetGoodMoves(chessTable, figureValueCalculator, lvl3_NoMoreMoronMoves.GetMove, true);
         }
 
         public Move GetMove(ChessTable chessTable)
         {
             Contract.Requires(chessTable != null);
 
-            var moveDecisionHelper = GetMoves(chessTable);
+            var moveDecisionHelper = GetMoveDecisionHelper(chessTable);
             if (moveDecisionHelper.GoodMovesWithGain.Any())
             {
                 var bestHit = moveDecisionHelper.GoodMovesWithGain.OrderByDescending(goodMove => figureValueCalculator.GetValue(goodMove.Move.CapturedFigure)).FirstOrDefault();
@@ -65,7 +49,7 @@ namespace Chess.AI
                 validMove.Execute(chessTable);
                 chessTable.TurnControl.ChangeTurn(false);
 
-                var enemyMoveDecisionHelper = lvl3_NoMoreMoronMoves.GetMoves(chessTable);
+                var enemyMoveDecisionHelper = lvl3_NoMoreMoronMoves.GetMoveDecisionHelper(chessTable);
                 var enemyGoodMoves = enemyMoveDecisionHelper.GoodMovesWithGain.Select(enemyGoodMoveWithGain => enemyGoodMoveWithGain.Move);
 
                 if (enemyMoveDecisionHelper.GoodMovesWithGain.Any(enemyGoodMoveWithGain => enemyGoodMoveWithGain.Gain > 0))

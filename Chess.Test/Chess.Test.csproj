@@ -20,6 +20,7 @@
     <None Remove="Resources\ChessTableState - NoMoronMoves.cgs" />
     <None Remove="Resources\ChessTableState - Opposition.cgs" />
     <None Remove="Resources\ChessTableState - Pawn Check.cgs" />
+    <None Remove="Resources\ChessTableState - Reveal Check.cgs" />
     <None Remove="Resources\ChessTableState.cgs" />
   </ItemGroup>
 
@@ -28,6 +29,7 @@
     <EmbeddedResource Include="Resources\ChessTableState - Castling.cgs" />
     <EmbeddedResource Include="Resources\ChessTableState - Check.cgs" />
     <EmbeddedResource Include="Resources\ChessTableState - BestMoveForBlack.cgs" />
+    <EmbeddedResource Include="Resources\ChessTableState - Reveal Check.cgs" />
     <EmbeddedResource Include="Resources\ChessTableState - Kamikaze 2.cgs" />
     <EmbeddedResource Include="Resources\ChessTableState - Kamikaze.cgs" />
     <EmbeddedResource Include="Resources\ChessTableState - EnPassant.cgs" />

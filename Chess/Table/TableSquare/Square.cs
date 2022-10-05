@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chess.Rules.Moves;
+using System;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
@@ -78,6 +79,13 @@ namespace Chess.Table.TableSquare
 
             var enemyMoves = chessTable.GetAllMoves(enemyFigures);
             return enemyMoves.Any(enemyMove => enemyMove.To == this);
+        }
+
+        public MoveType GetMoveType()
+        {
+            return State.IsEmpty() ?
+                       MoveType.Relocation :
+                       MoveType.Hit;
         }
     }
 }

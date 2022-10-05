@@ -67,7 +67,6 @@ namespace Chess.Rules.MoveProviders
             if (chessTable.Squares[from].State.CanCastle())
             {
                 var kingDestination = chessTable.Squares[from.Column - 2, from.Rank];
-
                 if (kingDestination.State.IsEmpty() &&
                     chessTable.Squares[Column.D, from.Rank].State.IsEmpty() &&
                     chessTable.Squares[Column.B, from.Rank].State.IsEmpty() &&

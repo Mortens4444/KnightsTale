@@ -1,13 +1,11 @@
 ﻿using Chess.FigureValues;
 using Chess.Rules.Moves;
 using Chess.Table;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace Chess.AI
 {
-    public class Lvl2_CarefulKamikazeMoves : IArtificalIntelligence
+    public class Lvl2_CarefulKamikazeMoves : IArtificalIntelligence, IMoveChooser
     {
         public Level Level { get; } = Level.Level_2;
 
@@ -20,27 +18,14 @@ namespace Chess.AI
             lvl1_KamikazeMoves = new Lvl1_KamikazeMoves(figureValueCalculationMode);
         }
 
-        public MoveDecisionHelper GetMoves(ChessTable chessTable)
+        public MoveDecisionHelper GetMoveDecisionHelper(ChessTable chessTable)
         {
-            Contract.Requires(chessTable != null);
-
-            var goodMovesWithGain = new List<MoveWithGainInfo>();
-            var validMoves = chessTable.GetValidMoves();
-            if (!validMoves.Any())
-            {
-                return new MoveDecisionHelper(validMoves, new List<MoveWithGainInfo>());
-            }
-
-            var allMoves = validMoves
-                .Select(validMove => new MoveWithDestinationSquareInfo { ValidMove = validMove, To = chessTable.Squares[validMove.To] });
-
-            ArtificalIntelligence.CheckMoves(chessTable, figureValueCalculator, goodMovesWithGain, allMoves, lvl1_KamikazeMoves.GetMove, false);
-            return new MoveDecisionHelper(validMoves, goodMovesWithGain);
+            return ArtificalIntelligence.GetGoodMoves(chessTable, figureValueCalculator, lvl1_KamikazeMoves.GetMove, false);
         }
 
         public Move GetMove(ChessTable chessTable)
         {
-            var moveDecisionHelper = GetMoves(chessTable);
+            var moveDecisionHelper = GetMoveDecisionHelper(chessTable);
             if (moveDecisionHelper.GoodMovesWithGain.Any())
             {
                 var bestHit = moveDecisionHelper.GoodMovesWithGain.OrderByDescending(goodMove => goodMove.Gain).FirstOrDefault();

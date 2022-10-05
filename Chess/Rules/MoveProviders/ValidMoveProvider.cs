@@ -3,6 +3,7 @@ using Chess.Table;
 using Chess.Table.TableSquare;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 
 namespace Chess.Rules.MoveProviders
 {
@@ -52,7 +53,7 @@ namespace Chess.Rules.MoveProviders
             return validator.GetAllMoves(chessTable, figureSquare);
         }
 
-        public IList<Move> GetValidMoves(ChessTable chessTable, Square figureSquare)
+        public IList<Move> GetValidMoves(ChessTable chessTable, Square figureSquare, bool setCheckProperties)
         {
             Contract.Requires(chessTable != null && figureSquare != null);
 
@@ -61,7 +62,12 @@ namespace Chess.Rules.MoveProviders
                 return new List<Move>();
             }
             var validator = validators[figureSquare.State];
-            return validator.GetValidMoves(chessTable, figureSquare);
+            return validator.GetValidMoves(chessTable, figureSquare, setCheckProperties);
+        }
+
+        public bool HasValidMove(ChessTable chessTable, Square figureSquare)
+        {
+            return GetValidMoves(chessTable, figureSquare, false).Any();
         }
     }
 }
