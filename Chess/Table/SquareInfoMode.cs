@@ -1,10 +1,9 @@
-﻿namespace Chess.Table
+﻿namespace Chess.Table;
+
+public enum SquareInfoMode
 {
-    public enum SquareInfoMode
-    {
-        Display,
-        Notation,
-        Store,
-        LongName
-    }
+    Display,
+    Notation,
+    Store,
+    LongName
 }

@@ -1,8 +1,7 @@
-﻿namespace Chess.Table
+﻿namespace Chess.Table;
+
+public enum SquareColor
 {
-    public enum SquareColor
-    {
-        White,
-        Black
-    }
+    White,
+    Black
 }

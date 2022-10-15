@@ -2,23 +2,22 @@
 using System;
 using System.IO;
 
-namespace Chess.Utilities
+namespace Chess.Utilities;
+
+public class Logger
 {
-    public class Logger
+    private readonly string filePath;
+
+    public Logger(string filePath)
     {
-        private readonly string filePath;
+        this.filePath = filePath;
+    }
 
-        public Logger(string filePath)
+    public void Write(Move validMove)
+    {
+        if (!String.IsNullOrEmpty(filePath))
         {
-            this.filePath = filePath;
-        }
-
-        public void Write(Move validMove)
-        {
-            if (!String.IsNullOrEmpty(filePath))
-            {
-                File.AppendAllText(filePath, $"{validMove}{Environment.NewLine}");
-            }
+            File.AppendAllText(filePath, $"{validMove}{Environment.NewLine}");
         }
     }
 }

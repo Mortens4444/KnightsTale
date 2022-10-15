@@ -5,66 +5,66 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
-namespace Chess.AI
+namespace Chess.AI;
+
+public class Lvl3_NoMoreMoronMoves : IArtificalIntelligence, IMoveChooser
 {
-    public class Lvl3_NoMoreMoronMoves : IArtificalIntelligence, IMoveChooser
+    private static readonly List<MoveType> GoodMoveTypes = new List<MoveType> { MoveType.Hit, MoveType.Promotion, MoveType.Castle, MoveType.EnPassant };
+
+    public Level Level { get; } = Level.Level_3;
+
+    private readonly FigureValueCalculator figureValueCalculator;
+    private readonly Lvl2_CarefulKamikazeMoves lvl2_CarefulKamikazeMoves;
+
+    public Lvl3_NoMoreMoronMoves(FigureValueCalculationMode figureValueCalculationMode)
     {
-        private static readonly List<MoveType> GoodMoveTypes = new List<MoveType> { MoveType.Hit, MoveType.Promotion, MoveType.Castle, MoveType.EnPassant };
+        figureValueCalculator = new FigureValueCalculator(figureValueCalculationMode);
+        lvl2_CarefulKamikazeMoves = new Lvl2_CarefulKamikazeMoves(figureValueCalculationMode);
+    }
 
-        public Level Level { get; } = Level.Level_3;
+    public MoveDecisionHelper GetMoveDecisionHelper(ChessTable chessTable)
+    {
+        return ArtificalIntelligence.GetGoodMoves(chessTable, figureValueCalculator, lvl2_CarefulKamikazeMoves.GetMove, true, validMove => validMove.IsEnemyInCheck || validMove.IsEnemyInCheckMate || GoodMoveTypes.Contains(validMove.MoveType));
+    }
 
-        private readonly FigureValueCalculator figureValueCalculator;
-        private readonly Lvl2_CarefulKamikazeMoves lvl2_CarefulKamikazeMoves;
+    public Move GetMove(ChessTable chessTable)
+    {
+        Contract.Requires(chessTable != null);
+        chessTable.DebugWriter($"{GetType().Name} searching for move...");
 
-        public Lvl3_NoMoreMoronMoves(FigureValueCalculationMode figureValueCalculationMode)
+        var moveDecisionHelper = GetMoveDecisionHelper(chessTable);
+        if (moveDecisionHelper.GoodMovesWithGain.Any())
         {
-            figureValueCalculator = new FigureValueCalculator(figureValueCalculationMode);
-            lvl2_CarefulKamikazeMoves = new Lvl2_CarefulKamikazeMoves(figureValueCalculationMode);
-        }
-
-        public MoveDecisionHelper GetMoveDecisionHelper(ChessTable chessTable)
-        {
-            return ArtificalIntelligence.GetGoodMoves(chessTable, figureValueCalculator, lvl2_CarefulKamikazeMoves.GetMove, true, validMove => validMove.IsEnemyInCheck || validMove.IsEnemyInCheckMate || GoodMoveTypes.Contains(validMove.MoveType));
-        }
-
-        public Move GetMove(ChessTable chessTable)
-        {
-            Contract.Requires(chessTable != null);
-
-            var moveDecisionHelper = GetMoveDecisionHelper(chessTable);
-            if (moveDecisionHelper.GoodMovesWithGain.Any())
+            var bestHit = moveDecisionHelper.GoodMovesWithGain.OrderByDescending(goodMove => figureValueCalculator.GetValue(goodMove.Move.CapturedFigure)).FirstOrDefault();
+            if (bestHit.Move != null)
             {
-                var bestHit = moveDecisionHelper.GoodMovesWithGain.OrderByDescending(goodMove => figureValueCalculator.GetValue(goodMove.Move.CapturedFigure)).FirstOrDefault();
-                if (bestHit.Move != null)
-                {
-                    return bestHit.Move;
-                }
+                return bestHit.Move;
+            }
+        }
+
+        var noMoronMoves = new List<Move>(moveDecisionHelper.ValidMoves);
+        foreach (var validMove in moveDecisionHelper.ValidMoves)
+        {
+            if (!noMoronMoves.Any())
+            {
+                break;
+            }
+            validMove.Execute(chessTable);
+            chessTable.TurnControl.ChangeTurn(false);
+
+            var enemyMoveDecisionHelper = lvl2_CarefulKamikazeMoves.GetMoveDecisionHelper(chessTable);
+            var enemyGoodMoves = enemyMoveDecisionHelper.GoodMovesWithGain.Select(enemyGoodMoveWithGain => enemyGoodMoveWithGain.Move);
+
+            if (enemyMoveDecisionHelper.GoodMovesWithGain.Any(enemyGoodMoveWithGain => enemyGoodMoveWithGain.Gain > 0))
+            {
+                noMoronMoves.Remove(validMove);
             }
 
-            var noMoronMoves = new List<Move>(moveDecisionHelper.ValidMoves);
-            foreach (var validMove in moveDecisionHelper.ValidMoves)
-            {
-                if (!noMoronMoves.Any())
-                {
-                    break;
-                }
-                validMove.Execute(chessTable);
-                chessTable.TurnControl.ChangeTurn(false);
-
-                var enemyMoveDecisionHelper = lvl2_CarefulKamikazeMoves.GetMoveDecisionHelper(chessTable);
-                var enemyGoodMoves = enemyMoveDecisionHelper.GoodMovesWithGain.Select(enemyGoodMoveWithGain => enemyGoodMoveWithGain.Move);
-
-                if (enemyMoveDecisionHelper.GoodMovesWithGain.Any(enemyGoodMoveWithGain => enemyGoodMoveWithGain.Gain > 0))
-                {
-                    noMoronMoves.Remove(validMove);
-                }
-
-                validMove.Rollback(chessTable);
-                chessTable.TurnControl.ChangeTurn(false);
-            }
-
-            return ArtificalIntelligence.GetRandomMove(noMoronMoves) ??
-                ArtificalIntelligence.GetRandomMove(moveDecisionHelper.ValidMoves);
+            validMove.Rollback(chessTable);
+            chessTable.TurnControl.ChangeTurn(false);
         }
+
+        return ArtificalIntelligence.GetRandomMove(noMoronMoves) ??
+            ArtificalIntelligence.GetRandomMove(moveDecisionHelper.ValidMoves);
     }
 }

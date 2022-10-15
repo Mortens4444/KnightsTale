@@ -6,7 +6,6 @@ using Chess.Console;
 using Chess.FigureValues;
 using Chess.Table;
 using Chess.Table.TableSquare;
-using System.Diagnostics.Contracts;
 using System.Text;
 
 FigureValueCalculationMode whiteFigureValueCalculationMode = FigureValueCalculationMode.General;

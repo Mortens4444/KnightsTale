@@ -5,69 +5,68 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
-namespace Chess.Rules.MoveProviders
+namespace Chess.Rules.MoveProviders;
+
+public class ValidMoveProvider
 {
-    public class ValidMoveProvider
+    private static readonly BishopMoveProvider bishopMoveProvider = new BishopMoveProvider();
+    private static readonly KingMoveProvider kingMoveProvider = new KingMoveProvider();
+    private static readonly KnightMoveProvider knightMoveProvider = new KnightMoveProvider();
+    private static readonly PawnMoveProvider pawnMoveProvider = new PawnMoveProvider();
+    private static readonly QueenMoveProvider queenMoveProvider = new QueenMoveProvider();
+    private static readonly RookMoveProvider rookMoveProvider = new RookMoveProvider();
+
+    private readonly Dictionary<SquareState, FigureMoveProvider> validators = new Dictionary<SquareState, FigureMoveProvider>
     {
-        private static readonly BishopMoveProvider bishopMoveProvider = new BishopMoveProvider();
-        private static readonly KingMoveProvider kingMoveProvider = new KingMoveProvider();
-        private static readonly KnightMoveProvider knightMoveProvider = new KnightMoveProvider();
-        private static readonly PawnMoveProvider pawnMoveProvider = new PawnMoveProvider();
-        private static readonly QueenMoveProvider queenMoveProvider = new QueenMoveProvider();
-        private static readonly RookMoveProvider rookMoveProvider = new RookMoveProvider();
+        { SquareState.BlackPawn, pawnMoveProvider },
+        { SquareState.BlackBishop, bishopMoveProvider },
+        { SquareState.BlackKing, kingMoveProvider },
+        { SquareState.BlackKingCanCastle, kingMoveProvider },
+        { SquareState.BlackKingMyTurn, kingMoveProvider },
+        { SquareState.BlackKingCanCastleMyTurn, kingMoveProvider },
+        { SquareState.BlackKnight, knightMoveProvider },
+        { SquareState.BlackQueen, queenMoveProvider },
+        { SquareState.BlackRook, rookMoveProvider },
+        { SquareState.BlackRookCanCastle, rookMoveProvider },
 
-        private readonly Dictionary<SquareState, FigureMoveProvider> validators = new Dictionary<SquareState, FigureMoveProvider>
+        { SquareState.WhitePawn, pawnMoveProvider },
+        { SquareState.WhiteBishop, bishopMoveProvider },
+        { SquareState.WhiteKing, kingMoveProvider },
+        { SquareState.WhiteKingCanCastle, kingMoveProvider },
+        { SquareState.WhiteKingMyTurn, kingMoveProvider },
+        { SquareState.WhiteKingCanCastleMyTurn, kingMoveProvider },
+        { SquareState.WhiteKnight, knightMoveProvider },
+        { SquareState.WhiteQueen, queenMoveProvider },
+        { SquareState.WhiteRook, rookMoveProvider },
+        { SquareState.WhiteRookCanCastle, rookMoveProvider }
+    };
+
+    public IList<Move> GetAllMoves(ChessTable chessTable, Square figureSquare)
+    {
+        Contract.Requires(chessTable != null && figureSquare != null);
+
+        if (!validators.ContainsKey(figureSquare.State))
         {
-            { SquareState.BlackPawn, pawnMoveProvider },
-            { SquareState.BlackBishop, bishopMoveProvider },
-            { SquareState.BlackKing, kingMoveProvider },
-            { SquareState.BlackKingCanCastle, kingMoveProvider },
-            { SquareState.BlackKingMyTurn, kingMoveProvider },
-            { SquareState.BlackKingCanCastleMyTurn, kingMoveProvider },
-            { SquareState.BlackKnight, knightMoveProvider },
-            { SquareState.BlackQueen, queenMoveProvider },
-            { SquareState.BlackRook, rookMoveProvider },
-            { SquareState.BlackRookCanCastle, rookMoveProvider },
-
-            { SquareState.WhitePawn, pawnMoveProvider },
-            { SquareState.WhiteBishop, bishopMoveProvider },
-            { SquareState.WhiteKing, kingMoveProvider },
-            { SquareState.WhiteKingCanCastle, kingMoveProvider },
-            { SquareState.WhiteKingMyTurn, kingMoveProvider },
-            { SquareState.WhiteKingCanCastleMyTurn, kingMoveProvider },
-            { SquareState.WhiteKnight, knightMoveProvider },
-            { SquareState.WhiteQueen, queenMoveProvider },
-            { SquareState.WhiteRook, rookMoveProvider },
-            { SquareState.WhiteRookCanCastle, rookMoveProvider }
-        };
-
-        public IList<Move> GetAllMoves(ChessTable chessTable, Square figureSquare)
-        {
-            Contract.Requires(chessTable != null && figureSquare != null);
-
-            if (!validators.ContainsKey(figureSquare.State))
-            {
-                return new List<Move>();
-            }
-            var validator = validators[figureSquare.State];
-            return validator.GetAllMoves(chessTable, figureSquare);
+            return new List<Move>();
         }
+        var validator = validators[figureSquare.State];
+        return validator.GetAllMoves(chessTable, figureSquare);
+    }
 
-        public IList<Move> GetValidMoves(ChessTable chessTable, Square figureSquare, bool setCheckProperties)
+    public IList<Move> GetValidMoves(ChessTable chessTable, Square figureSquare, bool setCheckProperties)
+    {
+        Contract.Requires(chessTable != null && figureSquare != null);
+
+        if (!validators.ContainsKey(figureSquare.State))
         {
-            Contract.Requires(chessTable != null && figureSquare != null);
-
-            if (!validators.ContainsKey(figureSquare.State))
-            {
-                return new List<Move>();
-            }
-            var validator = validators[figureSquare.State];
-            return validator.GetValidMoves(chessTable, figureSquare, setCheckProperties);
+            return new List<Move>();
         }
+        var validator = validators[figureSquare.State];
+        return validator.GetValidMoves(chessTable, figureSquare, setCheckProperties);
+    }
 
-        public bool HasValidMove(ChessTable chessTable, Square figureSquare)
-        {
-            return GetValidMoves(chessTable, figureSquare, false).Any();
-        }
+    public bool HasValidMove(ChessTable chessTable, Square figureSquare)
+    {
+        return GetValidMoves(chessTable, figureSquare, false).Any();
     }
 }

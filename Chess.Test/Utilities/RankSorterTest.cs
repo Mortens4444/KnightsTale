@@ -3,16 +3,15 @@ using Chess.Utilities;
 using NUnit.Framework;
 using System.Linq;
 
-namespace Chess.Test.Utilities
+namespace Chess.Test.Utilities;
+
+public class RankSorterTest
 {
-    public class RankSorterTest
+    [Test]
+    public void SortRanksTest()
     {
-        [Test]
-        public void SortRanksTest()
-        {
-            var ranks = Utils.GetEnumValues<Rank>().ToList();
-            ranks.Sort(new ReverseRankSorter());
-            Assert.AreEqual(Rank._8, ranks.First());
-        }
+        var ranks = Utils.GetEnumValues<Rank>().ToList();
+        ranks.Sort(new ReverseRankSorter());
+        Assert.AreEqual(Rank._8, ranks.First());
     }
 }

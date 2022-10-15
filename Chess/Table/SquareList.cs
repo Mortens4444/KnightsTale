@@ -5,98 +5,97 @@ using System.Linq;
 using Chess.FigureValues;
 using Chess.Table.TableSquare;
 
-namespace Chess.Table
+namespace Chess.Table;
+
+public class SquareList : List<Square>
 {
-    public class SquareList : List<Square>
+    public Square this[string squareName]
     {
-        public Square this[string squareName]
+        get
         {
-            get
+            foreach (var square in this.Where(square => square.Name == squareName))
             {
-                foreach (var square in this.Where(square => square.Name == squareName))
-                {
-                    return square;
-                }
-
-                throw new ArgumentOutOfRangeException($"Square not found: {squareName}");
+                return square;
             }
-        }
 
-        public Square this[SquareBase squareBase]
+            throw new ArgumentOutOfRangeException($"Square not found: {squareName}");
+        }
+    }
+
+    public Square this[SquareBase squareBase]
+    {
+        get
         {
-            get
+            Contract.Requires(squareBase != null);
+
+            foreach (var square in this.Where(square => (square.Column == squareBase.Column) && (square.Rank == squareBase.Rank)))
             {
-                Contract.Requires(squareBase != null);
-
-                foreach (var square in this.Where(square => (square.Column == squareBase.Column) && (square.Rank == squareBase.Rank)))
-                {
-                    return square;
-                }
-
-                throw new ArgumentOutOfRangeException($"Square not found with column and rank: {squareBase.Column}, {squareBase.Rank}");
+                return square;
             }
-        }
 
-        public Square this[Column column, Rank rank]
+            throw new ArgumentOutOfRangeException($"Square not found with column and rank: {squareBase.Column}, {squareBase.Rank}");
+        }
+    }
+
+    public Square this[Column column, Rank rank]
+    {
+        get
         {
-            get
+            foreach (var square in this.Where(square => (square.Column == column) && (square.Rank == rank)))
             {
-                foreach (var square in this.Where(square => (square.Column == column) && (square.Rank == rank)))
-                {
-                    return square;
-                }
-
-                throw new ArgumentOutOfRangeException($"Square not found with column and rank: {column}, {rank}");
+                return square;
             }
-        }
 
-        public Square GetWhiteKingSquare()
-        {
-            return this.Single(square => square.State.HasKing() && square.State.HasWhiteFigure());
+            throw new ArgumentOutOfRangeException($"Square not found with column and rank: {column}, {rank}");
         }
+    }
 
-        public Square GetBlackKingSquare()
-        {
-            return this.Single(square => square.State.HasKing() && square.State.HasBlackFigure());
-        }
+    public Square GetWhiteKingSquare()
+    {
+        return this.Single(square => square.State.HasKing() && square.State.HasWhiteFigure());
+    }
 
-        public Square GetEnPassantEmptySquare()
-        {
-            return this.FirstOrDefault(square => square.State == SquareState.EnPassantEmpty);
-        }
+    public Square GetBlackKingSquare()
+    {
+        return this.Single(square => square.State.HasKing() && square.State.HasBlackFigure());
+    }
 
-        public IEnumerable<Square> GetAll(SquareState squareState)
-        {
-            return this.Where(square => square.State == squareState);
-        }
+    public Square GetEnPassantEmptySquare()
+    {
+        return this.FirstOrDefault(square => square.State == SquareState.EnPassantEmpty);
+    }
 
-        public IEnumerable<Square> GetAllWhiteFigureSquares()
-        {
-            return this.Where(square => square.State >= SquareState.WhitePawn && square.State <= (SquareState.WhiteKingCanCastleMyTurn));
-        }
+    public IEnumerable<Square> GetAll(SquareState squareState)
+    {
+        return this.Where(square => square.State == squareState);
+    }
 
-        public IEnumerable<Square> GetAllBlackFigureSquares()
-        {
-            return this.Where(square => square.State >= SquareState.BlackPawn && square.State <= (SquareState.BlackKingCanCastleMyTurn));
-        }
+    public IEnumerable<Square> GetAllWhiteFigureSquares()
+    {
+        return this.Where(square => square.State >= SquareState.WhitePawn && square.State <= (SquareState.WhiteKingCanCastleMyTurn));
+    }
 
-        public double GetWhiteFiguresValue(FigureValueCalculationMode figureValueCalculationMode)
-        {
-            return GetFiguresValue(figureValueCalculationMode, GetAllWhiteFigureSquares);
-        }
+    public IEnumerable<Square> GetAllBlackFigureSquares()
+    {
+        return this.Where(square => square.State >= SquareState.BlackPawn && square.State <= (SquareState.BlackKingCanCastleMyTurn));
+    }
 
-        public double GetBlackFiguresValue(FigureValueCalculationMode figureValueCalculationMode)
-        {
-            return GetFiguresValue(figureValueCalculationMode, GetAllBlackFigureSquares);
-        }
+    public double GetWhiteFiguresValue(FigureValueCalculationMode figureValueCalculationMode)
+    {
+        return GetFiguresValue(figureValueCalculationMode, GetAllWhiteFigureSquares);
+    }
 
-        public static double GetFiguresValue(FigureValueCalculationMode figureValueCalculationMode, Func<IEnumerable<Square>> figureProvider)
-        {
-            Contract.Requires(figureProvider != null);
+    public double GetBlackFiguresValue(FigureValueCalculationMode figureValueCalculationMode)
+    {
+        return GetFiguresValue(figureValueCalculationMode, GetAllBlackFigureSquares);
+    }
 
-            var figureValueCalculator = new FigureValueCalculator(figureValueCalculationMode);
-            var figureSquares = figureProvider();
-            return figureSquares.Sum(figureSquare => figureValueCalculator.GetValue(figureSquare.State) ?? 0);
-        }
+    public static double GetFiguresValue(FigureValueCalculationMode figureValueCalculationMode, Func<IEnumerable<Square>> figureProvider)
+    {
+        Contract.Requires(figureProvider != null);
+
+        var figureValueCalculator = new FigureValueCalculator(figureValueCalculationMode);
+        var figureSquares = figureProvider();
+        return figureSquares.Sum(figureSquare => figureValueCalculator.GetValue(figureSquare.State) ?? 0);
     }
 }

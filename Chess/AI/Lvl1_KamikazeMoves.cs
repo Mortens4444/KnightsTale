@@ -4,37 +4,37 @@ using Chess.Table;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
-namespace Chess.AI
+namespace Chess.AI;
+
+public class Lvl1_KamikazeMoves : IArtificalIntelligence
 {
-    public class Lvl1_KamikazeMoves : IArtificalIntelligence
+    public Level Level { get; } = Level.Level_1;
+
+    private readonly FigureValueCalculator figureValueCalculator;
+
+    public Lvl1_KamikazeMoves(FigureValueCalculationMode figureValueCalculationMode)
     {
-        public Level Level { get; } = Level.Level_1;
+        figureValueCalculator = new FigureValueCalculator(figureValueCalculationMode);
+    }
 
-        private readonly FigureValueCalculator figureValueCalculator;
+    public Move GetMove(ChessTable chessTable)
+    {
+        Contract.Requires(chessTable != null);
+        chessTable.DebugWriter($"{GetType().Name} searching for move...");
 
-        public Lvl1_KamikazeMoves(FigureValueCalculationMode figureValueCalculationMode)
+        var validMoves = chessTable.GetValidMoves();
+        if (!validMoves.Any())
         {
-            figureValueCalculator = new FigureValueCalculator(figureValueCalculationMode);
+            return null;
         }
-
-        public Move GetMove(ChessTable chessTable)
+        var hitMoves = validMoves
+            .Where(validMove => validMove.MoveType == MoveType.Hit | validMove.MoveType == MoveType.EnPassant)
+            .Select(validMove => new MoveWithDestinationSquareInfo { ValidMove = validMove, To = chessTable.Squares[validMove.To] });
+        if (hitMoves.Any())
         {
-            Contract.Requires(chessTable != null);
-
-            var validMoves = chessTable.GetValidMoves();
-            if (!validMoves.Any())
-            {
-                return null;
-            }
-            var hitMoves = validMoves
-                .Where(validMove => validMove.MoveType == MoveType.Hit | validMove.MoveType == MoveType.EnPassant)
-                .Select(validMove => new MoveWithDestinationSquareInfo { ValidMove = validMove, To = chessTable.Squares[validMove.To] });
-            if (hitMoves.Any())
-            {
-                var bestHit = hitMoves.OrderByDescending(hitMove => figureValueCalculator.GetValue(hitMove.To.State)).First();
-                return bestHit.ValidMove;
-            }
-            return ArtificalIntelligence.GetRandomMove(validMoves);
+            var bestHit = hitMoves.OrderByDescending(hitMove => figureValueCalculator.GetValue(hitMove.To.State)).First();
+            return bestHit.ValidMove;
         }
+        return ArtificalIntelligence.GetRandomMove(validMoves);
     }
 }

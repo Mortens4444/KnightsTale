@@ -3,22 +3,22 @@ using Chess.Table;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
-namespace Chess.AI
+namespace Chess.AI;
+
+public class Lvl0_RandomMoves : IArtificalIntelligence
 {
-    public class Lvl0_RandomMoves : IArtificalIntelligence
+    public Level Level { get; } = Level.Level_0;
+
+    public Move GetMove(ChessTable chessTable)
     {
-        public Level Level { get; } = Level.Level_0;
+        Contract.Requires(chessTable != null);
+        chessTable.DebugWriter($"{GetType().Name} searching for move...");
 
-        public Move GetMove(ChessTable chessTable)
+        var validMoves = chessTable.GetValidMoves();
+        if (!validMoves.Any())
         {
-            Contract.Requires(chessTable != null);
-
-            var validMoves = chessTable.GetValidMoves();
-            if (!validMoves.Any())
-            {
-                return null;
-            }
-            return ArtificalIntelligence.GetRandomMove(validMoves);
+            return null;
         }
+        return ArtificalIntelligence.GetRandomMove(validMoves);
     }
 }

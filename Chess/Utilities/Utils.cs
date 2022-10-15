@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Chess.Utilities
+namespace Chess.Utilities;
+
+public static class Utils
 {
-    public static class Utils
+    public static IEnumerable<T> GetEnumValues<T>()
     {
-        public static IEnumerable<T> GetEnumValues<T>()
-        {
-            var values = Enum.GetValues(typeof(T));
-            return values.OfType<T>();
-        }
+        var values = Enum.GetValues(typeof(T));
+        return values.OfType<T>();
     }
 }

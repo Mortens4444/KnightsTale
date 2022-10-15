@@ -5,56 +5,55 @@ using System;
 using System.Linq;
 
 [assembly: CLSCompliant(false)]
-namespace Chess
+namespace Chess;
+
+public class ChessGame
 {
-    public class ChessGame
+    public ChessTable ChessTable { get; set; }
+
+    private Logger logger;
+
+    public ChessGame()
     {
-        public ChessTable ChessTable { get; set; }
+        NewGame();
+    }
 
-        private Logger logger;
+    public void SetLogFile(string value)
+    {
+        logger = new Logger(value);
+    }
 
-        public ChessGame()
+    public void NewGame()
+    {
+        ChessTable = new ChessTable();
+    }
+
+    public bool Execute(Move move)
+    {
+        var validMove = GetValidMove(move);
+        if (validMove != null)
         {
-            NewGame();
+            validMove.Execute(ChessTable);
+            logger?.Write(validMove);
+            ChessTable.TurnControl.ChangeTurn(true);
+            return true;
         }
+        return false;
+    }
 
-        public void SetLogFile(string value)
+    public Move GetValidMove(Move actualMove)
+    {
+        if (actualMove == null)
         {
-            logger = new Logger(value);
+            return null;
         }
+        ChessTable.TurnControl.ValidateMoveTurn(ChessTable.Squares[actualMove.From]);
+        var validMoves = ChessTable.GetValidMoves();
+        return validMoves.FirstOrDefault(move => move.Equals(actualMove));
+    }
 
-        public void NewGame()
-        {
-            ChessTable = new ChessTable();
-        }
-
-        public bool Execute(Move move)
-        {
-            var validMove = GetValidMove(move);
-            if (validMove != null)
-            {
-                validMove.Execute(ChessTable);
-                logger?.Write(validMove);
-                ChessTable.TurnControl.ChangeTurn(true);
-                return true;
-            }
-            return false;
-        }
-
-        public Move GetValidMove(Move actualMove)
-        {
-            if (actualMove == null)
-            {
-                return null;
-            }
-            ChessTable.TurnControl.ValidateMoveTurn(ChessTable.Squares[actualMove.From]);
-            var validMoves = ChessTable.GetValidMoves();
-            return validMoves.FirstOrDefault(move => move.Equals(actualMove));
-        }
-
-        public bool IsWhiteTurn()
-        {
-            return ChessTable.TurnControl.IsWhiteTurn();
-        }
+    public bool IsWhiteTurn()
+    {
+        return ChessTable.TurnControl.IsWhiteTurn();
     }
 }

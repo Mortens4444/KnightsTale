@@ -77,10 +77,19 @@ namespace Chess.Rules.Turns
             }
         }
 
-        private static void ChangeTurn(Square kingSquarePreviousTurn, Square kingSquareNewTurn)
+        private void ChangeTurn(Square kingSquarePreviousTurn, Square kingSquareNewTurn)
         {
             kingSquarePreviousTurn.State = kingSquarePreviousTurn.State.SetTurn(false);
             kingSquareNewTurn.State = kingSquareNewTurn.State.SetTurn(true);
+
+            if (kingSquareNewTurn.State.HasWhiteFigure())
+            {
+                chessTable.DebugWriter("White turn.");
+            }
+            if (kingSquareNewTurn.State.HasBlackFigure())
+            {
+                chessTable.DebugWriter("Black turn.");
+            }
         }
 
         protected virtual void OnChangeTurn(bool isWhiteTurn)

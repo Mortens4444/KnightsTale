@@ -1,14 +1,13 @@
-﻿namespace Chess.Table.TableSquare
+﻿namespace Chess.Table.TableSquare;
+
+public enum Column
 {
-    public enum Column
-    {
-        A = 1,
-        B,
-        C,
-        D,
-        E,
-        F,
-        G,
-        H
-    }
+    A = 1,
+    B,
+    C,
+    D,
+    E,
+    F,
+    G,
+    H
 }

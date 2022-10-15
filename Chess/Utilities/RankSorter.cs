@@ -1,13 +1,12 @@
 ﻿using Chess.Table.TableSquare;
 using System.Collections.Generic;
 
-namespace Chess.Utilities
+namespace Chess.Utilities;
+
+public class ReverseRankSorter : IComparer<Rank>
 {
-    public class ReverseRankSorter : IComparer<Rank>
+    public int Compare(Rank x, Rank y)
     {
-        public int Compare(Rank x, Rank y)
-        {
-            return (int)y - (int)x;
-        }
+        return (int)y - (int)x;
     }
 }
