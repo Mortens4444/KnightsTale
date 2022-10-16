@@ -3,26 +3,8 @@
   <PropertyGroup>
     <TargetFrameworks>net48;net7.0</TargetFrameworks>
     <AnalysisLevel>latest-all</AnalysisLevel>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0|AnyCPU'">
-    <LangVersion>11.0</LangVersion>
     <WarningLevel>9999</WarningLevel>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net48|AnyCPU'">
     <LangVersion>10.0</LangVersion>
-    <WarningLevel>9999</WarningLevel>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net48|AnyCPU'">
-    <LangVersion>10.0</LangVersion>
-    <WarningLevel>9999</WarningLevel>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0|AnyCPU'">
-    <LangVersion>10.0</LangVersion>
-    <WarningLevel>9999</WarningLevel>
   </PropertyGroup>
 
 </Project>

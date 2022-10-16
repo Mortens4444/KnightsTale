@@ -1,6 +1,6 @@
 export class DomManipulator {
     createElement(elementName, parent) {
-        let element = document.createElement(elementName);
+        const element = document.createElement(elementName);
         parent.appendChild(element);
         return element;
     }

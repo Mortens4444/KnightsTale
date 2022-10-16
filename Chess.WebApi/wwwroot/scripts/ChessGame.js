@@ -1,4 +1,4 @@
-import { ChessBoardBuilder } from "./ChessBoardBuilder.js";
+import { ChessBoardBuilder } from './ChessBoardBuilder.js';
 export class ChessGame {
     chessBoardBuilder;
     constructor() {

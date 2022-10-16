@@ -3,3 +3,4 @@
 .vs/
 packages/
 **/*.bak
+Chess.WebApi/node_modules/

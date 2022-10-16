@@ -1,0 +1,16 @@
+{
+  "name": "chess.webapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "ChessGame.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mortens",
+  "license": "ISC",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.40.0",
+    "@typescript-eslint/parser": "^5.40.0",
+    "eslint": "^8.25.0"
+  }
+}
