@@ -5,4 +5,3 @@
 - Fix tests -> Lvl5 AI
 - WPF UI
 - UWP UI?
-- WebAPI interface + UI (https://github.com/Mortens4444/Chess maybe?)

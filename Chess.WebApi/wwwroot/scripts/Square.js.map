@@ -1,0 +1,1 @@
+{"version":3,"file":"Square.js","sourceRoot":"","sources":["Square.ts"],"names":[],"mappings":"AAAA,MAAM,OAAO,MAAM;IACR,WAAW,CAAS;IACpB,SAAS,CAAS;IAEzB,YAAmB,WAAmB,EAAE,SAAiB;QACrD,IAAI,CAAC,WAAW,GAAG,WAAW,CAAC;QAC/B,IAAI,CAAC,SAAS,GAAG,SAAS,CAAC;IAC/B,CAAC;CACJ"}

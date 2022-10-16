@@ -4,14 +4,17 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
     <RootNamespace>KnightsTaleUci</RootNamespace>
+    <AnalysisLevel>latest-all</AnalysisLevel>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <LangVersion>10.0</LangVersion>
+    <LangVersion>11.0</LangVersion>
+    <WarningLevel>9999</WarningLevel>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <LangVersion>10.0</LangVersion>
+    <WarningLevel>9999</WarningLevel>
   </PropertyGroup>
 
   <ItemGroup>
