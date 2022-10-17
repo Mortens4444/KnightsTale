@@ -24,4 +24,3 @@ export class ChessGame {
 
 export const chessGame: ChessGame = new ChessGame();
 chessGame.showChessBoard();
-chessGame.newGame();

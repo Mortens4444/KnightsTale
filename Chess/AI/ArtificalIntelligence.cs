@@ -76,7 +76,7 @@ public static class ArtificalIntelligence
 
         var movesToConsider = movePreFilterPredicate == null ? validMoves : validMoves.Where(movePreFilterPredicate);
 
-        var goodMovesWithGainInfo = ArtificalIntelligence.GetGoodMoves(chessTable, figureValueCalculator, movesToConsider, enemyMoveProvider, breakOnCheckMate);
+        var goodMovesWithGainInfo = GetGoodMoves(chessTable, figureValueCalculator, movesToConsider, enemyMoveProvider, breakOnCheckMate);
         return new MoveDecisionHelper(validMoves, goodMovesWithGainInfo);
     }
 

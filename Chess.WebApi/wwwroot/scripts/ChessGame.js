@@ -17,5 +17,4 @@ export class ChessGame {
 }
 export const chessGame = new ChessGame();
 chessGame.showChessBoard();
-chessGame.newGame();
 //# sourceMappingURL=ChessGame.js.map

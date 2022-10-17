@@ -1,14 +1,14 @@
 import { DomManipulator } from './DomManipulator.js';
 import { Square } from './Square.js';
 const state = [
-    ['♜', '♞', ' ', '♛', '♚', '♝', '♞', '♜'],
-    ['♟', '♟', ' ', '♝', ' ', '♟', '♟', '♟'],
-    [' ', ' ', ' ', ' ', '♟', ' ', ' ', ' '],
-    [' ', '♗', '♟', '♟', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', '♙', '♙', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', '♙', ' ', ' '],
-    ['♙', '♙', '♙', ' ', ' ', ' ', '♙', '♙'],
-    ['♖', '♘', '♗', '♕', '♔', ' ', '♘', '♖']
+    ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'],
+    ['♟', '♟', '♟', '♟', '♟', '♟', '♟', '♟'],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+    ['♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙'],
+    ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖']
 ];
 const initialState = [
     ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'],
@@ -60,7 +60,7 @@ export class ChessBoardBuilder {
     }
     createTableRank(tableBody, rankNumber) {
         const rank = this.domManipulator.createElement(tr, tableBody);
-        this.createTableHeaderCell(rank, tr + rankNumber, rankNumber);
+        this.createTableHeaderCell(rank, tr + rankNumber, rankNumber.toString());
         return rank;
     }
     createSquares(tableBody) {

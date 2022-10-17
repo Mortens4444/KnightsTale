@@ -2,14 +2,14 @@ import { DomManipulator } from './DomManipulator.js';
 import { Square } from './Square.js';
 
 const state: Array<Array<string>> = [
-	['♜', '♞', ' ', '♛', '♚', '♝', '♞', '♜'],
-	['♟', '♟', ' ', '♝', ' ', '♟', '♟', '♟'],
-	[' ', ' ', ' ', ' ', '♟', ' ', ' ', ' '],
-	[' ', '♗', '♟', '♟', ' ', ' ', ' ', ' '],
-	[' ', ' ', ' ', '♙', '♙', ' ', ' ', ' '],
-	[' ', ' ', ' ', ' ', ' ', '♙', ' ', ' '],
-	['♙', '♙', '♙', ' ', ' ', ' ', '♙', '♙'],
-	['♖', '♘', '♗', '♕', '♔', ' ', '♘', '♖']
+	['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'],
+	['♟', '♟', '♟', '♟', '♟', '♟', '♟', '♟'],
+	[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+	[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+	[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+	[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+	['♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙'],
+	['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖']
 ];
 
 const initialState: Array<Array<string>> = [
@@ -63,15 +63,15 @@ export class ChessBoardBuilder {
 		}
 	}
 
-	createTableHeaderCell(parent, idValue: string, text: string) : void {
+	createTableHeaderCell(parent: HTMLElement, idValue: string, text: string): void {
 		const header = this.domManipulator.createElement(th, parent);
 		header.setAttribute(id, idValue);
 		header.textContent = text;
 	}
 
-	createTableRank(tableBody: HTMLElement, rankNumber) {
+	createTableRank(tableBody: HTMLElement, rankNumber: number) {
 		const rank = this.domManipulator.createElement(tr, tableBody);
-		this.createTableHeaderCell(rank, tr + rankNumber, rankNumber);
+		this.createTableHeaderCell(rank, tr + rankNumber, rankNumber.toString());
 		return rank;
 	}
 	
