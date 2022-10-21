@@ -34,4 +34,6 @@
     <Exec Command="npx eslint wwwroot/scripts/**.ts --format visualstudio"></Exec>
   </Target>
 
+  <ProjectExtensions><VisualStudio><UserProperties tsconfig_1json__JsonSchema="https://json.schemastore.org/typewiz.json" /></VisualStudio></ProjectExtensions>
+
 </Project>

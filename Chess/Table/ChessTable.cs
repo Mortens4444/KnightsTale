@@ -24,7 +24,7 @@ public class ChessTable
 
     public TurnControl TurnControl { get; private set; }
 
-    public DebugMode DebugMode { get; set; } = DebugMode.None;
+    public DebugMode DebugMode { get; set; } = DebugMode.Debug;
 
     public Action<string> DebugWriter { get; set; }
 

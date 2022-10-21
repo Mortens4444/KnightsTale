@@ -2,7 +2,7 @@
   "name": "chess.webapi",
   "version": "1.0.0",
   "description": "",
-  "main": "ChessGame.js",
+  "main": "./wwwroot/scripts/ChessGame.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -12,5 +12,8 @@
     "@typescript-eslint/eslint-plugin": "^5.40.0",
     "@typescript-eslint/parser": "^5.40.0",
     "eslint": "^8.25.0"
+  },
+  "dependencies": {
+    "knockout": "^3.5.1"
   }
 }

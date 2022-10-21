@@ -1,26 +1,23 @@
 import { ChessBoardBuilder } from './ChessBoardBuilder.js';
+//import * as ko from 'knockout';
 
 export class ChessGame {
 
 	private chessBoardBuilder: ChessBoardBuilder;
 
-	constructor() {
+	public constructor() {
 		this.chessBoardBuilder = new ChessBoardBuilder();
 	}
 
-	switchSide(): void {
+	public switchSide(): void {
 		this.chessBoardBuilder.switchSide();
 	}
 
-	newGame(): void {
+	public newGame(): void {
 		this.chessBoardBuilder.resetStates();
-		this.showChessBoard();
-	}
-
-	showChessBoard(): void {
 		this.chessBoardBuilder.showChessBoard();
 	}
 }
 
 export const chessGame: ChessGame = new ChessGame();
-chessGame.showChessBoard();
+//ko.applyBindings(chessGame, document.getElementById('app'));
