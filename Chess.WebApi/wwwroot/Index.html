@@ -5,21 +5,19 @@
     <title>Knight's Tale</title>
     <link rel="stylesheet" href="css/board.css">
 
-    <script type="text/javascript" src="../node_modules/knockout/build/output/knockout-latest.js"></script>
+    <script type="text/javascript" src="./lib/knockout/build/output/knockout-latest.js"></script>
     <script type="module" src="scripts/Square.js"></script>
     <script type="module" src="scripts/DomManipulator.js"></script>
     <script type="module" src="scripts/ChessBoardBuilder.js"></script>
     <script type="module" src="scripts/ChessGame.js"></script>
-    <!--<script type=module>
-        import * as chessGame from "./scripts/ChessGame.js";
-    </script>-->
+
 </head>
 <body>
 
     <div id="app" class="menu">
-        <a data-bind="click=newGame();">New Game</a>
-        <a href="#" onclick="chessGame.switchSide();">Switch Side</a>
-        <a href="https://localhost:44330/swagger">Swagger</a>        
+        <button data-bind="click: newGame">New Game</button>
+        <button data-bind="click: switchSide">Switch Side</button>
+        <button type="submit" data-bind="click: () => { location.href='https://localhost:44330/swagger'; }">Swagger</button>
     </div>
 
 </body>

@@ -4,5 +4,4 @@ export declare class ChessGame {
     switchSide(): void;
     newGame(): void;
 }
-export declare const chessGame: ChessGame;
 //# sourceMappingURL=ChessGame.d.ts.map

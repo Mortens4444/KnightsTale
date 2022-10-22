@@ -1,5 +1,4 @@
 import { ChessBoardBuilder } from './ChessBoardBuilder.js';
-//import * as ko from 'knockout';
 
 export class ChessGame {
 
@@ -19,5 +18,4 @@ export class ChessGame {
 	}
 }
 
-export const chessGame: ChessGame = new ChessGame();
-//ko.applyBindings(chessGame, document.getElementById('app'));
+ko.applyBindings(new ChessGame(), document.getElementById('app'));
