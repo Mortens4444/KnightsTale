@@ -31,7 +31,7 @@
     <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
-  <Target Name="RunESLint" BeforeTargets="AfterBuild">
+  <Target Name="RunESLint" AfterTargets="Build">
     <Exec Command="npx eslint wwwroot/scripts/**.ts --format visualstudio"></Exec>
   </Target>
 

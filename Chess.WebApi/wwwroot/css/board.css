@@ -1,4 +1,5 @@
 .chess-board {
+	margin: auto;
 	border-spacing: 0;
 	border-collapse: collapse;
 }
@@ -48,4 +49,8 @@
 	background-color: #333;
 	color: #f0f0f0;
 	overflow: hidden;
+}
+
+body {
+	background-color: darkseagreen
 }

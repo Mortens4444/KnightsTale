@@ -8,7 +8,8 @@ export declare class ChessBoardBuilder {
     private createTableHeaderCell;
     private createTableRank;
     private createSquares;
-    private cellOnClick;
+    private squareOnClick;
+    private getMove;
     private getSquare;
     private charShift;
     private getColumnText;

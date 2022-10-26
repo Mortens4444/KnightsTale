@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
 using Chess.WebApi.Dto;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Chess.WebApi.Controllers
 {
@@ -14,10 +14,32 @@ namespace Chess.WebApi.Controllers
             this.logger = logger;
         }
 
-        [HttpGet(Name = "StartNewGame")]
-        public KnightsTaleDto Get()
+        [HttpGet]
+        [Route("api/game/new")]
+        public IActionResult NewGame()
         {
-            return new KnightsTaleDto();
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("api/game/load")]
+        public IActionResult LoadGame([FromForm] IFormFile file)
+        {
+            return Ok(new KnightsTaleDto());
+        }
+
+        [HttpPut]
+        [Route("api/game/save")]
+        public IActionResult SaveGame()
+        {
+            return Ok();
+        }
+
+        [HttpPut]
+        [Route("api/game/move")]
+        public IActionResult Move([FromBody] string move)
+        {
+            return Ok(new KnightsTaleDto());
         }
     }
 }

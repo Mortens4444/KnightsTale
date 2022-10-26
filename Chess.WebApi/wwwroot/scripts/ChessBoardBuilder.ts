@@ -82,38 +82,48 @@ export class ChessBoardBuilder {
 			const rank = this.createTableRank(tableBody, rankNumber);
 			
 			for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
-				const cell = this.domManipulator.createElement(td, rank);
-				cell.setAttribute(id, this.getColumnText(columnIndex) + rankNumber);
-				cell.onclick = this.cellOnClick.bind(this);
-				cell.setAttribute('class', (rankIndex + columnIndex) % 2 == 1 ? 'dark' : 'light');
-				cell.textContent = this.isWhiteOnTopInStateRepresentation() ?
+				const square = this.domManipulator.createElement(td, rank);
+				square.setAttribute(id, this.getColumnText(columnIndex) + rankNumber);
+				square.onclick = this.squareOnClick.bind(this);
+				square.setAttribute('class', (rankIndex + columnIndex) % 2 == 1 ? 'dark' : 'light');
+				square.textContent = this.isWhiteOnTopInStateRepresentation() ?
 					this.getState(rankNumber - 1, this.whiteOnTopWhenShow ? columnIndex : 7 - columnIndex) :
 					this.getState(this.whiteOnTopWhenShow ? 7 - rankIndex : rankIndex, this.whiteOnTopWhenShow ? 7 - columnIndex : columnIndex);
 			}
 		}
 	}
 
-	private cellOnClick(event: MouseEvent) {
+	private squareOnClick(event: MouseEvent) {
 		if (this.moveFrom == null) {
 			this.moveFrom = <HTMLElement>event.srcElement;
 			this.moveFrom.classList.add(selected);
 		} else {
 			this.moveFrom.classList.remove(selected);
-
 			const toSquare: Square = this.getSquare(<HTMLElement>event.srcElement);
 			const fromSquare: Square = this.getSquare(this.moveFrom);
 
-			this.setState(toSquare.rankIndex, toSquare.columnIndex, this.getState(fromSquare.rankIndex, fromSquare.columnIndex));
-			this.setState(fromSquare.rankIndex, fromSquare.columnIndex, ' ');
-			
-			this.showChessBoard();
+			const request = new XMLHttpRequest();
+			request.open('PUT', 'KnightsTale/api/game/move');
+			request.setRequestHeader('content-type', 'application/json');
+			request.send(JSON.stringify(this.getMove(fromSquare, toSquare)));
+			request.onreadystatechange = () => {
+				if (request.readyState == 4 && request.status == 200) {
+					this.setState(toSquare.rankIndex, toSquare.columnIndex, this.getState(fromSquare.rankIndex, fromSquare.columnIndex));
+					this.setState(fromSquare.rankIndex, fromSquare.columnIndex, ' ');
+					this.showChessBoard();
+				}
+			};
 			this.moveFrom = null;
 		}
 	}
 
-	private getSquare(cell: HTMLElement): Square {
-		const rank = parseInt(<string>cell.id[1]);
-		const column = cell.id.charCodeAt(0);
+	private getMove(fromSquare: Square, toSquare: Square): string {
+		return fromSquare.toString(this.whiteOnTopWhenShow) + toSquare.toString(this.whiteOnTopWhenShow);
+	}
+
+	private getSquare(square: HTMLElement): Square {
+		const rank = parseInt(<string>square.id[1]);
+		const column = square .id.charCodeAt(0);
 		return this.isWhiteOnTopInStateRepresentation() ?
 			new Square(h.charCodeAt(0) - column, rank - 1) :
 			new Square(column - a.charCodeAt(0), 8 - rank);

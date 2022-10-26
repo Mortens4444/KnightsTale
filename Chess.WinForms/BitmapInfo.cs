@@ -1,75 +1,79 @@
-﻿using System.Drawing.Imaging;
+﻿using Chess.WinForms.Extensions;
+using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-using Chess.WinForms.Extensions;
 
 namespace Chess.WinForms;
 
 public class BitmapInfo
 {
-    public byte[] RGB_bytes;
+    public byte[] rgbBytes;
 
     public BitmapInfo(Bitmap bmp)
     {
         Bitmap = bmp;
         BitCount = ConvertPixelFormatToBitCount(Bitmap.PixelFormat);
         ByteCount = (byte)Math.Round((double)BitCount / 8);
-        RGB_bytes = GetByteArrayFromBitmap(Bitmap);
+        rgbBytes = GetByteArrayFromBitmap(Bitmap);
     }
 
     public static byte ConvertPixelFormatToBitCount(PixelFormat format)
     {
-        if (format == PixelFormat.Canonical) return 32;
+        if (format == PixelFormat.Canonical)
+        {
+            return 32;
+        }
 
-        var format_name = format.ToString();
-        if (format_name.Substring(0, 6) != "Format")
-            throw new Exception(String.Format("Unknown pixel format: {0}", format_name));
+        var formatName = format.ToString();
+        if (formatName.Substring(0, 6) != "Format")
+        {
+            throw new NotSupportedException($"Unknown pixel format: {formatName}");
+        }
 
-        format_name = format_name.Substring(6, 2);
-        if (Char.IsNumber(format_name[1]))
-            return Convert.ToByte(format_name);
+        formatName = formatName.Substring(6, 2);
+        if (Char.IsNumber(formatName[1]))
+        {
+            return Convert.ToByte(formatName);
+        }
 
-        return Convert.ToByte(format_name[0].ToString());
+        return Convert.ToByte(formatName[0].ToString());
     }
 
     public static byte[] GetByteArrayFromBitmap(Bitmap bitmap)
     {
-        var bmp_data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly,
-                                       bitmap.PixelFormat);
+        var bmpData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
 
-        var pixel_address = bmp_data.Scan0;
-        var stride_mul_height = bmp_data.Stride * bmp_data.Height;
+        var pixelAddress = bmpData.Scan0;
+        var strideMultipliedByHeight = bmpData.Stride * bmpData.Height;
 
-        var bitmap_rgb_bytes = new byte[stride_mul_height];
+        var bitmapRgbBytes = new byte[strideMultipliedByHeight];
 
-        Marshal.Copy(pixel_address, bitmap_rgb_bytes, 0, stride_mul_height);
-        bitmap.UnlockBits(bmp_data);
+        Marshal.Copy(pixelAddress, bitmapRgbBytes, 0, strideMultipliedByHeight);
+        bitmap.UnlockBits(bmpData);
 
-        return bitmap_rgb_bytes;
+        return bitmapRgbBytes;
     }
 
-    public static Bitmap GetBitmapFromByteArray(byte[] bitmap_rgb_bytes, int width)
+    public static Bitmap GetBitmapFromByteArray(byte[] bitmapRgbBytes, int width)
     {
-        var result = new Bitmap(width, bitmap_rgb_bytes.Length / width / 4);
-        for (var i = 0; i < result.Height; i++)
+        var result = new Bitmap(width, bitmapRgbBytes.Length / width / 4);
+        for (var row = 0; row < result.Height; row++)
         {
-            for (var j = 0; j < result.Width; j++)
+            for (var column = 0; column < result.Width; column++)
             {
-                var index = (i * width + j) * 4;
-                var c = Color.FromArgb(bitmap_rgb_bytes[index + 3], bitmap_rgb_bytes[index + 2], bitmap_rgb_bytes[index + 1],
-                                       bitmap_rgb_bytes[index]);
-                result.SetPixel(j, i, c);
+                var index = (row * width + column) * 4;
+                var color = Color.FromArgb(bitmapRgbBytes[index + 3], bitmapRgbBytes[index + 2], bitmapRgbBytes[index + 1], bitmapRgbBytes[index]);
+                result.SetPixel(column, row, color);
             }
         }
         return result;
     }
 
-    public static void CopyByteArrayToBitmap(byte[] bitmap_rgb_bytes, Bitmap bitmap)
+    public static void CopyByteArrayToBitmap(byte[] bitmapRgbBytes, Bitmap bitmap)
     {
-        var bmp_data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly,
-                                       bitmap.PixelFormat);
-        var pixel_address = bmp_data.Scan0;
-        Marshal.Copy(bitmap_rgb_bytes, 0, pixel_address, bmp_data.Stride * bmp_data.Height);
-        bitmap.UnlockBits(bmp_data);
+        var bmpData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
+        var pixelAddress = bmpData.Scan0;
+        Marshal.Copy(bitmapRgbBytes, 0, pixelAddress, bmpData.Stride * bmpData.Height);
+        bitmap.UnlockBits(bmpData);
     }
 
     public byte BitCount { get; set; }
@@ -78,44 +82,46 @@ public class BitmapInfo
 
     public Bitmap Bitmap { get; set; }
 
-    public int Length
-    {
-        get { return RGB_bytes.Length; }
-    }
+    public int Length => rgbBytes.Length;
 
     public void Transform(Color from, Color to, Color replace)
     {
         Transform(this, from, to, replace);
-        CopyByteArrayToBitmap(RGB_bytes, Bitmap);
+        CopyByteArrayToBitmap(rgbBytes, Bitmap);
     }
 
     public byte this[int index]
     {
         get
         {
-            return RGB_bytes[index];
+            return rgbBytes[index];
         }
         set
         {
-            RGB_bytes[index] = value;
+            rgbBytes[index] = value;
         }
     }
 
-    public static void Transform(BitmapInfo bitmap_info, Color from, Color to, Color replace)
+    public static void Transform(BitmapInfo bitmapInfo, Color from, Color to, Color replace)
     {
-        for (var i = 0; i < bitmap_info.Length; i += bitmap_info.ByteCount)
+        for (var i = 0; i < bitmapInfo.Length; i += bitmapInfo.ByteCount)
         {
-            Color c;
-            if (bitmap_info.ByteCount == 3) c = Color.FromArgb(bitmap_info[i + 2], bitmap_info[i + 1], bitmap_info[i]);
-            else c = Color.FromArgb(bitmap_info[i + 3], bitmap_info[i + 2], bitmap_info[i + 1], bitmap_info[i]);
+            Color color = bitmapInfo.ByteCount == 3 ?
+                Color.FromArgb(bitmapInfo[i + 2], bitmapInfo[i + 1], bitmapInfo[i]) :
+                Color.FromArgb(bitmapInfo[i + 3], bitmapInfo[i + 2], bitmapInfo[i + 1], bitmapInfo[i]);
 
-            if (!c.IsColorBetweenColors(from, to))
+            if (!color.IsColorBetweenColors(from, to))
+            {
                 continue;
+            }
 
-            if (bitmap_info.ByteCount != 3) bitmap_info[i + 3] = replace.A;
-            bitmap_info[i + 2] = replace.R;
-            bitmap_info[i + 1] = replace.G;
-            bitmap_info[i] = replace.B;
+            if (bitmapInfo.ByteCount != 3)
+            {
+                bitmapInfo[i + 3] = replace.A;
+            }
+            bitmapInfo[i + 2] = replace.R;
+            bitmapInfo[i + 1] = replace.G;
+            bitmapInfo[i] = replace.B;
         }
     }
 }

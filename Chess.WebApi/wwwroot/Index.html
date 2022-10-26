@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="css/board.css">
 
     <script type="text/javascript" src="./lib/knockout/build/output/knockout-latest.js"></script>
+
     <script type="module" src="scripts/Square.js"></script>
     <script type="module" src="scripts/DomManipulator.js"></script>
     <script type="module" src="scripts/ChessBoardBuilder.js"></script>
@@ -16,8 +17,14 @@
 
     <div id="app" class="menu">
         <button data-bind="click: newGame">New Game</button>
+
+        <label for="fileLoader">Load Game</label>
+        <input id="fileLoader" type="file" style="display: none" data-bind="event:{ change: loadGame }"/>
+
+        <button data-bind="click: saveGame">Save Game</button>
+
         <button data-bind="click: switchSide">Switch Side</button>
-        <button type="submit" data-bind="click: () => { location.href='https://localhost:44330/swagger'; }">Swagger</button>
+        <button type="submit" data-bind="click: () => { location.href='swagger'; }">Swagger</button>
     </div>
 
 </body>

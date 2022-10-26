@@ -14,9 +14,7 @@ public class BoardPainter
 
     public void ShowChessBoard(PaintEventArgs e, ChessTable chessTable, Square? fromSquare)
     {
-        //var frame_rectangle = new Rectangle(e.ClipRectangle.X + Frame, e.ClipRectangle.Y + Frame, e.ClipRectangle.Width - 2 * Frame, e.ClipRectangle.Height - 2 * Frame);
-
-        e.Graphics.FillRectangle(frameColor, e.ClipRectangle);
+       e.Graphics.FillRectangle(frameColor, e.ClipRectangle);
 
         int left, top;
         Square? possible_selected_square = null;

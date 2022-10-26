@@ -1,3 +1,4 @@
+- Load state on web UI (Fix api/game/load and/or loadGame(_: HTMLInputElement, event: Event))
 - Move.Promotion should not be automatic
 - Bad moves (NoMoreCastle, Let enemy to hit my figure, tie)
 - 50 moves -> tie (The 50-move draw rule, which today states that a draw can be claimed if no capture is made and no pawn is moved for 50 consecutive moves), 2 king +[knight | bishop] -> tie
