@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="css/board.css">
 
     <script type="text/javascript" src="./lib/knockout/build/output/knockout-latest.js"></script>
+    <script type="text/javascript" src="./lib/jquery/dist/jquery.min.js"></script>
 
     <script type="module" src="scripts/Square.js"></script>
     <script type="module" src="scripts/DomManipulator.js"></script>
@@ -19,7 +20,7 @@
         <button data-bind="click: newGame">New Game</button>
 
         <label for="fileLoader">Load Game</label>
-        <input id="fileLoader" type="file" style="display: none" data-bind="event:{ change: loadGame }"/>
+        <input id="fileLoader" type="file" style="display: none" data-bind="event:{ change: loadGame }" />
 
         <button data-bind="click: saveGame">Save Game</button>
 

@@ -1,4 +1,5 @@
 import { DomManipulator } from './DomManipulator.js';
+import { RequestSender } from './RequestSender.js';
 import { Square } from './Square.js';
 
 const a = 'A';
@@ -102,17 +103,12 @@ export class ChessBoardBuilder {
 			const toSquare: Square = this.getSquare(<HTMLElement>event.srcElement);
 			const fromSquare: Square = this.getSquare(this.moveFrom);
 
-			const request = new XMLHttpRequest();
-			request.open('PUT', 'KnightsTale/api/game/move');
-			request.setRequestHeader('content-type', 'application/json');
-			request.send(JSON.stringify(this.getMove(fromSquare, toSquare)));
-			request.onreadystatechange = () => {
-				if (request.readyState == 4 && request.status == 200) {
-					this.setState(toSquare.rankIndex, toSquare.columnIndex, this.getState(fromSquare.rankIndex, fromSquare.columnIndex));
-					this.setState(fromSquare.rankIndex, fromSquare.columnIndex, ' ');
-					this.showChessBoard();
-				}
-			};
+			RequestSender.execute('KnightsTale/api/game/move', 'PUT', () => {
+				this.setState(toSquare.rankIndex, toSquare.columnIndex, this.getState(fromSquare.rankIndex, fromSquare.columnIndex));
+				this.setState(fromSquare.rankIndex, fromSquare.columnIndex, ' ');
+				this.showChessBoard();
+			}, JSON.stringify(this.getMove(fromSquare, toSquare)), 'application/json');
+
 			this.moveFrom = null;
 		}
 	}

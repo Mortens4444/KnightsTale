@@ -1,4 +1,5 @@
 import { ChessBoardBuilder } from './ChessBoardBuilder.js';
+import { RequestSender } from './RequestSender.js';
 
 export class ChessGame {
 
@@ -13,15 +14,10 @@ export class ChessGame {
 	}
 
 	public newGame(): void {
-		const request = new XMLHttpRequest();
-		request.open('GET', 'KnightsTale/api/game/new');
-		request.send();
-		request.onreadystatechange = () => {
-			if (request.readyState == 4 && request.status == 200) {
-				this.chessBoardBuilder.resetStates();
-				this.chessBoardBuilder.showChessBoard();
-			}
-		};
+		RequestSender.execute('KnightsTale/api/game/new', 'GET', () => {
+			this.chessBoardBuilder.resetStates();
+			this.chessBoardBuilder.showChessBoard();
+		});
 	}
 
 	public loadGame(_: HTMLInputElement, event: Event): void {
@@ -30,18 +26,16 @@ export class ChessGame {
 		const file = <File>files[0];
 
 		const formData = new FormData();
-		formData.append('file', file);
+		formData.append('file', file, file.name);
 
-		const request = new XMLHttpRequest();
-		request.open('POST', 'KnightsTale/api/game/load');
-		request.setRequestHeader('content-type', 'multipart/form-data; boundary=25DD0FA4');
-		request.send(formData);
+		RequestSender.sendFormData('KnightsTale/api/game/load', 'POST', () => {
+			this.chessBoardBuilder.showChessBoard();
+		}, formData);
 	}
 
+
 	public saveGame(): void {
-		const request = new XMLHttpRequest();
-		request.open('PUT', 'KnightsTale/api/game/save');
-		request.send();
+		RequestSender.execute('KnightsTale/api/game/save', 'PUT', (data: string) => { console.log(data); });
 	}
 }
 

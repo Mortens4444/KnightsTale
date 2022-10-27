@@ -23,8 +23,15 @@ namespace Chess.WebApi.Controllers
 
         [HttpPost]
         [Route("api/game/load")]
-        public IActionResult LoadGame([FromForm] IFormFile file)
+        public async Task<IActionResult> LoadGame([FromForm] IFormFile file)
         {
+            using var stream = file.OpenReadStream();
+            using var streamReader = new StreamReader(stream);
+            var fileContent = streamReader.ReadToEnd();
+            if (fileContent.Length != 64)
+            {
+                return BadRequest($"Invalid file has been uploaded: {file.FileName}.");
+            }
             return Ok(new KnightsTaleDto());
         }
 
@@ -32,7 +39,7 @@ namespace Chess.WebApi.Controllers
         [Route("api/game/save")]
         public IActionResult SaveGame()
         {
-            return Ok();
+            return Ok("Save succeeded");
         }
 
         [HttpPut]

@@ -9,11 +9,14 @@
   "author": "Mortens",
   "license": "ISC",
   "devDependencies": {
+    "@types/jquery": "^3.5.14",
     "@typescript-eslint/eslint-plugin": "^5.40.0",
     "@typescript-eslint/parser": "^5.40.0",
     "eslint": "^8.25.0"
   },
   "dependencies": {
+    "@brenoroosevelt/toast": "^2.0.3",
+    "jquery": "^3.6.1",
     "knockout": "^3.5.1"
   }
 }
