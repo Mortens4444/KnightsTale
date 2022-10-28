@@ -31,6 +31,10 @@
     <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Chess\Chess.csproj" />
+  </ItemGroup>
+
   <Target Name="RunESLint" AfterTargets="Build">
     <Exec Command="npx eslint wwwroot/scripts/**.ts --format visualstudio"></Exec>
   </Target>

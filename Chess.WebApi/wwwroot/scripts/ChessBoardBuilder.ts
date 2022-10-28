@@ -1,4 +1,5 @@
 import { DomManipulator } from './DomManipulator.js';
+import type { KnightsTaleDto } from './Dtos/KnightsTaleDto.js';
 import { RequestSender } from './RequestSender.js';
 import { Square } from './Square.js';
 
@@ -167,4 +168,13 @@ export class ChessBoardBuilder {
 	public switchSide(): void {
 		this.showChessBoard(!this.whiteOnTopWhenShow);
 	}
+
+	public loadState(knightsTaleDto: KnightsTaleDto): void {
+		for (let i = 0; i < knightsTaleDto.states.length; i++) {
+			const rank = Math.floor(i / 8);
+			const column = i % 8;
+			this.setState(rank, column, <string>knightsTaleDto.states[i]);
+		}
+		this.showChessBoard();
+    }
 }

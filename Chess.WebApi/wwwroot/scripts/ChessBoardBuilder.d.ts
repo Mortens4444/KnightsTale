@@ -1,3 +1,4 @@
+import type { KnightsTaleDto } from './Dtos/KnightsTaleDto.js';
 export declare class ChessBoardBuilder {
     private domManipulator;
     private moveFrom;
@@ -19,5 +20,6 @@ export declare class ChessBoardBuilder {
     resetStates(): void;
     showChessBoard(whiteOnTopWhenShow?: boolean | undefined): void;
     switchSide(): void;
+    loadState(knightsTaleDto: KnightsTaleDto): void;
 }
 //# sourceMappingURL=ChessBoardBuilder.d.ts.map

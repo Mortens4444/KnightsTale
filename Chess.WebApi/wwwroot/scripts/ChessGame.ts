@@ -1,4 +1,5 @@
 import { ChessBoardBuilder } from './ChessBoardBuilder.js';
+import type { KnightsTaleDto } from './Dtos/KnightsTaleDto.js';
 import { RequestSender } from './RequestSender.js';
 
 export class ChessGame {
@@ -28,8 +29,8 @@ export class ChessGame {
 		const formData = new FormData();
 		formData.append('file', file, file.name);
 
-		RequestSender.sendFormData('KnightsTale/api/game/load', 'POST', () => {
-			this.chessBoardBuilder.showChessBoard();
+		RequestSender.sendFormData('KnightsTale/api/game/load', 'POST', (knightsTaleDto: KnightsTaleDto) => {
+			this.chessBoardBuilder.loadState(knightsTaleDto);
 		}, formData);
 	}
 
