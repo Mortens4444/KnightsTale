@@ -19,13 +19,20 @@
     <div id="app" class="menu">
         <button data-bind="click: newGame">New Game</button>
 
+        <input id="fileLoader" type="file" data-bind="event:{ change: loadGame }" accept=".cgs" />
         <label for="fileLoader">Load Game</label>
-        <input id="fileLoader" type="file" style="display: none" data-bind="event:{ change: loadGame }" />
 
         <button data-bind="click: saveGame">Save Game</button>
 
         <button data-bind="click: switchSide">Switch Side</button>
         <button type="submit" data-bind="click: () => { location.href='swagger'; }">Swagger</button>
+
+        <label> Black player</label>
+        <select data-bind="options: playerTypes, value: blackPlayerType"></select>
+
+        <label> White player</label>
+        <select data-bind="options: playerTypes, value: whitePlayerType"></select>
+
     </div>
 
 </body>

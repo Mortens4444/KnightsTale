@@ -34,9 +34,17 @@ export class ChessGame {
 		}, formData);
 	}
 
-
 	public saveGame(): void {
-		RequestSender.execute('KnightsTale/api/game/save', 'PUT', (data: string) => { console.log(data); });
+		RequestSender.execute('KnightsTale/api/game/save', 'POST', (base64SaveGame: string) => {
+			const saveGame = Uint8Array.from(atob(base64SaveGame), c => c.charCodeAt(0));
+			const fileLink = document.createElement('a');
+			const blob = new Blob([saveGame], { type: 'application/octet-stream' });
+			const downloadURL = window.URL.createObjectURL(blob);
+			fileLink.href = downloadURL;
+			fileLink.download = 'game.cgs';
+			fileLink.click();
+			URL.revokeObjectURL(fileLink.href);
+		});
 	}
 }
 

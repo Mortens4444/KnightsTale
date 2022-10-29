@@ -98,10 +98,14 @@ public class ChessTable
         }
     }
 
+    public byte[] GetSquareStates()
+    {
+        return Squares.Select(square => (byte)square.State).ToArray();
+    }
+
     public void SaveToFile(string filePath)
     {
-        var fileContent = Squares.Select(square => (byte)square.State).ToArray();
-        File.WriteAllBytes(filePath, fileContent);
+        File.WriteAllBytes(filePath, GetSquareStates());
     }
 
     public void LoadFromFile(string filePath)

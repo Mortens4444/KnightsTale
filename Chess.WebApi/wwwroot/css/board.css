@@ -54,3 +54,7 @@
 body {
 	background-color: darkseagreen
 }
+
+input[type="file"] {
+	display: none;
+}

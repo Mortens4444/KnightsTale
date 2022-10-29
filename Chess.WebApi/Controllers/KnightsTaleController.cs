@@ -1,7 +1,11 @@
+using Chess.Rules.Moves;
 using Chess.Table;
 using Chess.WebApi.Dto;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
+using System.Net.Mime;
+using System.Buffers.Text;
 
 namespace Chess.WebApi.Controllers
 {
@@ -9,13 +13,11 @@ namespace Chess.WebApi.Controllers
     [Route("[controller]")]
     public class KnightsTaleController : ControllerBase
     {
-        private readonly ILogger<KnightsTaleController> logger;
         private readonly ChessGame chessGame;
 
-        public KnightsTaleController(ILogger<KnightsTaleController> logger)
+        public KnightsTaleController(ChessGame chessGame)
         {
-            this.logger = logger;
-            chessGame = new ChessGame();
+            this.chessGame = chessGame;
         }
 
         [HttpGet]
@@ -41,32 +43,27 @@ namespace Chess.WebApi.Controllers
             binaryReader.Read(bytes, 0, bytes.Length);
             chessGame.ChessTable.LoadByteArray(bytes);
 
-            var stringBuilder = new StringBuilder();
-            foreach (var square in chessGame.ChessTable.Squares)
-            {
-                var squareInfo = square.State.GetSquareInfo();
-                stringBuilder.Append(squareInfo.DisplayChar);
-            }
-            var result = new KnightsTaleDto
-            {
-                States = stringBuilder.ToString(),
-                StateValues = bytes
-            };
-            return Ok(result);
+            return Ok(KnightsTaleDto.CreateFromGame(chessGame));
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("api/game/save")]
         public IActionResult SaveGame()
         {
-            return Ok("Save succeeded");
+            var content = chessGame.ChessTable.GetSquareStates();
+            return Ok(Convert.ToBase64String(content));
         }
 
-        [HttpPut]
-        [Route("api/game/move")]
-        public IActionResult Move([FromBody] string move)
+        [HttpPost]
+        [Route("api/game/move/{move}")]
+        public IActionResult Move(string move)
         {
-            return Ok(new KnightsTaleDto());
+            if (chessGame.Execute(new Move(move)))
+            {
+                return Ok(KnightsTaleDto.CreateFromGame(chessGame));
+            }
+
+            return BadRequest();
         }
     }
 }

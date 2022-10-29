@@ -103,12 +103,11 @@ export class ChessBoardBuilder {
 			this.moveFrom.classList.remove(selected);
 			const toSquare: Square = this.getSquare(<HTMLElement>event.srcElement);
 			const fromSquare: Square = this.getSquare(this.moveFrom);
+			const move = this.getMove(fromSquare, toSquare);
 
-			RequestSender.execute('KnightsTale/api/game/move', 'PUT', () => {
-				this.setState(toSquare.rankIndex, toSquare.columnIndex, this.getState(fromSquare.rankIndex, fromSquare.columnIndex));
-				this.setState(fromSquare.rankIndex, fromSquare.columnIndex, ' ');
-				this.showChessBoard();
-			}, JSON.stringify(this.getMove(fromSquare, toSquare)), 'application/json');
+			RequestSender.execute(`KnightsTale/api/game/move/${move}`, 'POST', (knightsTaleDto: KnightsTaleDto) => {
+				this.loadState(knightsTaleDto);
+			});
 
 			this.moveFrom = null;
 		}
