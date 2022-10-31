@@ -25,14 +25,16 @@
         <button data-bind="click: saveGame">Save Game</button>
 
         <button data-bind="click: switchSide">Switch Side</button>
-        <button type="submit" data-bind="click: () => { location.href='swagger'; }">Swagger</button>
-
-        <label> Black player</label>
-        <select data-bind="options: playerTypes, value: blackPlayerType"></select>
 
         <label> White player</label>
-        <select data-bind="options: playerTypes, value: whitePlayerType"></select>
+        <select data-bind="options: playerTypes, value: selectedWhitePlayerType, event:{ change: whiteAIChanged }"></select>
+        <select data-bind="options: figureValueCalculationModes, value: selectedWhiteFigureValueCalculationMode, event:{ change: whiteAIChanged }"></select>
 
+        <label> Black player</label>
+        <select data-bind="options: playerTypes, value: selectedBlackPlayerType, event:{ change: blackAIChanged }"></select>
+        <select data-bind="options: figureValueCalculationModes, value: selectedBlackFigureValueCalculationMode, event:{ change: blackAIChanged }"></select>
+
+        <button style="float: right;" type="submit" data-bind="click: () => { location.href='swagger'; }">Swagger</button>
     </div>
 
 </body>

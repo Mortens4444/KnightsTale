@@ -1,3 +1,5 @@
+using Chess.AI;
+using Chess.FigureValues;
 using Chess.Rules.Moves;
 using Chess.Table;
 using Chess.WebApi.Dto;
@@ -26,6 +28,20 @@ namespace Chess.WebApi.Controllers
         {
             chessGame.NewGame();
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("api/game/playertypes")]
+        public IActionResult GetPlayerTypes()
+        {
+            return Ok(Enum.GetValues<Level>().Cast<Level>().ToDictionary(value => (int)value, value => value.ToString()));
+        }
+
+        [HttpGet]
+        [Route("api/game/figurevaluecalculationmodes")]
+        public IActionResult GetFigureValueCalculationModes()
+        {
+            return Ok(Enum.GetValues<FigureValueCalculationMode>().Cast<FigureValueCalculationMode>().ToDictionary(value => (int)value, value => value.ToString()));
         }
 
         [HttpPost]
@@ -58,12 +74,28 @@ namespace Chess.WebApi.Controllers
         [Route("api/game/move/{move}")]
         public IActionResult Move(string move)
         {
-            if (chessGame.Execute(new Move(move)))
+            try
             {
-                return Ok(KnightsTaleDto.CreateFromGame(chessGame));
-            }
+                if (chessGame.Execute(new Move(move)))
+                {
+                    return Ok(KnightsTaleDto.CreateFromGame(chessGame));
+                }
 
-            return BadRequest();
+                return BadRequest($"Move ({move}) is not valid.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("api/game/ai/getmove")]
+        public IActionResult GetMoveFromAI([FromQuery] int level, [FromQuery] int figureValueCalculationMode)
+        {
+            var ai = AIBuilder.GetAI((Level)level, (FigureValueCalculationMode)figureValueCalculationMode);
+            var move = ai.GetMove(chessGame.ChessTable);
+            return Ok(move.ToString());
         }
     }
 }

@@ -1,5 +1,6 @@
 import { DomManipulator } from './DomManipulator.js';
 import type { KnightsTaleDto } from './Dtos/KnightsTaleDto.js';
+import { RequestCallbacksDto } from './Dtos/RequestCallbacksDto.js';
 import { RequestSender } from './RequestSender.js';
 import { Square } from './Square.js';
 
@@ -103,15 +104,17 @@ export class ChessBoardBuilder {
 			this.moveFrom.classList.remove(selected);
 			const toSquare: Square = this.getSquare(<HTMLElement>event.srcElement);
 			const fromSquare: Square = this.getSquare(this.moveFrom);
-			const move = this.getMove(fromSquare, toSquare);
-
-			RequestSender.execute(`KnightsTale/api/game/move/${move}`, 'POST', (knightsTaleDto: KnightsTaleDto) => {
-				this.loadState(knightsTaleDto);
-			});
-
+			this.move(this.getMove(fromSquare, toSquare));
 			this.moveFrom = null;
 		}
 	}
+
+	public move(move: string): void {
+		RequestSender.execute(`KnightsTale/api/game/move/${move}`, 'POST',
+			new RequestCallbacksDto((knightsTaleDto: KnightsTaleDto) => {
+				this.loadState(knightsTaleDto);
+			}, (request: JQuery.jqXHR<object>) => { RequestSender.showError(request); }), `${move} executed.`);
+    }
 
 	private getMove(fromSquare: Square, toSquare: Square): string {
 		return fromSquare.toString(this.whiteOnTopWhenShow) + toSquare.toString(this.whiteOnTopWhenShow);

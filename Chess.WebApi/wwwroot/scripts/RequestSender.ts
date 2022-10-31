@@ -1,4 +1,6 @@
 ﻿import * as toast from '../lib/@brenoroosevelt/toast/lib/esm/toast.js';
+import type { KnightsTaleDto } from './Dtos/KnightsTaleDto.js';
+import type { RequestCallbacksDto } from './Dtos/RequestCallbacksDto.js';
 
 export class RequestSender {
     public columnIndex: number;
@@ -9,51 +11,40 @@ export class RequestSender {
         this.rankIndex = rankIndex;
     }
 
-	public static execute(url: string, method: string, processDataFunction: (responseData: any) => void, requestData: any = undefined, contentType: string | undefined = undefined): void {
+	public static execute(url: string, method: string,
+		requestCallbacksDto: RequestCallbacksDto,
+		successMessage = '',
+		requestData: object | undefined = undefined,
+		contentType: string | undefined = undefined): void {
 		$.ajax({
 			url: url,
 			type: method,
 			data: requestData,
 			processData: false,
-			contentType: contentType,
-			success: (data: any, text: JQuery.Ajax.SuccessTextStatus) => {
-				this.processSuccessResult(data, text, processDataFunction);
+			contentType: contentType || false,
+			success: (data: KnightsTaleDto | string, text: JQuery.Ajax.SuccessTextStatus) => {
+				this.processSuccessResult(successMessage, data, text, requestCallbacksDto.processDataCallback);
 			},
-			error: (request: JQuery.jqXHR<any>, status: JQuery.Ajax.ErrorTextStatus, error: string) => {
-				this.showError(request, status, error);
+			error: (request: JQuery.jqXHR<object>) => {
+				requestCallbacksDto.errorHandlerCallback(request);
 			}
 		});
 	}
 
-	public static sendFormData(url: string, method: string, processDataFunction: (responseData: any) => void, requestData: any = undefined): void {
-		$.ajax({
-			url: url,
-			type: method,
-			data: requestData,
-			processData: false,
-			contentType: false,
-			success: (data: any, text: JQuery.Ajax.SuccessTextStatus) => {
-				this.processSuccessResult(data, text, processDataFunction);
-			},
-			error: (request: JQuery.jqXHR<any>, status: JQuery.Ajax.ErrorTextStatus, error: string) => {
-				this.showError(request, status, error);
-			}
-		});
+	public static showError(request: JQuery.jqXHR<object>): void {
+		const errorMessager = request.responseText;
+		console.error(errorMessager);
+		toast.error(errorMessager);
 	}
 
-	private static processSuccessResult(data: any, text: JQuery.Ajax.SuccessTextStatus, processDataFunction: (responseData: any) => void): void {
+	private static processSuccessResult(successMessage: string, data: KnightsTaleDto | string, text: JQuery.Ajax.SuccessTextStatus, processDataCallback: (responseData: KnightsTaleDto | string) => void): void {
 		if (text != 'success') {
 			console.log(data);
 		}
 
-		toast.success('Operation succeeded');
-		processDataFunction(data);
-	}
-
-	private static showError(request: JQuery.jqXHR<any>, status: JQuery.Ajax.ErrorTextStatus, error: string): void {
-		const errorMessager = 'Unable to execute request: ' + status;
-		console.error(errorMessager);
-		console.error(request + ' ' + error);
-		toast.error(errorMessager);
+		if (successMessage) {
+			toast.success(successMessage);
+        }
+		processDataCallback(data);
 	}
 }
