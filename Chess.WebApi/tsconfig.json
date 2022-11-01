@@ -19,7 +19,7 @@
     "importsNotUsedAsValues": "error",
     "inlineSourceMap": true,
     "inlineSources": true,
-    "module": "es6",
+    "module": "EsNext",
     "moduleResolution": "node",
     "moduleSuffixes": [ "" ],
     "newLine": "crlf",

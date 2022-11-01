@@ -5,6 +5,7 @@ using Chess.Table;
 using Chess.Table.TableSquare;
 using Chess.Utilities;
 using Chess.WinForms.Extensions;
+using System.CodeDom.Compiler;
 
 namespace Chess.WinForms;
 
@@ -15,6 +16,7 @@ public partial class MainForm : Form
     private Square? fromSquare = null;
     private IArtificalIntelligence? whiteArtificalIntelligence = null;
     private IArtificalIntelligence? blackArtificalIntelligence = null;
+    private ChessTable chessTableToShow = new();
 
     public MainForm()
     {
@@ -28,7 +30,7 @@ public partial class MainForm : Form
 
     private void PBoard_Paint(object sender, PaintEventArgs e)
     {
-        boardPainter.ShowChessBoard(e, chessGame.ChessTable, fromSquare);
+        boardPainter.ShowChessBoard(e, chessTableToShow, fromSquare);
     }
 
     private void TsmiNewGame_Click(object sender, EventArgs e)
@@ -52,7 +54,7 @@ public partial class MainForm : Form
     {
         if (saveFileDialog.ShowDialog() == DialogResult.OK)
         {
-            chessGame.ChessTable.SaveToFile(saveFileDialog.FileName);
+            chessTableToShow.SaveToFile(saveFileDialog.FileName);
             pBoard.Invalidate();
         }
     }
@@ -118,7 +120,8 @@ public partial class MainForm : Form
             BackColor = lvMoves.Items.Count % 2 == 0 ? Color.LightBlue : lvMoves.BackColor
         };
         item.SubItems.Add(move.ToString());
-        lvMoves.Items.Add(item);
+        chessTableToShow.CopyStates(chessGame.ChessTable);
+        this.Invoke(() => { lvMoves.Items.Add(item); });
     }
 
     private Square GetSquare(MouseEventArgs e)
@@ -152,7 +155,10 @@ public partial class MainForm : Form
 
     private void TurnControl_TurnChanged(object? sender, TurnControlEventArgs e)
     {
-        GetNextMove();
+        Task.Factory.StartNew(() =>
+        {
+            GetNextMove();
+        });
     }
 
     private void GetNextMove()

@@ -23,7 +23,14 @@ export class RequestSender {
 			processData: false,
 			contentType: contentType || false,
 			success: (data: KnightsTaleDto | string, text: JQuery.Ajax.SuccessTextStatus) => {
-				this.processSuccessResult(successMessage, data, text, requestCallbacksDto.processDataCallback);
+				if (text != 'success' && console) {
+					console.log(data);
+				}
+
+				if (successMessage) {
+					toast.success(successMessage);
+				}
+				requestCallbacksDto.processDataCallback(data);
 			},
 			error: (request: JQuery.jqXHR<object>) => {
 				requestCallbacksDto.errorHandlerCallback(request);
@@ -33,18 +40,9 @@ export class RequestSender {
 
 	public static showError(request: JQuery.jqXHR<object>): void {
 		const errorMessager = request.responseText;
-		console.error(errorMessager);
-		toast.error(errorMessager);
-	}
-
-	private static processSuccessResult(successMessage: string, data: KnightsTaleDto | string, text: JQuery.Ajax.SuccessTextStatus, processDataCallback: (responseData: KnightsTaleDto | string) => void): void {
-		if (text != 'success') {
-			console.log(data);
-		}
-
-		if (successMessage) {
-			toast.success(successMessage);
+		if (console) {
+			console.error(errorMessager);
         }
-		processDataCallback(data);
+		toast.error(errorMessager);
 	}
 }

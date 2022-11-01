@@ -24,6 +24,9 @@ save
 ## Chess.Test
 Tests for the game.
 
+## Chess.WebApi
+Web API and client to use the Chess library.
+
 ## Chess.WinForms
 Graphical interface to play the chess game created with Windows.Forms framework.
 

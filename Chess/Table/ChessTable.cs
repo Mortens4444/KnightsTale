@@ -24,7 +24,7 @@ public class ChessTable
 
     public TurnControl TurnControl { get; private set; }
 
-    public DebugMode DebugMode { get; set; } = DebugMode.Debug;
+    public DebugMode DebugMode { get; set; } = DebugMode.None;
 
     public Action<string> DebugWriter { get; set; }
 
@@ -96,6 +96,11 @@ public class ChessTable
                 Squares.Add(new Square(column, rank));
             }
         }
+    }
+
+    public void CopyStates(ChessTable chessTable)
+    {
+        LoadByteArray(chessTable.GetSquareStates());
     }
 
     public byte[] GetSquareStates()

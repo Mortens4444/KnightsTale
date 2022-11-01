@@ -1,3 +1,5 @@
+- Create and fix test for ChessTableState - Fix Exception.cgs
+- Add TimeSpan values for moves, and show them on WinForms application
 - Set AI and get response
 - Fix switch side
 - Move.Promotion should not be automatic
