@@ -84,11 +84,11 @@ namespace Chess.Rules.Turns
 
             if (kingSquareNewTurn.State.HasWhiteFigure())
             {
-                chessTable.DebugWriter("White turn.");
+                chessTable.DebugWriter($"White turn. - {kingSquareNewTurn}");
             }
             if (kingSquareNewTurn.State.HasBlackFigure())
             {
-                chessTable.DebugWriter("Black turn.");
+                chessTable.DebugWriter($"Black turn. - {kingSquareNewTurn}");
             }
         }
 

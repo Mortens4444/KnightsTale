@@ -80,40 +80,50 @@ public abstract class FigureMoveProvider
         foreach (var move in allMoves)
         {
             lastMove?.Rollback(chessTable);
-            lastMove = move;
-            move.Execute(chessTable);
+            lastMove = null;
 
-            chessTable.DebugWriter($"Testing move: {move}...");
-
-            if (kingMoves)
-            {
-                kingSquare = chessTable.Squares[move.To];
-            }
-
-            if (chessTable.IsInCheck(kingSquare) || OppositionTester.IsOpposition(kingSquare, foeKingSquare, move))
+            if (move.MoveType == MoveType.Castle && chessTable.IsInCheck(kingSquare))
             {
                 invalidMoves.Add(move);
-
                 chessTable.DebugWriter("Invalid.");
             }
             else
             {
-                if (setCheckProperties && chessTable.IsInCheck(foeKingSquare))
+                lastMove = move;
+                move.Execute(chessTable);
+
+                chessTable.DebugWriter($"Testing move: {move}...");
+
+                if (kingMoves)
                 {
-                    if (chessTable.HasValidMove(foeKingSquare.State))
-                    {
-                        move.IsEnemyInCheck = true;
-                        chessTable.DebugWriter($"Check for {foeKingSquare} when {chessTable.Squares[move.To].State} moves {move}.");
-                    }
-                    else
-                    {
-                        move.IsEnemyInCheckMate = true;
-                        chessTable.DebugWriter($"Checkmate for {foeKingSquare} when {chessTable.Squares[move.To].State} moves {move}.");
-                    }
+                    kingSquare = chessTable.Squares[move.To];
                 }
 
-                chessTable.DebugWriter("Valid.");
+                if (chessTable.IsInCheck(kingSquare) || OppositionTester.IsOpposition(kingSquare, foeKingSquare, move))
+                {
+                    invalidMoves.Add(move);
+                    chessTable.DebugWriter("Invalid.");
+                }
+                else
+                {
+                    if (setCheckProperties && chessTable.IsInCheck(foeKingSquare))
+                    {
+                        if (chessTable.HasValidMove(foeKingSquare.State))
+                        {
+                            move.IsEnemyInCheck = true;
+                            chessTable.DebugWriter($"Check for {foeKingSquare} when {chessTable.Squares[move.To].State} moves {move}.");
+                        }
+                        else
+                        {
+                            move.IsEnemyInCheckMate = true;
+                            chessTable.DebugWriter($"Checkmate for {foeKingSquare} when {chessTable.Squares[move.To].State} moves {move}.");
+                        }
+                    }
+
+                    chessTable.DebugWriter("Valid.");
+                }
             }
+
         }
         lastMove?.Rollback(chessTable);
         RestoreEnPassantEmptySquare(chessTable, enPassantSquare);

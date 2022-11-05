@@ -17,54 +17,55 @@ public class KingMoveProvider : FigureMoveProvider
         Column column = from.Column - 1;
         Rank rank;
 
+        var kingSquare = chessTable.Squares[from];
         if (column >= Column.A)
         {
-            AddValidMove(chessTable.Squares[from], chessTable.Squares[column, from.Rank], result);
+            AddValidMove(kingSquare, chessTable.Squares[column, from.Rank], result);
 
             rank = from.Rank - 1;
             if (rank >= Rank._1)
             {
-                AddValidMove(chessTable.Squares[from], chessTable.Squares[column, rank], result);
+                AddValidMove(kingSquare, chessTable.Squares[column, rank], result);
             }
         }
 
         rank = from.Rank - 1;
         if (rank >= Rank._1)
         {
-            AddValidMove(chessTable.Squares[from], chessTable.Squares[from.Column, rank], result);
+            AddValidMove(kingSquare, chessTable.Squares[from.Column, rank], result);
 
             column = from.Column + 1;
             if (column <= Column.H)
             {
-                AddValidMove(chessTable.Squares[from], chessTable.Squares[column, rank], result);
+                AddValidMove(kingSquare, chessTable.Squares[column, rank], result);
             }
         }
 
         column = from.Column + 1;
         if (column <= Column.H)
         {
-            AddValidMove(chessTable.Squares[from], chessTable.Squares[column, from.Rank], result);
+            AddValidMove(kingSquare, chessTable.Squares[column, from.Rank], result);
 
             rank = from.Rank + 1;
             if (rank <= Rank._8)
             {
-                AddValidMove(chessTable.Squares[from], chessTable.Squares[column, rank], result);
+                AddValidMove(kingSquare, chessTable.Squares[column, rank], result);
             }
         }
 
         rank = from.Rank + 1;
         if (rank <= Rank._8)
         {
-            AddValidMove(chessTable.Squares[from], chessTable.Squares[from.Column, rank], result);
+            AddValidMove(kingSquare, chessTable.Squares[from.Column, rank], result);
 
             column = from.Column - 1;
             if (column >= Column.A)
             {
-                AddValidMove(chessTable.Squares[from], chessTable.Squares[column, rank], result);
+                AddValidMove(kingSquare, chessTable.Squares[column, rank], result);
             }
         }
 
-        if (chessTable.Squares[from].State.CanCastle())
+        if (kingSquare.State.CanCastle())
         {
             var kingDestination = chessTable.Squares[from.Column - 2, from.Rank];
             if (kingDestination.State.IsEmpty() &&
@@ -72,7 +73,7 @@ public class KingMoveProvider : FigureMoveProvider
                 chessTable.Squares[Column.B, from.Rank].State.IsEmpty() &&
                 chessTable.Squares[Column.A, from.Rank].State.CanCastle())
             {
-                result.Add(new Move(chessTable.Squares[from], kingDestination, MoveType.Castle));
+                result.Add(new Move(kingSquare, kingDestination, MoveType.Castle));
             }
 
             kingDestination = chessTable.Squares[from.Column + 2, from.Rank];
@@ -80,7 +81,7 @@ public class KingMoveProvider : FigureMoveProvider
                 chessTable.Squares[Column.F, from.Rank].State.IsEmpty() &&
                 chessTable.Squares[Column.H, from.Rank].State.CanCastle())
             {
-                result.Add(new Move(chessTable.Squares[from], kingDestination, MoveType.Castle));
+                result.Add(new Move(kingSquare, kingDestination, MoveType.Castle));
             }
         }
 

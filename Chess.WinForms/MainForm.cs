@@ -46,6 +46,7 @@ public partial class MainForm : Form
         if (openFileDialog.ShowDialog() == DialogResult.OK)
         {
             chessGame.ChessTable.LoadFromFile(openFileDialog.FileName);
+            chessTableToShow.CopyStates(chessGame.ChessTable);
             pBoard.Invalidate();
         }
     }
