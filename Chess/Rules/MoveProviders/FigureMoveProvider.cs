@@ -15,7 +15,7 @@ public abstract class FigureMoveProvider
     public IList<Move> GetValidMoves(ChessTable chessTable, Square from, bool setCheckProperties)
     {
         var result = GetAllMoves(chessTable, from);
-        RemoveInvalidkMoves(chessTable, from, result, setCheckProperties);
+        RemoveInvalidMoves(chessTable, from, result, setCheckProperties);
         return result;
     }
 
@@ -40,7 +40,7 @@ public abstract class FigureMoveProvider
         result.Add(new Move(from, to, moveType));
     }
 
-    public static void RemoveInvalidkMoves(ChessTable chessTable, Square from, IList<Move> allMoves, bool setCheckProperties)
+    public static void RemoveInvalidMoves(ChessTable chessTable, Square from, IList<Move> allMoves, bool setCheckProperties)
     {
         Contract.Requires(chessTable != null && from != null && allMoves != null);
 

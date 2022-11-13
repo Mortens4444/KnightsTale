@@ -6,6 +6,6 @@
 - 50 moves -> tie (The 50-move draw rule, which today states that a draw can be claimed if no capture is made and no pawn is moved for 50 consecutive moves), 2 king +[knight | bishop] -> tie
 - CLSCompliant(false) -> CLSCompliant(true) + eliminate warnings
 - Fix tests -> Lvl5 AI
-- WPF UI - Fix drawing chessboard
-- UWP UI?
-- Two king with one bishop or king => Tie
+- WPF UI - New game, Load, Save, Move, Set AI, Show move history
+- UWP UI - Show chessboard, New game, Load, Save, Move, Set AI, Show move history
+- Two king with one bishop/knight => Tie
