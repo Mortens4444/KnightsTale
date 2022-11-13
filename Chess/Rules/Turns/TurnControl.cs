@@ -1,4 +1,5 @@
-﻿using Chess.Table;
+﻿using Chess.Rules.Moves;
+using Chess.Table;
 using Chess.Table.TableSquare;
 using System;
 using System.Diagnostics.Contracts;
@@ -57,7 +58,7 @@ namespace Chess.Rules.Turns
             }
         }
 
-        public void ChangeTurn(bool sendEvent)
+        public void ChangeTurn(Move lastMove, bool sendTurnChangedEvent)
         {
             white = !white;
             var whiteKingSquare = chessTable.Squares.GetWhiteKingSquare();
@@ -71,9 +72,9 @@ namespace Chess.Rules.Turns
                 ChangeTurn(whiteKingSquare, blackKingSquare);
             }
 
-            if (sendEvent)
+            if (sendTurnChangedEvent)
             {
-                OnChangeTurn(white);
+                OnChangeTurn(lastMove, white);
             }
         }
 
@@ -84,17 +85,17 @@ namespace Chess.Rules.Turns
 
             if (kingSquareNewTurn.State.HasWhiteFigure())
             {
-                chessTable.DebugWriter($"White turn. - {kingSquareNewTurn}");
+                chessTable.DebugWriter($"White turn {kingSquareNewTurn.Column}{RankHelper.ToString(kingSquareNewTurn.Rank)}.");
             }
             if (kingSquareNewTurn.State.HasBlackFigure())
             {
-                chessTable.DebugWriter($"Black turn. - {kingSquareNewTurn}");
+                chessTable.DebugWriter($"Black turn {kingSquareNewTurn.Column}{RankHelper.ToString(kingSquareNewTurn.Rank)}.");
             }
         }
 
-        protected virtual void OnChangeTurn(bool isWhiteTurn)
+        protected virtual void OnChangeTurn(Move lastMove, bool isWhiteTurn)
         {
-            TurnChanged?.Invoke(this, new TurnControlEventArgs(isWhiteTurn));
+            TurnChanged?.Invoke(this, new TurnControlEventArgs(lastMove, isWhiteTurn));
         }
     }
 }

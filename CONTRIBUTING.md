@@ -1,11 +1,11 @@
-- Create and fix test for ChessTableState - Fix Exception.cgs
-- Add TimeSpan values for moves, and show them on WinForms application
-- Set AI and get response
-- Fix switch side
+- Create and fix test for ChessTableState - Fix Exception.cgs (Lvl4 AI has a problem, not rolling back a move?)
+- Set AI and get response in Chess.WebApi
+- Fix switch side in Chess.WebApi
 - Move.Promotion should not be automatic
 - Bad moves (NoMoreCastle, Let enemy to hit my figure, tie)
 - 50 moves -> tie (The 50-move draw rule, which today states that a draw can be claimed if no capture is made and no pawn is moved for 50 consecutive moves), 2 king +[knight | bishop] -> tie
 - CLSCompliant(false) -> CLSCompliant(true) + eliminate warnings
 - Fix tests -> Lvl5 AI
-- WPF UI
+- WPF UI - Fix drawing chessboard
 - UWP UI?
+- Two king with one bishop or king => Tie

@@ -8,7 +8,7 @@ namespace Chess.Rules.MoveProviders;
 
 public class BishopMoveProvider : FigureMoveProvider
 {
-    public override IList<Move> GetAllMoves(ChessTable chessTable, SquareBase from)
+    public override IList<Move> GetAllMoves(ChessTable chessTable, Square from)
     {
         Contract.Requires(chessTable != null && from != null);
         
@@ -25,7 +25,7 @@ public class BishopMoveProvider : FigureMoveProvider
             if (rank >= Rank._1 && column >= Column.A)
             {
                 destination = chessTable.Squares[column, rank];
-                AddValidMove(chessTable.Squares[from], destination, result);
+                AddValidMove(from, destination, result);
                 modifier++;
             }
             else
@@ -42,7 +42,7 @@ public class BishopMoveProvider : FigureMoveProvider
             if (rank <= Rank._8 && column <= Column.H)
             {
                 destination = chessTable.Squares[column, rank];
-                AddValidMove(chessTable.Squares[from], destination, result);
+                AddValidMove(from, destination, result);
                 modifier++;
             }
             else
@@ -59,7 +59,7 @@ public class BishopMoveProvider : FigureMoveProvider
             if (column >= Column.A && rank <= Rank._8)
             {
                 destination = chessTable.Squares[column, rank];
-                AddValidMove(chessTable.Squares[from], destination, result);
+                AddValidMove(from, destination, result);
                 modifier++;
             }
             else
@@ -76,7 +76,7 @@ public class BishopMoveProvider : FigureMoveProvider
             if (column <= Column.H && rank >= Rank._1)
             {
                 destination = chessTable.Squares[column, rank];
-                AddValidMove(chessTable.Squares[from], destination, result);
+                AddValidMove(from, destination, result);
                 modifier++;
             }
             else

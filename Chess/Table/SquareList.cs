@@ -22,7 +22,7 @@ public class SquareList : List<Square>
         }
     }
 
-    public Square this[SquareBase squareBase]
+    public Square this[Square squareBase]
     {
         get
         {

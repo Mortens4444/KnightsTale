@@ -8,7 +8,7 @@ namespace Chess.Rules.MoveProviders;
 
 public class RookMoveProvider : FigureMoveProvider
 {
-    public override IList<Move> GetAllMoves(ChessTable chessTable, SquareBase from)
+    public override IList<Move> GetAllMoves(ChessTable chessTable, Square from)
     {
         Contract.Requires(chessTable != null && from != null);
 
@@ -23,7 +23,7 @@ public class RookMoveProvider : FigureMoveProvider
             if (rank >= Rank._1)
             {
                 destination = chessTable.Squares[from.Column, rank];
-                AddValidMove(chessTable.Squares[from], destination, result);
+                AddValidMove(from, destination, result);
                 modifier++;
             }
             else
@@ -39,7 +39,7 @@ public class RookMoveProvider : FigureMoveProvider
             if (rank <= Rank._8)
             {
                 destination = chessTable.Squares[from.Column, rank];
-                AddValidMove(chessTable.Squares[from], destination, result);
+                AddValidMove(from, destination, result);
                 modifier++;
             }
             else
@@ -56,7 +56,7 @@ public class RookMoveProvider : FigureMoveProvider
             if (column >= Column.A)
             {
                 destination = chessTable.Squares[column, from.Rank];
-                AddValidMove(chessTable.Squares[from], destination, result);
+                AddValidMove(from, destination, result);
                 modifier++;
             }
             else
@@ -72,7 +72,7 @@ public class RookMoveProvider : FigureMoveProvider
             if (column <= Column.H)
             {
                 destination = chessTable.Squares[column, from.Rank];
-                AddValidMove(chessTable.Squares[from], destination, result);
+                AddValidMove(from, destination, result);
                 modifier++;
             }
             else

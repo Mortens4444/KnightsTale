@@ -84,7 +84,7 @@ public static class SquareStateExtensions
         return squareState.HasFlag((SquareState)0x40);
     }
 
-    public static SquareState NoCastle(this SquareState squareState)
+    public static SquareState ClearCastlingFlag(this SquareState squareState)
     {
         return squareState & ~(SquareState)0x40;
     }
@@ -101,7 +101,7 @@ public static class SquareStateExtensions
 
     public static bool HasKing(this SquareState squareState)
     {
-        return (squareState & SquareState.WhiteKing) == SquareState.WhiteKing;
+        return squareState.HasFlag((SquareState)0x10);
     }
 
     public static SquareInfoAttribute GetSquareInfo(this SquareState squareState)
@@ -115,16 +115,13 @@ public static class SquareStateExtensions
     public static string ToString(this SquareState squareState, SquareInfoMode squareInfoMode)
     {
         var squareInfo = squareState.GetSquareInfo();
-        switch (squareInfoMode)
+        return squareInfoMode switch
         {
-            case SquareInfoMode.Display:
-                return squareInfo.DisplayChar.ToString();
-            case SquareInfoMode.Notation:
-                return squareInfo.NotationChar.ToString();
-            case SquareInfoMode.Store:
-                return squareInfo.StoreChar.ToString();
-            default:
-                return squareState.ToString();
+            SquareInfoMode.Display => squareInfo.DisplayChar.ToString(),
+            SquareInfoMode.Notation => squareInfo.NotationChar.ToString(),
+            SquareInfoMode.Store => squareInfo.StoreChar.ToString(),
+            _ => squareState.ToString(),
         };
+        ;
     }
 }

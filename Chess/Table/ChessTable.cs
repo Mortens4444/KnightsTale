@@ -24,13 +24,21 @@ public class ChessTable
 
     public TurnControl TurnControl { get; private set; }
 
-    public DebugMode DebugMode { get; set; } = DebugMode.None;
+    public DebugMode DebugMode { get; set; } = DebugMode.Debug;
 
     public Action<string> DebugWriter { get; set; }
 
-    public string DebuggerDisplay { get { return ToString(SquareInfoMode.Display, true); } }
+    public Stopwatch StopwatchWhite = new();
 
-    private readonly ValidMoveProvider validMoveProvider = new ValidMoveProvider();
+    public Stopwatch StopwatchBlack = new();
+
+    public List<MoveWithTime> PreviousMoves = new();
+
+    public MoveWithTime LastMove => PreviousMoves.Any() ? PreviousMoves[PreviousMoves.Count - 1] : null;
+
+    public string DebuggerDisplay { get { return ToString(SquareInfoMode.Notation, true); } }
+
+    private readonly ValidMoveProvider validMoveProvider = new();
 
     public ChessTable()
     {
@@ -39,6 +47,7 @@ public class ChessTable
         ranks.Sort(new ReverseRankSorter());
         Ranks = ranks;
         TurnControl = new TurnControl(this);
+        TurnControl.TurnChanged += TurnControl_TurnChanged;
         SetupTable();
 
         DebugWriter = (string message) =>
@@ -84,6 +93,7 @@ public class ChessTable
         Squares[Column.H, Rank._8].State = SquareState.BlackRookCanCastle;
 
         TurnControl.Reset();
+        StopwatchWhite.Start();
     }
 
     private void InitializeSquares()
@@ -223,16 +233,19 @@ public class ChessTable
     {
         Contract.Requires(figures != null);
 
+        DebugWriter(DebuggerDisplay);
         var result = new List<Move>();
         foreach (var figure in figures)
         {
             result.AddRange(validMoveProvider.GetValidMoves(this, figure, true));
         }
 
+        DebugWriter($"Valid moves: {String.Join(", ", result.Select(move => ChessTable.GetMoveDetails(move)))}");
+
         return result;
     }
 
-    public bool IsEnemyInCheck(SquareBase square)
+    public bool IsEnemyInCheck(Square square)
     {
         var kingSquare = Squares[square].State.HasWhiteFigure() ?
             Squares.GetBlackKingSquare() :
@@ -243,5 +256,27 @@ public class ChessTable
     public bool IsInCheck(Square kingSquare)
     {
         return kingSquare.IsInCheck(this);
+    }
+
+    public static string GetMoveDetails(Move move)
+    {
+        return $"{move.MoveType} - {move.From} -> {move.To}";
+    }
+
+    private void TurnControl_TurnChanged(object sender, TurnControlEventArgs e)
+    {
+        if (e.IsWhiteTurn)
+        {
+            StopwatchBlack.Stop();
+            StopwatchWhite.Start();
+            PreviousMoves.Add(new MoveWithTime(e.LastMove, StopwatchBlack.Elapsed));
+            
+        }
+        else
+        {
+            StopwatchWhite.Stop();
+            StopwatchBlack.Start();
+            PreviousMoves.Add(new MoveWithTime(e.LastMove, StopwatchWhite.Elapsed));
+        }
     }
 }

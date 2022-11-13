@@ -7,9 +7,9 @@ namespace Chess.Rules.Moves;
 
 public class Move : IEquatable<Move>
 {
-    public SquareBase From { get; private set; }
+    public Square From { get; private set; }
 
-    public SquareBase To { get; private set; }
+    public Square To { get; private set; }
 
     public SquareState CapturedFigure { get; private set; }
 
@@ -21,7 +21,7 @@ public class Move : IEquatable<Move>
 
     public MoveType MoveType { get; private set; }
 
-    public Move(string move)
+    public Move(string move, ChessTable chessTable)
     {
         if (move == null)
         {
@@ -32,12 +32,12 @@ public class Move : IEquatable<Move>
             throw new ArgumentException("Move length should be 4 characters", nameof(move));
         }
 
-        From = move.Substring(0, 2);
-        To = move.Substring(2, 2);
+        From = chessTable.Squares[move.Substring(0, 2)];
+        To = chessTable.Squares[move.Substring(2, 2)];
         MoveType = MoveType.Unknown;
     }
 
-    public Move(SquareBase from, SquareBase to, MoveType moveType = MoveType.Unknown)
+    public Move(Square from, Square to, MoveType moveType = MoveType.Unknown)
     {
         From = from;
         To = to;
@@ -69,39 +69,32 @@ public class Move : IEquatable<Move>
         return (byte)From.Column;
     }
 
-    public static implicit operator Move(string value)
+    public static Move FromString(string value, ChessTable chessTable)
     {
-        return FromString(value);
+        return new Move(value, chessTable);
     }
 
-    public static Move FromString(string value)
-    {
-        return new Move(value);
-    }
-
-    public void Execute(ChessTable chessTable)
+    public void Execute(ChessTable chessTable, bool changeTurn, bool sendTurnChangedEvent)
     {
         Contract.Requires(chessTable != null);
 
-        var fromSquare = chessTable.Squares[From];
-
-        if (fromSquare.State.CanCastle())
+        if (From.State.CanCastle())
         {
-            fromSquare.State = fromSquare.State.NoCastle();
+            From.State = From.State.ClearCastlingFlag();
             NoMoreCastle = true;
         }
-        if (MoveType == MoveType.Hit || IsEnemyInCheck || IsEnemyInCheckMate)
+        if (MoveType == MoveType.Hit || MoveType == MoveType.CheckMate || IsEnemyInCheck || IsEnemyInCheckMate)
         {
-            Hit(chessTable);
+            Hit();
         }
-        chessTable.Squares[To].State = fromSquare.State;
-        fromSquare.State = SquareState.Empty;
+        To.State = From.State;
+        From.State = SquareState.Empty;
 
         chessTable.ClearEnPassantSquare();
         switch (MoveType)
         {
             case MoveType.Unknown:
-                Rollback(chessTable);
+                Rollback(chessTable, changeTurn, sendTurnChangedEvent);
                 throw new InvalidOperationException("You should use verified moves on the board. Use one of the FigureMoveProviders.");
             case MoveType.Relocation:
                 SetEnPassantSquare(chessTable);
@@ -113,19 +106,23 @@ public class Move : IEquatable<Move>
                 Castle(chessTable);
                 break;
             case MoveType.Promotion:
-                Promotion(chessTable);
+                Promotion();
                 break;
             case MoveType.Hit:
+            case MoveType.CheckMate:
                 break;
             default:
                 throw new NotImplementedException();
         }
+        if (changeTurn)
+        {
+            chessTable.TurnControl.ChangeTurn(this, sendTurnChangedEvent);
+        }
     }
 
-    private void Promotion(ChessTable chessTable)
+    private void Promotion()
     {
-        chessTable.Squares[To].State = To.Rank == Rank._8 ?
-            SquareState.WhiteQueen : SquareState.BlackQueen;
+        To.State = To.Rank == Rank._8 ? SquareState.WhiteQueen : SquareState.BlackQueen;
     }
 
     private void EnPassant(ChessTable chessTable)
@@ -171,15 +168,15 @@ public class Move : IEquatable<Move>
         }
     }
 
-    private void Hit(ChessTable chessTable)
+    private void Hit()
     {
-        CapturedFigure = chessTable.Squares[To].State;
+        CapturedFigure = To.State;
     }
 
     private void SetEnPassantSquare(ChessTable chessTable)
     {
         var movedRanks = To.Rank - From.Rank;
-        if (chessTable.Squares[To].State.HasPawn() && Math.Abs(movedRanks) == 2)
+        if (To.State.HasPawn() && Math.Abs(movedRanks) == 2)
         {
             chessTable.Squares[From.Column, From.Rank + movedRanks / 2].State = SquareState.EnPassantEmpty;
         }
@@ -188,13 +185,13 @@ public class Move : IEquatable<Move>
     private void ClearEnPassantSquare(ChessTable chessTable)
     {
         var movedRanks = To.Rank - From.Rank;
-        if (chessTable.Squares[From].State.HasPawn() && Math.Abs(movedRanks) == 2)
+        if (From.State.HasPawn() && Math.Abs(movedRanks) == 2)
         {
             chessTable.Squares[From.Column, From.Rank + movedRanks / 2].State = SquareState.Empty;
         }
     }
 
-    public void Rollback(ChessTable chessTable)
+    public void Rollback(ChessTable chessTable, bool changeTurn, bool sendTurnChangedEvent)
     {
         Contract.Requires(chessTable != null);
 
@@ -225,12 +222,17 @@ public class Move : IEquatable<Move>
                     SquareState.WhitePawn : SquareState.BlackPawn;
                 break;
             case MoveType.Hit:
+            case MoveType.CheckMate:
                 toSquare.State = CapturedFigure;
                 break;
             case MoveType.Unknown:
                 break;
             default:
                 throw new NotImplementedException();
+        }
+        if (changeTurn)
+        {
+            chessTable.TurnControl.ChangeTurn(this, sendTurnChangedEvent);
         }
     }
 

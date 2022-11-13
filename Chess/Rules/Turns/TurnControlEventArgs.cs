@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chess.Rules.Moves;
+using System;
 
 namespace Chess.Rules.Turns
 {
@@ -6,8 +7,11 @@ namespace Chess.Rules.Turns
     {
         public bool IsWhiteTurn { get; set; }
 
-        public TurnControlEventArgs(bool isWhiteTurn)
+        public Move LastMove { get; set; }
+
+        public TurnControlEventArgs(Move lastMove, bool isWhiteTurn)
         {
+            LastMove = lastMove;
             IsWhiteTurn = isWhiteTurn;
         }
     }

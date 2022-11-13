@@ -28,17 +28,26 @@ public class ChessGame
         ChessTable = new ChessTable();
     }
 
+    public bool Execute(string move)
+    {
+        return Execute(new Move(move, ChessTable));
+    }
+
     public bool Execute(Move move)
     {
         var validMove = GetValidMove(move);
         if (validMove != null)
         {
-            validMove.Execute(ChessTable);
+            validMove.Execute(ChessTable, true, true);
             logger?.Write(validMove);
-            ChessTable.TurnControl.ChangeTurn(true);
             return true;
         }
         return false;
+    }
+
+    public Move GetValidMove(string actualMove)
+    {
+        return GetValidMove(new Move(actualMove, ChessTable));
     }
 
     public Move GetValidMove(Move actualMove)
@@ -47,7 +56,7 @@ public class ChessGame
         {
             return null;
         }
-        ChessTable.TurnControl.ValidateMoveTurn(ChessTable.Squares[actualMove.From]);
+        ChessTable.TurnControl.ValidateMoveTurn(actualMove.From);
         var validMoves = ChessTable.GetValidMoves();
         return validMoves.FirstOrDefault(move => move.Equals(actualMove));
     }

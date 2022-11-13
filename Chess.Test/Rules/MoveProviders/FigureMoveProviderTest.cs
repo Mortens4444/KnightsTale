@@ -12,8 +12,8 @@ public abstract class FigureMoveProviderTest
     public void GetAllMoves(string chessTableResourceName, string from, params string[] allMoveDestinations)
     {
         var chessTable = ResourceLoader.GetChessTable(chessTableResourceName);
-        var allMoves = FigureMoveProvider.GetAllMoves(chessTable, from);
-        var expected = allMoveDestinations.Select(validMoveDestination => new Move(from, validMoveDestination));
+        var allMoves = FigureMoveProvider.GetAllMoves(chessTable, chessTable.Squares[from!]);
+        var expected = allMoveDestinations.Select(validMoveDestination => new Move(chessTable.Squares[from!], chessTable.Squares[validMoveDestination!]));
         CollectionAssert.AreEquivalent(expected, allMoves);
         Assert.Pass();
     }
@@ -21,8 +21,8 @@ public abstract class FigureMoveProviderTest
     public void GetValidMoves(string chessTableResourceName, string from, params string[] validMoveDestinations)
     {
         var chessTable = ResourceLoader.GetChessTable(chessTableResourceName);
-        var validMoves = FigureMoveProvider.GetValidMoves(chessTable, from, true);
-        var expected = validMoveDestinations.Select(validMoveDestination => new Move(from, validMoveDestination));
+        var validMoves = FigureMoveProvider.GetValidMoves(chessTable, chessTable.Squares[from], true);
+        var expected = validMoveDestinations.Select(validMoveDestination => new Move(chessTable.Squares[from], chessTable.Squares[validMoveDestination]));
         CollectionAssert.AreEquivalent(expected, validMoves);
         Assert.Pass();
     }

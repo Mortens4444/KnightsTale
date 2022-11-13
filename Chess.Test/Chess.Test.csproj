@@ -12,6 +12,7 @@
     <None Remove="Resources\ChessTableState - BestMoveForBlack 2.cgs" />
     <None Remove="Resources\ChessTableState - BestMoveForBlack.cgs" />
     <None Remove="Resources\ChessTableState - Check.cgs" />
+    <None Remove="Resources\ChessTableState - Checkmate.cgs" />
     <None Remove="Resources\ChessTableState - EnPassant.cgs" />
     <None Remove="Resources\ChessTableState - Fix Exception.cgs" />
     <None Remove="Resources\ChessTableState - Kamikaze 2.cgs" />
@@ -34,6 +35,7 @@
     <EmbeddedResource Include="Resources\ChessTableState - Check.cgs" />
     <EmbeddedResource Include="Resources\ChessTableState - BestMoveForBlack.cgs" />
     <EmbeddedResource Include="Resources\ChessTableState - Fix Exception.cgs" />
+    <EmbeddedResource Include="Resources\ChessTableState - Checkmate.cgs" />
     <EmbeddedResource Include="Resources\ChessTableState - Reveal Check.cgs" />
     <EmbeddedResource Include="Resources\ChessTableState - Kamikaze 2.cgs" />
     <EmbeddedResource Include="Resources\ChessTableState - Kamikaze.cgs" />

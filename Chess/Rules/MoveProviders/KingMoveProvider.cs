@@ -8,7 +8,7 @@ namespace Chess.Rules.MoveProviders;
 
 public class KingMoveProvider : FigureMoveProvider
 {
-    public override IList<Move> GetAllMoves(ChessTable chessTable, SquareBase from)
+    public override IList<Move> GetAllMoves(ChessTable chessTable, Square from)
     {
         Contract.Requires(chessTable != null && from != null);
 
@@ -17,7 +17,7 @@ public class KingMoveProvider : FigureMoveProvider
         Column column = from.Column - 1;
         Rank rank;
 
-        var kingSquare = chessTable.Squares[from];
+        var kingSquare = from;
         if (column >= Column.A)
         {
             AddValidMove(kingSquare, chessTable.Squares[column, from.Rank], result);

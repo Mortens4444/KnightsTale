@@ -7,6 +7,7 @@ namespace Chess.Test.AI;
 
 public class ArtificalIntelligenceMovesTest
 {
+    [TestCase("Chess.Test.Resources.ChessTableState - Checkmate.cgs", typeof(Lvl4_NoMoreMoronMoves), "C3 - B2")]
     [TestCase("Chess.Test.Resources.ChessTableState - Kamikaze.cgs", typeof(Lvl1_KamikazeMoves), "E4 - D5")]
     [TestCase("Chess.Test.Resources.ChessTableState - Kamikaze 2.cgs", typeof(Lvl1_KamikazeMoves), "C5 - D5")]
     [TestCase("Chess.Test.Resources.ChessTableState - Kamikaze 2.cgs", typeof(Lvl2_CarefulKamikazeMoves), "E4 - D5")]
@@ -20,18 +21,18 @@ public class ArtificalIntelligenceMovesTest
     {
         var chessTable = ResourceLoader.GetChessTable(chessTableResourceName);
         var artificalIntelligence = Activator.CreateInstance(artificalIntelligenceType, FigureValueCalculationMode.General) as IArtificalIntelligence;
-        var move = artificalIntelligence?.GetMove(chessTable);
+        var move = artificalIntelligence!.GetMove(chessTable);
 
         if (expectedChoosenMoves.Length == 1)
         {
-            Assert.AreEqual(expectedChoosenMoves[0], move?.ToString());
+            Assert.AreEqual(expectedChoosenMoves[0], move!.ToString());
         }
         else
         {
-            Assert.Contains(move.ToString(), expectedChoosenMoves);
+            Assert.Contains(move!.ToString(), expectedChoosenMoves);
         }
 
-        move.Execute(chessTable);
+        move.Execute(chessTable, false, false);
         Assert.IsFalse(chessTable.IsInCheck(chessTable.Squares.GetWhiteKingSquare()));
     }
 }

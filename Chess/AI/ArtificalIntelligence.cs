@@ -35,7 +35,7 @@ public static class ArtificalIntelligence
         var whiteFiguresValue = chessTable.Squares.GetWhiteFiguresValue(figureValueCalculator.FigureValueCalculationMode);
         var blackFiguresValue = chessTable.Squares.GetBlackFiguresValue(figureValueCalculator.FigureValueCalculationMode);
         
-        var diff = chessTable.Squares[myMove.ValidMove.To].State.HasWhiteFigure() ?
+        var diff = myMove.ValidMove.To.State.HasWhiteFigure() ?
             whiteFiguresValue - blackFiguresValue :
             blackFiguresValue - whiteFiguresValue;
         if (diff < 0)
@@ -56,7 +56,7 @@ public static class ArtificalIntelligence
             gain += 10;
         }
 
-        var enemyGain = figureValueCalculator.GetValue(chessTable.Squares[enemyMove.To].State) ?? 0;
+        var enemyGain = figureValueCalculator.GetValue(enemyMove.To.State) ?? 0;
         var myGain = gain - enemyGain;
         if (myGain >= 0)
         {
@@ -85,13 +85,12 @@ public static class ArtificalIntelligence
         Contract.Requires(chessTable != null && enemyMoveProvider != null);
 
         IEnumerable<MoveWithDestinationSquareInfo> moves = movesToConsider
-            .Select(validMove => new MoveWithDestinationSquareInfo { ValidMove = validMove, To = chessTable.Squares[validMove.To] });
+            .Select(validMove => new MoveWithDestinationSquareInfo { ValidMove = validMove, To = validMove.To });
 
         var goodMovesWithGainInfo = new List<MoveWithGainInfo>();
         foreach (var move in moves)
         { 
-            move.ValidMove.Execute(chessTable);
-            chessTable.TurnControl.ChangeTurn(false);
+            move.ValidMove.Execute(chessTable, true, false);            
 
             var enemyMove = enemyMoveProvider(chessTable);
             if (enemyMove == null)
@@ -109,8 +108,7 @@ public static class ArtificalIntelligence
                 AddGoodMove(chessTable, figureValueCalculator, goodMovesWithGainInfo, move, enemyMove);
             }
 
-            move.ValidMove.Rollback(chessTable);
-            chessTable.TurnControl.ChangeTurn(false);
+            move.ValidMove.Rollback(chessTable, true, false);
         }
 
         return goodMovesWithGainInfo;

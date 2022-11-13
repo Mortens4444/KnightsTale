@@ -8,16 +8,15 @@ namespace Chess.Rules.MoveProviders;
 
 public class PawnMoveProvider : FigureMoveProvider
 {
-    public override IList<Move> GetAllMoves(ChessTable chessTable, SquareBase from)
+    public override IList<Move> GetAllMoves(ChessTable chessTable, Square from)
     {
         Contract.Requires(chessTable != null && from != null);
 
         var result = new List<Move>();
         Square to;
 
-        var fromSquare = chessTable.Squares[from.Name];
-        if (fromSquare.State == SquareState.WhitePawn ||
-            fromSquare.State == SquareState.WhitePawnCanHitWithEnPassant)
+        if (from.State == SquareState.WhitePawn ||
+            from.State == SquareState.WhitePawnCanHitWithEnPassant)
         {
             if (from.Rank != Rank._8)
             {
@@ -55,8 +54,8 @@ public class PawnMoveProvider : FigureMoveProvider
                 }
             }
         }
-        else if (fromSquare.State == SquareState.BlackPawn ||
-            fromSquare.State == SquareState.BlackPawnCanHitWithEnPassant)
+        else if (from.State == SquareState.BlackPawn ||
+            from.State == SquareState.BlackPawnCanHitWithEnPassant)
         {
             if (from.Rank != Rank._1)
             {
@@ -100,7 +99,7 @@ public class PawnMoveProvider : FigureMoveProvider
         return result;
     }
 
-    private static void AddEnPassantMove(ChessTable chessTable, SquareBase from, List<Move> result, Rank fromRank, Rank toRank, int columnDelta)
+    private static void AddEnPassantMove(ChessTable chessTable, Square from, List<Move> result, Rank fromRank, Rank toRank, int columnDelta)
     {
         var enPassantSquare = chessTable.Squares[from.Column + columnDelta, toRank];
         if (from.Rank == fromRank && enPassantSquare.State == SquareState.EnPassantEmpty)
@@ -109,7 +108,7 @@ public class PawnMoveProvider : FigureMoveProvider
         }
     }
 
-    private static void AddInitialMove(ChessTable chessTable, SquareBase from, List<Move> result, Rank fromRank, Rank toRank)
+    private static void AddInitialMove(ChessTable chessTable, Square from, List<Move> result, Rank fromRank, Rank toRank)
     {
         var to = chessTable.Squares[from.Column, toRank];
         if (from.Rank == fromRank && !to.State.HasFigure())

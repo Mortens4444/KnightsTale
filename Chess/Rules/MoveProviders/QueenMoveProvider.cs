@@ -10,7 +10,7 @@ public class QueenMoveProvider : FigureMoveProvider
     private readonly BishopMoveProvider bishopMoveProvider = new();
     private readonly RookMoveProvider rookMoveProvider = new();
 
-    public override IList<Move> GetAllMoves(ChessTable chessTable, SquareBase from)
+    public override IList<Move> GetAllMoves(ChessTable chessTable, Square from)
     {
         var result = new List<Move>();
         var result1 = bishopMoveProvider.GetAllMoves(chessTable, from);

@@ -2,7 +2,6 @@
 using Chess.Table;
 using Chess.Table.TableSquare;
 using Chess.Utilities;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
@@ -11,14 +10,12 @@ namespace Chess.Rules.MoveProviders;
 
 public abstract class FigureMoveProvider
 {
-    private static uint removeCheckMovesHitCount = 0;
+    public abstract IList<Move> GetAllMoves(ChessTable chessTable, Square from);
 
-    public abstract IList<Move> GetAllMoves(ChessTable chessTable, SquareBase from);
-
-    public IList<Move> GetValidMoves(ChessTable chessTable, SquareBase from, bool setCheckProperties)
+    public IList<Move> GetValidMoves(ChessTable chessTable, Square from, bool setCheckProperties)
     {
         var result = GetAllMoves(chessTable, from);
-        RemoveCheckMoves(chessTable, from, result, setCheckProperties);
+        RemoveInvalidkMoves(chessTable, from, result, setCheckProperties);
         return result;
     }
 
@@ -36,14 +33,14 @@ public abstract class FigureMoveProvider
         }
     }
 
-    protected static void AddHitMove(SquareBase from, Square to, IList<Move> result)
+    protected static void AddHitMove(Square from, Square to, IList<Move> result)
     {
         Contract.Requires(from != null && to != null && result != null);
         var moveType = to.GetMoveType();
         result.Add(new Move(from, to, moveType));
     }
 
-    public static void RemoveCheckMoves(ChessTable chessTable, SquareBase from, IList<Move> allMoves, bool setCheckProperties)
+    public static void RemoveInvalidkMoves(ChessTable chessTable, Square from, IList<Move> allMoves, bool setCheckProperties)
     {
         Contract.Requires(chessTable != null && from != null && allMoves != null);
 
@@ -52,9 +49,7 @@ public abstract class FigureMoveProvider
             return;
         }
 
-        chessTable.DebugWriter($"RemoveCheckMoves hit count: {++removeCheckMovesHitCount}");
-
-        var white = chessTable.Squares[from].State.HasWhiteFigure();
+        var white = from.State.HasWhiteFigure();
         var enPassantSquare = chessTable.Squares.GetEnPassantEmptySquare();
 
         Square kingSquare;
@@ -75,70 +70,62 @@ public abstract class FigureMoveProvider
         var movingFigure = allMoves[0].From;
         Move lastMove = null;
 
-        chessTable.DebugWriter($"{movingFigure} has {allMoves.Count} moves:{Environment.NewLine}{chessTable.DebuggerDisplay}{Environment.NewLine}{String.Join(", ", allMoves)}");
-
         foreach (var move in allMoves)
         {
-            lastMove?.Rollback(chessTable);
+            lastMove?.Rollback(chessTable, false, false);
             lastMove = null;
 
             if (move.MoveType == MoveType.Castle && chessTable.IsInCheck(kingSquare))
             {
                 invalidMoves.Add(move);
-                chessTable.DebugWriter("Invalid.");
             }
             else
             {
                 lastMove = move;
-                move.Execute(chessTable);
-
-                chessTable.DebugWriter($"Testing move: {move}...");
+                move.Execute(chessTable, false, false);
 
                 if (kingMoves)
                 {
-                    kingSquare = chessTable.Squares[move.To];
+                    kingSquare = move.To;
                 }
 
                 if (chessTable.IsInCheck(kingSquare) || OppositionTester.IsOpposition(kingSquare, foeKingSquare, move))
                 {
                     invalidMoves.Add(move);
-                    chessTable.DebugWriter("Invalid.");
                 }
                 else
                 {
-                    if (setCheckProperties && chessTable.IsInCheck(foeKingSquare))
+                    if (move.MoveType == MoveType.CheckMate)
                     {
-                        if (chessTable.HasValidMove(foeKingSquare.State))
+                        move.IsEnemyInCheckMate = true;
+                    }
+                    else
+                    {
+                        if (setCheckProperties && chessTable.IsInCheck(foeKingSquare))
                         {
-                            move.IsEnemyInCheck = true;
-                            chessTable.DebugWriter($"Check for {foeKingSquare} when {chessTable.Squares[move.To].State} moves {move}.");
-                        }
-                        else
-                        {
-                            move.IsEnemyInCheckMate = true;
-                            chessTable.DebugWriter($"Checkmate for {foeKingSquare} when {chessTable.Squares[move.To].State} moves {move}.");
+                            if (chessTable.HasValidMove(foeKingSquare.State))
+                            {
+                                move.IsEnemyInCheck = true;
+                            }
+                            else
+                            {
+                                move.IsEnemyInCheckMate = true;
+                            }
                         }
                     }
-
-                    chessTable.DebugWriter("Valid.");
                 }
             }
-
         }
-        lastMove?.Rollback(chessTable);
+        lastMove?.Rollback(chessTable, false, false);
         RestoreEnPassantEmptySquare(chessTable, enPassantSquare);
         allMoves.RemoveAll(move => invalidMoves.Contains(move));
-
-        chessTable.DebugWriter(allMoves.Any() ?
-            $"The valid moves are:{Environment.NewLine}{String.Join(", ", allMoves)}{Environment.NewLine}--------------------------------------------" :
-            $"There are no valid moves for {movingFigure}{Environment.NewLine}--------------------------------------------");
     }
 
     private static void RestoreEnPassantEmptySquare(ChessTable chessTable, Square enPassantSquare)
     {
         if (enPassantSquare != null)
         {
-            chessTable.Squares[enPassantSquare].State = SquareState.EnPassantEmpty;
+            enPassantSquare.State = SquareState.EnPassantEmpty;
         }
     }
 }

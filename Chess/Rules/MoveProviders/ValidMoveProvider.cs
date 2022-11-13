@@ -9,14 +9,14 @@ namespace Chess.Rules.MoveProviders;
 
 public class ValidMoveProvider
 {
-    private static readonly BishopMoveProvider bishopMoveProvider = new BishopMoveProvider();
-    private static readonly KingMoveProvider kingMoveProvider = new KingMoveProvider();
-    private static readonly KnightMoveProvider knightMoveProvider = new KnightMoveProvider();
-    private static readonly PawnMoveProvider pawnMoveProvider = new PawnMoveProvider();
-    private static readonly QueenMoveProvider queenMoveProvider = new QueenMoveProvider();
-    private static readonly RookMoveProvider rookMoveProvider = new RookMoveProvider();
+    private static readonly BishopMoveProvider bishopMoveProvider = new();
+    private static readonly KingMoveProvider kingMoveProvider = new();
+    private static readonly KnightMoveProvider knightMoveProvider = new();
+    private static readonly PawnMoveProvider pawnMoveProvider = new();
+    private static readonly QueenMoveProvider queenMoveProvider = new();
+    private static readonly RookMoveProvider rookMoveProvider = new();
 
-    private readonly Dictionary<SquareState, FigureMoveProvider> validators = new Dictionary<SquareState, FigureMoveProvider>
+    private readonly Dictionary<SquareState, FigureMoveProvider> validators = new()
     {
         { SquareState.BlackPawn, pawnMoveProvider },
         { SquareState.BlackBishop, bishopMoveProvider },

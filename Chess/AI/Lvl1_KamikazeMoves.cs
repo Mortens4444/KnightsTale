@@ -29,7 +29,7 @@ public class Lvl1_KamikazeMoves : IArtificalIntelligence
         }
         var hitMoves = validMoves
             .Where(validMove => validMove.MoveType == MoveType.Hit | validMove.MoveType == MoveType.EnPassant)
-            .Select(validMove => new MoveWithDestinationSquareInfo { ValidMove = validMove, To = chessTable.Squares[validMove.To] });
+            .Select(validMove => new MoveWithDestinationSquareInfo { ValidMove = validMove, To = validMove.To });
         if (hitMoves.Any())
         {
             var bestHit = hitMoves.OrderByDescending(hitMove => figureValueCalculator.GetValue(hitMove.To.State)).First();

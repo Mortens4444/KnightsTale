@@ -76,7 +76,7 @@ namespace Chess.WebApi.Controllers
         {
             try
             {
-                if (chessGame.Execute(new Move(move)))
+                if (chessGame.Execute(new Move(move, chessGame.ChessTable)))
                 {
                     return Ok(KnightsTaleDto.CreateFromGame(chessGame));
                 }

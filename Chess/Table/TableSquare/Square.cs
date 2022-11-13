@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Chess.Table.TableSquare;
 
-public class Square : SquareBase
+public class Square : IEquatable<Square>
 {
     public SquareState State { get; set; }
 
@@ -27,9 +27,10 @@ public class Square : SquareBase
     }
 
     public Square(Column column, Rank rank)
-        : base(column, rank)
     {
         Value = (byte)((byte)column * 10 + (byte)rank);
+        Column = column;
+        Rank = rank;
     }
 
     public string ToUpperString()
@@ -84,7 +85,41 @@ public class Square : SquareBase
     public MoveType GetMoveType()
     {
         return State.IsEmpty() ?
-                   MoveType.Relocation :
-                   MoveType.Hit;
+                    MoveType.Relocation :
+               State.HasKing() ?
+                    MoveType.CheckMate :
+                    MoveType.Hit;
+    }
+
+    public Column Column { get; private set; }
+
+    public Rank Rank { get; private set; }
+
+    public string Name
+    {
+        get
+        {
+            return String.Concat(Column.ToString(), RankHelper.ToString(Rank));
+        }
+    }
+
+    public bool Equals(Square other)
+    {
+        if (other == null)
+        {
+            return false;
+        }
+
+        return Column == other.Column && Rank == other.Rank;
+    }
+
+    public override bool Equals(object obj)
+    {
+        return Equals(obj as Square);
+    }
+
+    public override int GetHashCode()
+    {
+        return (int)Column;
     }
 }

@@ -13,10 +13,10 @@ public partial class MainForm : Form
 {
     private readonly BoardPainter boardPainter = new();
     private readonly ChessGame chessGame = new();
+    private readonly ChessTable chessTableToShow = new();
     private Square? fromSquare = null;
     private IArtificalIntelligence? whiteArtificalIntelligence = null;
     private IArtificalIntelligence? blackArtificalIntelligence = null;
-    private ChessTable chessTableToShow = new();
 
     public MainForm()
     {
@@ -67,12 +67,12 @@ public partial class MainForm : Form
 
     public static Column GetActualColumn(int horizontal_delta, int x)
     {
-        return (x - horizontal_delta) / BoardPainter.SquareWidth + Column.A;
+        return (x - horizontal_delta) / BoardPainter.SquareSize + Column.A;
     }
 
     public static Rank GetActualRank(int vertical_delta, int y)
     {
-        return Rank._8 - (y - vertical_delta) / BoardPainter.SquareHeight;
+        return Rank._8 - (y - vertical_delta) / BoardPainter.SquareSize;
     }
 
     private void PBoard_MouseClick(object sender, MouseEventArgs e)
@@ -120,9 +120,16 @@ public partial class MainForm : Form
         {
             BackColor = lvMoves.Items.Count % 2 == 0 ? Color.LightBlue : lvMoves.BackColor
         };
-        item.SubItems.Add(move.ToString());
+
+        var lastMove = chessGame.ChessTable.LastMove;
+        item.SubItems.Add(lastMove.Move.ToString());
+        item.SubItems.Add(lastMove.Time.ToString());
         chessTableToShow.CopyStates(chessGame.ChessTable);
-        this.Invoke(() => { lvMoves.Items.Add(item); });
+        Invoke(() =>
+        {
+            lvMoves.Items.Add(item);
+            lvMoves.EnsureVisible(lvMoves.Items.Count - 1);
+        });
     }
 
     private Square GetSquare(MouseEventArgs e)
@@ -183,14 +190,16 @@ public partial class MainForm : Form
             if (!chessGame.Execute(move))
             {
                 var kingSquare = kingSquareProvider();
+                string message;
                 if (kingSquare.State.HasWhiteFigure())
                 {
-                    rtbMessage.Text = kingSquare.IsInCheck(chessGame.ChessTable) ? "Black won!" : "It's a draw.";
+                    message = kingSquare.IsInCheck(chessGame.ChessTable) ? "Black won!" : "It's a draw.";
                 }
                 else
                 {
-                    rtbMessage.Text = kingSquare.IsInCheck(chessGame.ChessTable) ? "White won!" : "It's a tie.";
+                    message = kingSquare.IsInCheck(chessGame.ChessTable) ? "White won!" : "It's a tie.";
                 }
+                Invoke(() => { rtbMessage.Text = message; });
             }
             else
             {

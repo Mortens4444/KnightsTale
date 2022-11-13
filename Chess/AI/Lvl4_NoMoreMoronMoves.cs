@@ -47,8 +47,7 @@ public class Lvl4_NoMoreMoronMoves : IArtificalIntelligence, IMoveChooser
             {
                 break;
             }
-            validMove.Execute(chessTable);
-            chessTable.TurnControl.ChangeTurn(false);
+            validMove.Execute(chessTable, true, false);
 
             var enemyMoveDecisionHelper = lvl3_NoMoreMoronMoves.GetMoveDecisionHelper(chessTable);
             var enemyGoodMoves = enemyMoveDecisionHelper.GoodMovesWithGain.Select(enemyGoodMoveWithGain => enemyGoodMoveWithGain.Move);
@@ -58,8 +57,7 @@ public class Lvl4_NoMoreMoronMoves : IArtificalIntelligence, IMoveChooser
                 noMoronMoves.Remove(validMove);
             }
 
-            validMove.Rollback(chessTable);
-            chessTable.TurnControl.ChangeTurn(false);
+            validMove.Rollback(chessTable, true, false);
         }
         
         return ArtificalIntelligence.GetRandomMove(noMoronMoves) ??
