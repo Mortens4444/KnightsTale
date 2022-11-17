@@ -128,7 +128,7 @@ public class ChessTable
         var fileContent = File.ReadAllBytes(filePath);
         LoadByteArray(fileContent);
     }
-    
+
     public void LoadByteArray(byte[] fileContent)
     {
         Contract.Requires(fileContent != null);
@@ -177,7 +177,7 @@ public class ChessTable
                     default:
                         throw new NotImplementedException();
                 }
-                
+
             }
             result.AppendLine(showRanksAndColumns ? RankHelper.ToString(rank) : String.Empty);
         }
@@ -198,11 +198,11 @@ public class ChessTable
         return GetValidMoves(figures);
     }
 
-    public IList<Move> GetAllMoves(IEnumerable<Square> figures)
+    public PossibleMoves GetAllMoves(IEnumerable<Square> figures)
     {
         Contract.Requires(figures != null);
 
-        var result = new List<Move>();
+        var result = new PossibleMoves();
         foreach (var figure in figures)
         {
             result.AddRange(validMoveProvider.GetAllMoves(this, figure));
@@ -229,15 +229,15 @@ public class ChessTable
         return false;
     }
 
-    public IList<Move> GetValidMoves(IEnumerable<Square> figures)
+    public ValidMoves GetValidMoves(IEnumerable<Square> figures)
     {
         Contract.Requires(figures != null);
 
         DebugWriter(DebuggerDisplay);
-        var result = new List<Move>();
+        var result = new ValidMoves();
         foreach (var figure in figures)
         {
-            result.AddRange(validMoveProvider.GetValidMoves(this, figure, true));
+            result.AddRange(validMoveProvider.GetValidMoves(this, figure, true, false));
         }
 
         DebugWriter($"Valid moves: {String.Join(", ", result.Select(move => ChessTable.GetMoveDetails(move)))}");
@@ -270,7 +270,7 @@ public class ChessTable
             StopwatchBlack.Stop();
             StopwatchWhite.Start();
             PreviousMoves.Add(new MoveWithTime(e.LastMove, StopwatchBlack.Elapsed));
-            
+
         }
         else
         {
@@ -278,5 +278,11 @@ public class ChessTable
             StopwatchBlack.Start();
             PreviousMoves.Add(new MoveWithTime(e.LastMove, StopwatchWhite.Elapsed));
         }
+    }
+
+    public void RemoveLast()
+    {
+        LastMove.Move.Rollback(this, true, false);
+        PreviousMoves.Remove(LastMove);
     }
 }

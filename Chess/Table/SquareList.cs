@@ -13,7 +13,7 @@ public class SquareList : List<Square>
     {
         get
         {
-            foreach (var square in this.Where(square => square.Name == squareName))
+            foreach (var square in this.Where(square => square.Name.Equals(squareName, StringComparison.InvariantCultureIgnoreCase)))
             {
                 return square;
             }
@@ -48,6 +48,17 @@ public class SquareList : List<Square>
 
             throw new ArgumentOutOfRangeException($"Square not found with column and rank: {column}, {rank}");
         }
+    }
+
+    public IOrderedEnumerable<Square> GetKingSquares(bool whiteFirst)
+    {
+        var kings = this.Where(square => square.State.HasKing());
+        if (whiteFirst)
+        {
+            return kings.OrderBy(square => (int)square.State);
+        }
+
+        return kings.OrderByDescending(square => (int)square.State);
     }
 
     public Square GetWhiteKingSquare()

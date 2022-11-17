@@ -11,5 +11,6 @@ public enum MoveType
     EnPassant = 0x04,
     Castle = 0x08,
     Promotion = 0x10,
-    CheckMate = 0x20
+    HitWithPromotion = 0x20,
+    CheckMate = 0x40
 }

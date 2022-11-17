@@ -21,7 +21,7 @@ public abstract class FigureMoveProviderTest
     public void GetValidMoves(string chessTableResourceName, string from, params string[] validMoveDestinations)
     {
         var chessTable = ResourceLoader.GetChessTable(chessTableResourceName);
-        var validMoves = FigureMoveProvider.GetValidMoves(chessTable, chessTable.Squares[from], true);
+        var validMoves = FigureMoveProvider.GetValidMoves(chessTable, chessTable.Squares[from], true, false);
         var expected = validMoveDestinations.Select(validMoveDestination => new Move(chessTable.Squares[from], chessTable.Squares[validMoveDestination]));
         CollectionAssert.AreEquivalent(expected, validMoves);
         Assert.Pass();

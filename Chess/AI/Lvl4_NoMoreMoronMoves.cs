@@ -1,9 +1,7 @@
 ﻿using Chess.FigureValues;
 using Chess.Rules.Moves;
 using Chess.Table;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
 
 namespace Chess.AI;
 
@@ -29,38 +27,6 @@ public class Lvl4_NoMoreMoronMoves : IArtificalIntelligence, IMoveChooser
     {
         Contract.Requires(chessTable != null);
         chessTable.DebugWriter($"{GetType().Name} searching for move...");
-
-        var moveDecisionHelper = GetMoveDecisionHelper(chessTable);
-        if (moveDecisionHelper.GoodMovesWithGain.Any())
-        {
-            var bestHit = moveDecisionHelper.GoodMovesWithGain.OrderByDescending(goodMove => figureValueCalculator.GetValue(goodMove.Move.CapturedFigure)).FirstOrDefault();
-            if (bestHit != null)
-            {
-                return bestHit.Move;
-            }
-        }
-
-        var noMoronMoves = new List<Move>(moveDecisionHelper.ValidMoves);
-        foreach (var validMove in moveDecisionHelper.ValidMoves)
-        {
-            if (!noMoronMoves.Any())
-            {
-                break;
-            }
-            validMove.Execute(chessTable, true, false);
-
-            var enemyMoveDecisionHelper = lvl3_NoMoreMoronMoves.GetMoveDecisionHelper(chessTable);
-            var enemyGoodMoves = enemyMoveDecisionHelper.GoodMovesWithGain.Select(enemyGoodMoveWithGain => enemyGoodMoveWithGain.Move);
-
-            if (enemyMoveDecisionHelper.GoodMovesWithGain.Any(enemyGoodMoveWithGain => enemyGoodMoveWithGain.Gain > 0))
-            {
-                noMoronMoves.Remove(validMove);
-            }
-
-            validMove.Rollback(chessTable, true, false);
-        }
-        
-        return ArtificalIntelligence.GetRandomMove(noMoronMoves) ??
-            ArtificalIntelligence.GetRandomMove(moveDecisionHelper.ValidMoves);
+        return ArtificalIntelligence.GetMove(chessTable, lvl3_NoMoreMoronMoves.GetMoveDecisionHelper, figureValueCalculator);
     }
 }

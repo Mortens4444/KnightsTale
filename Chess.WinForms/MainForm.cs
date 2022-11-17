@@ -124,6 +124,7 @@ public partial class MainForm : Form
         var lastMove = chessGame.ChessTable.LastMove;
         item.SubItems.Add(lastMove.Move.ToString());
         item.SubItems.Add(lastMove.Time.ToString());
+        item.Tag = lastMove;
         chessTableToShow.CopyStates(chessGame.ChessTable);
         Invoke(() =>
         {
@@ -205,6 +206,22 @@ public partial class MainForm : Form
             {
                 AddMoveToListView(move);
             }
+        }
+    }
+
+    private void TsmiRollback_Click(object sender, EventArgs e)
+    {
+        if (lvMoves.SelectedItems.Count == 1)
+        {
+            var toIndex = lvMoves.SelectedItems[0].Index;
+            for (int i = lvMoves.Items.Count - 1; i >= toIndex; i--)
+            {
+                lvMoves.Items[i].Remove();
+                chessGame.ChessTable.RemoveLast();
+            }
+            chessTableToShow.CopyStates(chessGame.ChessTable);
+            chessGame.ChessTable.TurnControl.SendTurnNotification();
+            pBoard.Invalidate();
         }
     }
 }

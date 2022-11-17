@@ -1,7 +1,6 @@
 ﻿using Chess.Rules.Moves;
 using Chess.Table;
 using Chess.Table.TableSquare;
-using System.Collections.Generic;
 
 namespace Chess.Rules.MoveProviders;
 
@@ -10,9 +9,9 @@ public class QueenMoveProvider : FigureMoveProvider
     private readonly BishopMoveProvider bishopMoveProvider = new();
     private readonly RookMoveProvider rookMoveProvider = new();
 
-    public override IList<Move> GetAllMoves(ChessTable chessTable, Square from)
+    public override PossibleMoves GetAllMoves(ChessTable chessTable, Square from)
     {
-        var result = new List<Move>();
+        var result = new PossibleMoves();
         var result1 = bishopMoveProvider.GetAllMoves(chessTable, from);
         var result2 = rookMoveProvider.GetAllMoves(chessTable, from);
         result.AddRange(result1);

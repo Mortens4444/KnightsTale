@@ -49,6 +49,12 @@ public static class SquareStateExtensions
             squareState.HasBlackFigure() && destination.State.HasWhiteFigure();
     }
 
+    public static bool CanMoveToSquare(this SquareState squareState, Square destination)
+    {
+        Contract.Requires(destination != null);
+        return destination.State.IsEmpty() || squareState.HasEnemyOnSquare(destination);
+    }
+
     public static bool HasPawn(this SquareState squareState)
     {
         return squareState.HasFlag(SquareState.WhitePawn) && !squareState.HasKing();

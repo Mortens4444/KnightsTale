@@ -1,18 +1,17 @@
 ﻿using Chess.Rules.Moves;
 using Chess.Table;
 using Chess.Table.TableSquare;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
 namespace Chess.Rules.MoveProviders;
 
 public class KingMoveProvider : FigureMoveProvider
 {
-    public override IList<Move> GetAllMoves(ChessTable chessTable, Square from)
+    public override PossibleMoves GetAllMoves(ChessTable chessTable, Square from)
     {
         Contract.Requires(chessTable != null && from != null);
 
-        var result = new List<Move>();
+        var result = new PossibleMoves();
 
         Column column = from.Column - 1;
         Rank rank;
@@ -20,48 +19,48 @@ public class KingMoveProvider : FigureMoveProvider
         var kingSquare = from;
         if (column >= Column.A)
         {
-            AddValidMove(kingSquare, chessTable.Squares[column, from.Rank], result);
+            AddMove(kingSquare, chessTable.Squares[column, from.Rank], result);
 
             rank = from.Rank - 1;
             if (rank >= Rank._1)
             {
-                AddValidMove(kingSquare, chessTable.Squares[column, rank], result);
+                AddMove(kingSquare, chessTable.Squares[column, rank], result);
             }
         }
 
         rank = from.Rank - 1;
         if (rank >= Rank._1)
         {
-            AddValidMove(kingSquare, chessTable.Squares[from.Column, rank], result);
+            AddMove(kingSquare, chessTable.Squares[from.Column, rank], result);
 
             column = from.Column + 1;
             if (column <= Column.H)
             {
-                AddValidMove(kingSquare, chessTable.Squares[column, rank], result);
+                AddMove(kingSquare, chessTable.Squares[column, rank], result);
             }
         }
 
         column = from.Column + 1;
         if (column <= Column.H)
         {
-            AddValidMove(kingSquare, chessTable.Squares[column, from.Rank], result);
+            AddMove(kingSquare, chessTable.Squares[column, from.Rank], result);
 
             rank = from.Rank + 1;
             if (rank <= Rank._8)
             {
-                AddValidMove(kingSquare, chessTable.Squares[column, rank], result);
+                AddMove(kingSquare, chessTable.Squares[column, rank], result);
             }
         }
 
         rank = from.Rank + 1;
         if (rank <= Rank._8)
         {
-            AddValidMove(kingSquare, chessTable.Squares[from.Column, rank], result);
+            AddMove(kingSquare, chessTable.Squares[from.Column, rank], result);
 
             column = from.Column - 1;
             if (column >= Column.A)
             {
-                AddValidMove(kingSquare, chessTable.Squares[column, rank], result);
+                AddMove(kingSquare, chessTable.Squares[column, rank], result);
             }
         }
 

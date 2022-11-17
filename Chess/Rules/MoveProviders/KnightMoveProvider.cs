@@ -1,18 +1,17 @@
 ﻿using Chess.Rules.Moves;
 using Chess.Table;
 using Chess.Table.TableSquare;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
 namespace Chess.Rules.MoveProviders;
 
 public class KnightMoveProvider : FigureMoveProvider
 {
-    public override IList<Move> GetAllMoves(ChessTable chessTable, Square from)
+    public override PossibleMoves GetAllMoves(ChessTable chessTable, Square from)
     {
         Contract.Requires(chessTable != null && from != null);
 
-        var result = new List<Move>();
+        var result = new PossibleMoves();
 
         Square destination;
 
@@ -21,13 +20,13 @@ public class KnightMoveProvider : FigureMoveProvider
             if (from.Rank > Rank._2)
             {
                 destination = chessTable.Squares[from.Column - 1, from.Rank - 2];
-                AddValidMove(from, destination, result);
+                AddMove(from, destination, result);
             }
 
             if (from.Rank < Rank._7)
             {
                 destination = chessTable.Squares[from.Column - 1, from.Rank + 2];
-                AddValidMove(from, destination, result);
+                AddMove(from, destination, result);
             }
         }
 
@@ -36,13 +35,13 @@ public class KnightMoveProvider : FigureMoveProvider
             if (from.Rank > Rank._1)
             {
                 destination = chessTable.Squares[from.Column - 2, from.Rank - 1];
-                AddValidMove(from, destination, result);
+                AddMove(from, destination, result);
             }
 
             if (from.Rank < Rank._8)
             {
                 destination = chessTable.Squares[from.Column - 2, from.Rank + 1];
-                AddValidMove(from, destination, result);
+                AddMove(from, destination, result);
             }
         }
 
@@ -51,13 +50,13 @@ public class KnightMoveProvider : FigureMoveProvider
             if (from.Rank > Rank._1)
             {
                 destination = chessTable.Squares[from.Column + 2, from.Rank - 1];
-                AddValidMove(from, destination, result);
+                AddMove(from, destination, result);
             }
 
             if (from.Rank < Rank._8)
             {
                 destination = chessTable.Squares[from.Column + 2, from.Rank + 1];
-                AddValidMove(from, destination, result);
+                AddMove(from, destination, result);
             }
         }
 
@@ -66,13 +65,13 @@ public class KnightMoveProvider : FigureMoveProvider
             if (from.Rank > Rank._2)
             {
                 destination = chessTable.Squares[from.Column + 1, from.Rank - 2];
-                AddValidMove(from, destination, result);
+                AddMove(from, destination, result);
             }
 
             if (from.Rank < Rank._7)
             {
                 destination = chessTable.Squares[from.Column + 1, from.Rank + 2];
-                AddValidMove(from, destination, result);
+                AddMove(from, destination, result);
             }
         }
 

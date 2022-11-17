@@ -4,6 +4,7 @@ using Chess;
 using Chess.AI;
 using Chess.Console;
 using Chess.FigureValues;
+using Chess.Rules.Moves;
 using Chess.Table;
 using Chess.Table.TableSquare;
 using System.Text;
@@ -190,8 +191,14 @@ do
             }
         }
 
-        GetNextMove(whiteArtificalIntelligence, chessGame.ChessTable.Squares.GetWhiteKingSquare);
-        GetNextMove(blackArtificalIntelligence, chessGame.ChessTable.Squares.GetBlackKingSquare);
+        if (chessGame.ChessTable.TurnControl.IsWhiteTurn())
+        {
+            GetNextMove(whiteArtificalIntelligence, chessGame.ChessTable.Squares.GetWhiteKingSquare);
+        }
+        if (chessGame.ChessTable.TurnControl.IsBlackTurn())
+        {
+            GetNextMove(blackArtificalIntelligence, chessGame.ChessTable.Squares.GetBlackKingSquare);
+        }
     }
 #if !DEBUG
     catch (Exception ex)

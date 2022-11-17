@@ -1,18 +1,17 @@
 ﻿using Chess.Rules.Moves;
 using Chess.Table;
 using Chess.Table.TableSquare;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
 namespace Chess.Rules.MoveProviders;
 
 public class RookMoveProvider : FigureMoveProvider
 {
-    public override IList<Move> GetAllMoves(ChessTable chessTable, Square from)
+    public override PossibleMoves GetAllMoves(ChessTable chessTable, Square from)
     {
         Contract.Requires(chessTable != null && from != null);
 
-        var result = new List<Move>();
+        var result = new PossibleMoves();
 
         Square destination;
         int modifier = 1;
@@ -23,7 +22,7 @@ public class RookMoveProvider : FigureMoveProvider
             if (rank >= Rank._1)
             {
                 destination = chessTable.Squares[from.Column, rank];
-                AddValidMove(from, destination, result);
+                AddMove(from, destination, result);
                 modifier++;
             }
             else
@@ -39,7 +38,7 @@ public class RookMoveProvider : FigureMoveProvider
             if (rank <= Rank._8)
             {
                 destination = chessTable.Squares[from.Column, rank];
-                AddValidMove(from, destination, result);
+                AddMove(from, destination, result);
                 modifier++;
             }
             else
@@ -56,7 +55,7 @@ public class RookMoveProvider : FigureMoveProvider
             if (column >= Column.A)
             {
                 destination = chessTable.Squares[column, from.Rank];
-                AddValidMove(from, destination, result);
+                AddMove(from, destination, result);
                 modifier++;
             }
             else
@@ -72,7 +71,7 @@ public class RookMoveProvider : FigureMoveProvider
             if (column <= Column.H)
             {
                 destination = chessTable.Squares[column, from.Rank];
-                AddValidMove(from, destination, result);
+                AddMove(from, destination, result);
                 modifier++;
             }
             else

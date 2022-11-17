@@ -1,18 +1,17 @@
 ﻿using Chess.Rules.Moves;
 using Chess.Table;
 using Chess.Table.TableSquare;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
 namespace Chess.Rules.MoveProviders;
 
 public class PawnMoveProvider : FigureMoveProvider
 {
-    public override IList<Move> GetAllMoves(ChessTable chessTable, Square from)
+    public override PossibleMoves GetAllMoves(ChessTable chessTable, Square from)
     {
         Contract.Requires(chessTable != null && from != null);
 
-        var result = new List<Move>();
+        var result = new PossibleMoves();
         Square to;
 
         if (from.State == SquareState.WhitePawn ||
@@ -36,7 +35,7 @@ public class PawnMoveProvider : FigureMoveProvider
                     to = chessTable.Squares[from.Column - 1, from.Rank + 1];
                     if (to.State.HasBlackFigure())
                     {
-                        AddHitMove(from, to, result);
+                        AddMove(from, to, result);
                     }
                 }
             }
@@ -49,7 +48,7 @@ public class PawnMoveProvider : FigureMoveProvider
                     to = chessTable.Squares[from.Column + 1, from.Rank + 1];
                     if (to.State.HasBlackFigure())
                     {
-                        AddHitMove(from, to, result);
+                        AddMove(from, to, result);
                     }
                 }
             }
@@ -76,7 +75,7 @@ public class PawnMoveProvider : FigureMoveProvider
                     to = chessTable.Squares[from.Column - 1, from.Rank - 1];
                     if (to.State.HasWhiteFigure())
                     {
-                        AddHitMove(from, to, result);
+                        AddMove(from, to, result);
                     }
                 }
             }
@@ -90,7 +89,7 @@ public class PawnMoveProvider : FigureMoveProvider
                     to = chessTable.Squares[from.Column + 1, from.Rank - 1];
                     if (to.State.HasWhiteFigure())
                     {
-                        AddHitMove(from, to, result);
+                        AddMove(from, to, result);
                     }
                 }
             }
@@ -99,7 +98,7 @@ public class PawnMoveProvider : FigureMoveProvider
         return result;
     }
 
-    private static void AddEnPassantMove(ChessTable chessTable, Square from, List<Move> result, Rank fromRank, Rank toRank, int columnDelta)
+    private static void AddEnPassantMove(ChessTable chessTable, Square from, PossibleMoves result, Rank fromRank, Rank toRank, int columnDelta)
     {
         var enPassantSquare = chessTable.Squares[from.Column + columnDelta, toRank];
         if (from.Rank == fromRank && enPassantSquare.State == SquareState.EnPassantEmpty)
@@ -108,7 +107,7 @@ public class PawnMoveProvider : FigureMoveProvider
         }
     }
 
-    private static void AddInitialMove(ChessTable chessTable, Square from, List<Move> result, Rank fromRank, Rank toRank)
+    private static void AddInitialMove(ChessTable chessTable, Square from, PossibleMoves result, Rank fromRank, Rank toRank)
     {
         var to = chessTable.Squares[from.Column, toRank];
         if (from.Rank == fromRank && !to.State.HasFigure())

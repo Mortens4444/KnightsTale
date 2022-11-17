@@ -1,15 +1,18 @@
-﻿using Chess.Table;
+﻿using Chess.AI;
+using Chess.FigureValues;
+using Chess.Table;
 using Chess.Table.TableSquare;
 using System;
 using System.Diagnostics.Contracts;
+using System.Linq;
 
 namespace Chess.Rules.Moves;
 
 public class Move : IEquatable<Move>
 {
-    public Square From { get; private set; }
+    public Square From { get; }
 
-    public Square To { get; private set; }
+    public Square To { get; }
 
     public SquareState CapturedFigure { get; private set; }
 
@@ -19,7 +22,7 @@ public class Move : IEquatable<Move>
 
     public bool IsEnemyInCheckMate { get; set; }
 
-    public MoveType MoveType { get; private set; }
+    public MoveType MoveType { get; }
 
     public Move(string move, ChessTable chessTable)
     {
@@ -34,14 +37,65 @@ public class Move : IEquatable<Move>
 
         From = chessTable.Squares[move.Substring(0, 2)];
         To = chessTable.Squares[move.Substring(2, 2)];
-        MoveType = MoveType.Unknown;
+
+        MoveType = SetMoveType(GetMoveType());
     }
 
     public Move(Square from, Square to, MoveType moveType = MoveType.Unknown)
     {
         From = from;
         To = to;
-        MoveType = moveType;
+        MoveType = SetMoveType(moveType);
+    }
+
+    private MoveType GetMoveType()
+    {
+        if (From.State.HasPawn())
+        {
+            if (Math.Abs(From.Column - To.Column) == 1 && To.State.IsEmpty())
+            {
+                return MoveType.EnPassant;
+            }
+            if (To.Rank == Rank._1 || To.Rank == Rank._8)
+            {
+                return MoveType.Promotion;
+            }
+        }
+        else if (From.State.HasKing() && Math.Abs(From.Column - To.Column) == 2)
+        {
+            return MoveType.Castle;
+        }
+        return MoveType.Unknown;
+    }
+
+    private MoveType SetMoveType(MoveType moveType)
+    {
+        if (moveType != MoveType.Unknown)
+        {
+            return moveType;
+        }
+
+        if (To.State.IsEmpty())
+        {
+            return MoveType.Relocation;
+        }
+        else
+        {
+            if (To.State.HasKing())
+            {
+                IsEnemyInCheck = true;
+                IsEnemyInCheckMate = true;
+                return MoveType.CheckMate;
+            }
+            else
+            {
+                if (From.State.HasPawn() && (To.Rank == Rank._1 || To.Rank == Rank._8))
+                {
+                    return MoveType.HitWithPromotion;
+                }
+                return MoveType.Hit;
+            }
+        }
     }
 
     public override string ToString()
@@ -83,7 +137,7 @@ public class Move : IEquatable<Move>
             From.State = From.State.ClearCastlingFlag();
             NoMoreCastle = true;
         }
-        if (MoveType == MoveType.Hit || MoveType == MoveType.CheckMate || IsEnemyInCheck || IsEnemyInCheckMate)
+        if (MoveType == MoveType.Hit || MoveType == MoveType.HitWithPromotion || MoveType == MoveType.CheckMate || IsEnemyInCheck || IsEnemyInCheckMate)
         {
             Hit();
         }
@@ -93,9 +147,6 @@ public class Move : IEquatable<Move>
         chessTable.ClearEnPassantSquare();
         switch (MoveType)
         {
-            case MoveType.Unknown:
-                Rollback(chessTable, changeTurn, sendTurnChangedEvent);
-                throw new InvalidOperationException("You should use verified moves on the board. Use one of the FigureMoveProviders.");
             case MoveType.Relocation:
                 SetEnPassantSquare(chessTable);
                 break;
@@ -105,6 +156,7 @@ public class Move : IEquatable<Move>
             case MoveType.Castle:
                 Castle(chessTable);
                 break;
+            case MoveType.HitWithPromotion:
             case MoveType.Promotion:
                 Promotion();
                 break;
@@ -225,7 +277,10 @@ public class Move : IEquatable<Move>
             case MoveType.CheckMate:
                 toSquare.State = CapturedFigure;
                 break;
-            case MoveType.Unknown:
+            case MoveType.HitWithPromotion:
+                fromSquare.State = To.Rank == Rank._8 ?
+                    SquareState.WhitePawn : SquareState.BlackPawn;
+                toSquare.State = CapturedFigure;
                 break;
             default:
                 throw new NotImplementedException();
@@ -270,5 +325,18 @@ public class Move : IEquatable<Move>
                 chessTable.Squares["F8"].State = SquareState.Empty;
             }
         }
+    }
+
+    public bool IsBadMove(ChessTable chessTable, Delegates.MoveDecisionHelperCallback moveDecisionHelperCallback, FigureValueCalculator figureValueCalculator)
+    {
+        Execute(chessTable, true, false);
+        var gain = figureValueCalculator.GetValue(CapturedFigure);
+
+        var enemyMoveDecisionHelper = moveDecisionHelperCallback(chessTable);
+        var result = enemyMoveDecisionHelper.GoodMovesWithGain.Any(enemyGoodMoveWithGain => enemyGoodMoveWithGain.Gain - gain > 0);
+
+        Rollback(chessTable, true, false);
+
+        return result;
     }
 }

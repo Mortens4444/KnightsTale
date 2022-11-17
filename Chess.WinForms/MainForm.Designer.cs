@@ -28,6 +28,7 @@ partial class MainForm
     /// </summary>
     private void InitializeComponent()
     {
+            this.components = new System.ComponentModel.Container();
             this.pMain = new System.Windows.Forms.Panel();
             this.pBoard = new System.Windows.Forms.Panel();
             this.splitter1 = new System.Windows.Forms.Splitter();
@@ -40,6 +41,9 @@ partial class MainForm
             this.lvMoves = new System.Windows.Forms.ListView();
             this.chNumber = new System.Windows.Forms.ColumnHeader();
             this.chMove = new System.Windows.Forms.ColumnHeader();
+            this.chTime = new System.Windows.Forms.ColumnHeader();
+            this.cmsMovesContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsmiRollback = new System.Windows.Forms.ToolStripMenuItem();
             this.msMenu = new System.Windows.Forms.MenuStrip();
             this.gameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiNewGame = new System.Windows.Forms.ToolStripMenuItem();
@@ -50,9 +54,9 @@ partial class MainForm
             this.tsmiExit = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.chTime = new System.Windows.Forms.ColumnHeader();
             this.pMain.SuspendLayout();
             this.pRight.SuspendLayout();
+            this.cmsMovesContextMenu.SuspendLayout();
             this.msMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -157,7 +161,10 @@ partial class MainForm
             this.chNumber,
             this.chMove,
             this.chTime});
+            this.lvMoves.ContextMenuStrip = this.cmsMovesContextMenu;
+            this.lvMoves.FullRowSelect = true;
             this.lvMoves.Location = new System.Drawing.Point(3, 122);
+            this.lvMoves.MultiSelect = false;
             this.lvMoves.Name = "lvMoves";
             this.lvMoves.Size = new System.Drawing.Size(194, 344);
             this.lvMoves.TabIndex = 0;
@@ -173,6 +180,25 @@ partial class MainForm
             // 
             this.chMove.Text = "Move";
             this.chMove.Width = 80;
+            // 
+            // chTime
+            // 
+            this.chTime.Text = "Time";
+            this.chTime.Width = 80;
+            // 
+            // cmsMovesContextMenu
+            // 
+            this.cmsMovesContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmiRollback});
+            this.cmsMovesContextMenu.Name = "cmsMovesContextMenu";
+            this.cmsMovesContextMenu.Size = new System.Drawing.Size(120, 26);
+            // 
+            // tsmiRollback
+            // 
+            this.tsmiRollback.Name = "tsmiRollback";
+            this.tsmiRollback.Size = new System.Drawing.Size(119, 22);
+            this.tsmiRollback.Text = "Rollback";
+            this.tsmiRollback.Click += new System.EventHandler(this.TsmiRollback_Click);
             // 
             // msMenu
             // 
@@ -243,11 +269,6 @@ partial class MainForm
             // 
             this.openFileDialog.Filter = "Chess game save|*.cgs";
             // 
-            // chTime
-            // 
-            this.chTime.Text = "Time";
-            this.chTime.Width = 80;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -261,6 +282,7 @@ partial class MainForm
             this.pMain.PerformLayout();
             this.pRight.ResumeLayout(false);
             this.pRight.PerformLayout();
+            this.cmsMovesContextMenu.ResumeLayout(false);
             this.msMenu.ResumeLayout(false);
             this.msMenu.PerformLayout();
             this.ResumeLayout(false);
@@ -293,4 +315,6 @@ partial class MainForm
     private ComboBox cbWhite;
     private ColumnHeader chNumber;
     private ColumnHeader chTime;
+    private ContextMenuStrip cmsMovesContextMenu;
+    private ToolStripMenuItem tsmiRollback;
 }

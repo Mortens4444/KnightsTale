@@ -41,32 +41,32 @@ public class ValidMoveProvider
         { SquareState.WhiteRookCanCastle, rookMoveProvider }
     };
 
-    public IList<Move> GetAllMoves(ChessTable chessTable, Square figureSquare)
+    public PossibleMoves GetAllMoves(ChessTable chessTable, Square figureSquare)
     {
         Contract.Requires(chessTable != null && figureSquare != null);
 
         if (!validators.ContainsKey(figureSquare.State))
         {
-            return new List<Move>();
+            return new PossibleMoves();
         }
         var validator = validators[figureSquare.State];
         return validator.GetAllMoves(chessTable, figureSquare);
     }
 
-    public IList<Move> GetValidMoves(ChessTable chessTable, Square figureSquare, bool setCheckProperties)
+    public ValidMoves GetValidMoves(ChessTable chessTable, Square figureSquare, bool setCheckProperties, bool stopSearchOnFirstValidMove)
     {
         Contract.Requires(chessTable != null && figureSquare != null);
 
         if (!validators.ContainsKey(figureSquare.State))
         {
-            return new List<Move>();
+            return new ValidMoves();
         }
         var validator = validators[figureSquare.State];
-        return validator.GetValidMoves(chessTable, figureSquare, setCheckProperties);
+        return validator.GetValidMoves(chessTable, figureSquare, setCheckProperties, stopSearchOnFirstValidMove);
     }
 
     public bool HasValidMove(ChessTable chessTable, Square figureSquare)
     {
-        return GetValidMoves(chessTable, figureSquare, false).Any();
+        return GetValidMoves(chessTable, figureSquare, false, true).Any();
     }
 }

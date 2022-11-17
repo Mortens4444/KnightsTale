@@ -82,15 +82,6 @@ public class Square : IEquatable<Square>
         return enemyMoves.Any(enemyMove => enemyMove.To == this);
     }
 
-    public MoveType GetMoveType()
-    {
-        return State.IsEmpty() ?
-                    MoveType.Relocation :
-               State.HasKing() ?
-                    MoveType.CheckMate :
-                    MoveType.Hit;
-    }
-
     public Column Column { get; private set; }
 
     public Rank Rank { get; private set; }

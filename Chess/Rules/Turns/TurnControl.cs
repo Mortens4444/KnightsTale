@@ -3,6 +3,7 @@ using Chess.Table;
 using Chess.Table.TableSquare;
 using System;
 using System.Diagnostics.Contracts;
+using System.Linq;
 
 namespace Chess.Rules.Turns
 {
@@ -58,28 +59,32 @@ namespace Chess.Rules.Turns
             }
         }
 
+        public void SendTurnNotification()
+        {
+            SetTurn(chessTable.LastMove.Move, true, white);
+        }
+
         public void ChangeTurn(Move lastMove, bool sendTurnChangedEvent)
         {
             white = !white;
-            var whiteKingSquare = chessTable.Squares.GetWhiteKingSquare();
-            var blackKingSquare = chessTable.Squares.GetBlackKingSquare();
-            if (white)
-            {
-                ChangeTurn(blackKingSquare, whiteKingSquare);
-            }
-            else
-            {
-                ChangeTurn(whiteKingSquare, blackKingSquare);
-            }
+            SetTurn(lastMove, sendTurnChangedEvent, white);
+        }
 
+        private void SetTurn(Move lastMove, bool sendTurnChangedEvent, bool isWhite)
+        {
+            var kingSquares = chessTable.Squares.GetKingSquares(!isWhite);
+            white = isWhite;
+            ChangeTurn(kingSquares);
             if (sendTurnChangedEvent)
             {
-                OnChangeTurn(lastMove, white);
+                OnChangeTurn(lastMove, isWhite);
             }
         }
 
-        private void ChangeTurn(Square kingSquarePreviousTurn, Square kingSquareNewTurn)
+        private void ChangeTurn(IOrderedEnumerable<Square> kingSquares)
         {
+            var kingSquarePreviousTurn = kingSquares.ElementAt(0);
+            var kingSquareNewTurn = kingSquares.ElementAt(1);
             kingSquarePreviousTurn.State = kingSquarePreviousTurn.State.SetTurn(false);
             kingSquareNewTurn.State = kingSquareNewTurn.State.SetTurn(true);
 

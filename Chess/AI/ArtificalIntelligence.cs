@@ -80,6 +80,25 @@ public static class ArtificalIntelligence
         return new MoveDecisionHelper(validMoves, goodMovesWithGainInfo);
     }
 
+    public static Move GetMove(ChessTable chessTable, Delegates.MoveDecisionHelperCallback moveDecisionHelperCallback, FigureValueCalculator figureValueCalculator)
+    {
+        var validMoves = chessTable.GetValidMoves();
+        var noMoronMoves = new List<Move>(validMoves);
+        foreach (var validMove in validMoves)
+        {
+            if (!noMoronMoves.Any())
+            {
+                break;
+            }
+            if (validMove.IsBadMove(chessTable, moveDecisionHelperCallback, figureValueCalculator))
+            {
+                noMoronMoves.Remove(validMove);
+            }
+        }
+
+        return GetRandomMove(noMoronMoves) ?? GetRandomMove(validMoves);
+    }
+
     private static IList<MoveWithGainInfo> GetGoodMoves(ChessTable chessTable, FigureValueCalculator figureValueCalculator, IEnumerable<Move> movesToConsider, Func<ChessTable, Move> enemyMoveProvider, bool breakOnCheckMate)
     {
         Contract.Requires(chessTable != null && enemyMoveProvider != null);
