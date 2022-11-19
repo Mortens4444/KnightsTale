@@ -39,6 +39,7 @@ public partial class MainForm : Form
         lvMoves.Items.Clear();
         rtbMessage.Text = String.Empty;
         GetNextMove();
+        chessTableToShow.CopyStates(chessGame.ChessTable);
     }
 
     private void TsmiLoadGame_Click(object sender, EventArgs e)
@@ -92,7 +93,7 @@ public partial class MainForm : Form
                     move = new Move(fromSquare, toSquare);
                     if (chessGame.Execute(move))
                     {
-                        AddMoveToListView(move);
+                        AddMoveToListView();
                         rtbMessage.Text = String.Empty;
                     }
                     else
@@ -113,7 +114,7 @@ public partial class MainForm : Form
         }
     }
 
-    private void AddMoveToListView(Move move)
+    private void AddMoveToListView()
     {
         var number = lvMoves.Items.Count + 1;
         var item = new ListViewItem(number.ToString())
@@ -204,7 +205,7 @@ public partial class MainForm : Form
             }
             else
             {
-                AddMoveToListView(move);
+                AddMoveToListView();
             }
         }
     }

@@ -247,14 +247,11 @@ public class Move : IEquatable<Move>
     {
         Contract.Requires(chessTable != null);
 
-        var fromSquare = chessTable.Squares[From];
-        var toSquare = chessTable.Squares[To];
-
-        fromSquare.State = toSquare.State;
-        toSquare.State = SquareState.Empty;
+        From.State = To.State;
+        To.State = SquareState.Empty;
         if (NoMoreCastle)
         {
-            fromSquare.State = fromSquare.State.SetCastle();
+            From.State = From.State.SetCastle();
             NoMoreCastle = false;
         }
 
@@ -270,17 +267,17 @@ public class Move : IEquatable<Move>
                 CastleRollback(chessTable);
                 break;
             case MoveType.Promotion:
-                fromSquare.State = To.Rank == Rank._8 ?
+                From.State = To.Rank == Rank._8 ?
                     SquareState.WhitePawn : SquareState.BlackPawn;
                 break;
             case MoveType.Hit:
             case MoveType.CheckMate:
-                toSquare.State = CapturedFigure;
+                To.State = CapturedFigure;
                 break;
             case MoveType.HitWithPromotion:
-                fromSquare.State = To.Rank == Rank._8 ?
+                From.State = To.Rank == Rank._8 ?
                     SquareState.WhitePawn : SquareState.BlackPawn;
-                toSquare.State = CapturedFigure;
+                To.State = CapturedFigure;
                 break;
             default:
                 throw new NotImplementedException();

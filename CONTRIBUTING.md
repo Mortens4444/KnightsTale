@@ -1,4 +1,3 @@
-- Create and fix test for ChessTableState - Fix Exception.cgs (Lvl4 AI has a problem, not rolling back a move? D5-E4)
 - Set AI and get response in Chess.WebApi
 - Fix switch side in Chess.WebApi
 - Move.Promotion should not be automatic

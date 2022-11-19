@@ -74,6 +74,12 @@ public static class ArtificalIntelligence
             return new MoveDecisionHelper(validMoves, new List<MoveWithGainInfo>());
         }
 
+        var winnerMoves = validMoves.Where(validMove => validMove.IsEnemyInCheckMate);
+        if (winnerMoves.Any())
+        {
+            return new MoveDecisionHelper(validMoves, winnerMoves.Select(winnerMove => new MoveWithGainInfo(winnerMove, Double.MaxValue)).ToList());
+        }
+
         var movesToConsider = movePreFilterPredicate == null ? validMoves : validMoves.Where(movePreFilterPredicate);
 
         var goodMovesWithGainInfo = GetGoodMoves(chessTable, figureValueCalculator, movesToConsider, enemyMoveProvider, breakOnCheckMate);
@@ -118,6 +124,7 @@ public static class ArtificalIntelligence
                 {
                     if (breakOnCheckMate)
                     {
+                        move.ValidMove.Rollback(chessTable, true, false);
                         break;
                     }
                 }
