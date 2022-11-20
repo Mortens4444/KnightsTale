@@ -46,9 +46,9 @@ public static class ArtificalIntelligence
         return false;
     }
 
-    public static void AddGoodMove(ChessTable chessTable, FigureValueCalculator figureValueCalculator, IList<MoveWithGainInfo> goodMoves, MoveWithDestinationSquareInfo goodMove, Move enemyMove)
+    public static double GetMoveGain(ChessTable chessTable, FigureValueCalculator figureValueCalculator, MoveWithDestinationSquareInfo goodMove, Move enemyMove)
     {
-        Contract.Requires(chessTable != null && figureValueCalculator != null && goodMoves != null && goodMove != null && enemyMove != null);
+        Contract.Requires(chessTable != null && figureValueCalculator != null && goodMove != null && enemyMove != null);
 
         var gain = figureValueCalculator.GetValue(goodMove.ValidMove.CapturedFigure) ?? 0;
         if (goodMove.ValidMove.IsEnemyInCheck && goodMove.To != enemyMove.To)
@@ -58,10 +58,7 @@ public static class ArtificalIntelligence
 
         var enemyGain = figureValueCalculator.GetValue(enemyMove.To.State) ?? 0;
         var myGain = gain - enemyGain;
-        if (myGain >= 0)
-        {
-            goodMoves.Add(new MoveWithGainInfo(goodMove.ValidMove, myGain));
-        }
+        return myGain;
     }
 
     public static MoveDecisionHelper GetGoodMoves(ChessTable chessTable, FigureValueCalculator figureValueCalculator, Func<ChessTable, Move> enemyMoveProvider, bool breakOnCheckMate, Func<Move, bool> movePreFilterPredicate = null)
@@ -89,20 +86,43 @@ public static class ArtificalIntelligence
     public static Move GetMove(ChessTable chessTable, Delegates.MoveDecisionHelperCallback moveDecisionHelperCallback, FigureValueCalculator figureValueCalculator)
     {
         var validMoves = chessTable.GetValidMoves();
+        var veryGoodMoves = new List<Move>();
+        var goodMoves = new List<Move>();
         var noMoronMoves = new List<Move>(validMoves);
-        foreach (var validMove in validMoves)
+
+        if (validMoves.Any())
         {
-            if (!noMoronMoves.Any())
+            foreach (var validMove in validMoves)
             {
-                break;
-            }
-            if (validMove.IsBadMove(chessTable, moveDecisionHelperCallback, figureValueCalculator))
-            {
-                noMoronMoves.Remove(validMove);
+                var moveEvaluateResult = validMove.EvaluateMove(chessTable, moveDecisionHelperCallback, figureValueCalculator);
+
+                switch (moveEvaluateResult)
+                {
+                    case MoveEvaluationResult.Bad:
+                        noMoronMoves.Remove(validMove);
+                        break;
+
+                    case MoveEvaluationResult.Good:
+                        goodMoves.Add(validMove);
+                        break;
+
+                    case MoveEvaluationResult.WinInTwoMoves:
+                        veryGoodMoves.Add(validMove);
+                        break;
+
+                    case MoveEvaluationResult.Winner:
+                        return validMove;
+
+                    case MoveEvaluationResult.Unknown:
+                    case MoveEvaluationResult.Questionable:
+                    case MoveEvaluationResult.Neutral:
+                    default:
+                        break;
+                }
             }
         }
 
-        return GetRandomMove(noMoronMoves) ?? GetRandomMove(validMoves);
+        return GetRandomMove(veryGoodMoves) ?? GetRandomMove(goodMoves) ?? GetRandomMove(noMoronMoves) ?? GetRandomMove(validMoves);
     }
 
     private static IList<MoveWithGainInfo> GetGoodMoves(ChessTable chessTable, FigureValueCalculator figureValueCalculator, IEnumerable<Move> movesToConsider, Func<ChessTable, Move> enemyMoveProvider, bool breakOnCheckMate)
@@ -131,7 +151,12 @@ public static class ArtificalIntelligence
             }
             else
             {
-                AddGoodMove(chessTable, figureValueCalculator, goodMovesWithGainInfo, move, enemyMove);
+                var myGain = GetMoveGain(chessTable, figureValueCalculator, move, enemyMove);
+                if (myGain >= 0)
+                {
+                    goodMovesWithGainInfo.Add(new MoveWithGainInfo(move.ValidMove, myGain));
+                }
+
             }
 
             move.ValidMove.Rollback(chessTable, true, false);

@@ -1,5 +1,4 @@
-﻿using Chess.Rules.Moves;
-using System;
+﻿using System;
 using System.Diagnostics.Contracts;
 using System.Linq;
 

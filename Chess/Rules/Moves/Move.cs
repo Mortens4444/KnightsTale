@@ -323,14 +323,67 @@ public class Move : IEquatable<Move>
             }
         }
     }
-
-    public bool IsBadMove(ChessTable chessTable, Delegates.MoveDecisionHelperCallback moveDecisionHelperCallback, FigureValueCalculator figureValueCalculator)
+    
+    public MoveEvaluationResult EvaluateMove(ChessTable chessTable, Delegates.MoveDecisionHelperCallback moveDecisionHelperCallback, FigureValueCalculator figureValueCalculator)
     {
+        var result = MoveEvaluationResult.Unknown;
         Execute(chessTable, true, false);
-        var gain = figureValueCalculator.GetValue(CapturedFigure);
 
-        var enemyMoveDecisionHelper = moveDecisionHelperCallback(chessTable);
-        var result = enemyMoveDecisionHelper.GoodMovesWithGain.Any(enemyGoodMoveWithGain => enemyGoodMoveWithGain.Gain - gain > 0);
+        var enemyKing = To.State.HasWhiteFigure() ? chessTable.Squares.GetBlackKingSquare() : chessTable.Squares.GetWhiteKingSquare();
+        if (chessTable.HasValidMove(enemyKing.State))
+        {
+            if (enemyKing.IsInCheck(chessTable))
+            {
+                var enemyMoves = chessTable.GetValidMoves();
+                if (enemyMoves.Count == 1)
+                {
+                    enemyMoves[0].Execute(chessTable, true, false);
+                    var mdh = moveDecisionHelperCallback(chessTable);
+                    if (mdh.GoodMovesWithGain.Any(g => g.Gain == Double.MaxValue))
+                    {
+                        result = MoveEvaluationResult.WinInTwoMoves;
+                    }
+                    enemyMoves[0].Rollback(chessTable, true, false);
+                }
+                else
+                {
+                    var mdh = moveDecisionHelperCallback(chessTable);
+                    if (mdh.GoodMovesWithGain.Any(g => g.Move.To == To))
+                    {
+                        result = MoveEvaluationResult.Questionable;
+                    }
+                    else 
+                    // Check is not always a good move!!!
+                    result = MoveEvaluationResult.Good;
+                }
+            }
+            else
+            {
+                var gain = figureValueCalculator.GetValue(CapturedFigure);
+
+                var enemyMoveDecisionHelper = moveDecisionHelperCallback(chessTable);
+
+                var goodMove = enemyMoveDecisionHelper.GoodMovesWithGain.Any(enemyGoodMoveWithGain => enemyGoodMoveWithGain.Gain - gain < 0);
+                if (goodMove)
+                {
+                    result = MoveEvaluationResult.Good;
+                }
+
+                var badMove = enemyMoveDecisionHelper.GoodMovesWithGain.Any(enemyGoodMoveWithGain => enemyGoodMoveWithGain.Gain - gain > 0);
+                if (badMove)
+                {
+                    result = MoveEvaluationResult.Bad;
+                }
+            }
+        }
+        else
+        {
+            // Not sure if this is a winner move, other figures still can move!!!
+            if (enemyKing.IsInCheck(chessTable))
+            {
+                result = MoveEvaluationResult.Winner;
+            }
+        }
 
         Rollback(chessTable, true, false);
 

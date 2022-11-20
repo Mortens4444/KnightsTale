@@ -137,6 +137,11 @@ public class ChessTable
         {
             Squares[i].State = (SquareState)fileContent[i];
         }
+
+        if (Squares.GetBlackKingSquare().State.IsMyTurn())
+        {
+            TurnControl.ChangeTurn(null, false);
+        }
     }
 
     public void ClearEnPassantSquare()
