@@ -1,6 +1,5 @@
 ﻿using Chess.Table;
 using Chess.Table.TableSquare;
-using System.Data.Common;
 
 namespace Chess.WinForms;
 
@@ -19,7 +18,7 @@ public class BoardPainter
     private readonly Color blackFigureColor = Color.Blue;
     private readonly Color selectedSquareColor = Color.Turquoise;
 
-    public void ShowChessBoard(PaintEventArgs e, ChessTable chessTable, Square? fromSquare)
+    public void ShowChessBoard(PaintEventArgs e, SquareList tableSquares, Square? fromSquare)
     {
        e.Graphics.FillRectangle(frameColor, e.ClipRectangle);
 
@@ -32,7 +31,7 @@ public class BoardPainter
 
                 DrawColumnName(e.Graphics, column, FontSizeHalf, left + SquareSizeHalf - FontSizeHalf);
 
-                var square = chessTable.Squares[column, rank];
+                var square = tableSquares[column, rank];
                 var isSelected = square.Equals(fromSquare);
 
                 SquareState squareState = DrawSquare(e.Graphics, square, isSelected, top, left);

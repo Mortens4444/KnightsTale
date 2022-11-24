@@ -20,6 +20,8 @@ public static class LevelToArtificalIntelligenceConverter
                 return new Lvl3_NoMoreMoronMoves(FigureValues.FigureValueCalculationMode.General);
             case Level.Level_4:
                 return new Lvl4_NoMoreMoronMoves(FigureValues.FigureValueCalculationMode.General);
+            case Level.Level_5:
+                return new Lvl5_NoMoreMoronMoves(FigureValues.FigureValueCalculationMode.General);
             default:
                 throw new NotImplementedException();
         };

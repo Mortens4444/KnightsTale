@@ -18,7 +18,7 @@ namespace Chess.Wpf
         public MainWindow()
         {
             InitializeComponent();
-            boardPainter.ShowChessBoard((Grid)FindName("ChessTable"), chessGame, fromSquare);
+            boardPainter.ShowChessBoard((Grid)FindName("ChessTable"), chessGame.ChessTable.FinalizedSquares, fromSquare);
         }
 
         private void NewGame_Click(object sender, RoutedEventArgs e)

@@ -13,7 +13,7 @@ namespace Chess.Wpf
     {
         private const int SquareSize = 50;
 
-        public void ShowChessBoard(Grid chessTable, ChessGame chessGame, Square fromSquare)
+        public void ShowChessBoard(Grid chessTable, SquareList tableSquares, Square fromSquare)
         {
             var columns = Utils.GetEnumValues<Column>().ToList();
             var ranks = Utils.GetEnumValues<Rank>().ToList();
@@ -49,7 +49,7 @@ namespace Chess.Wpf
                     };
                     SetColumnAndRank(chessTable, square, (int)column, rowNumber);
 
-                    var state = chessGame.ChessTable.Squares[column, rank].State;
+                    var state = tableSquares[column, rank].State;
                     var squareInfo = state.GetSquareInfo();
 
                     var textBlock = CreateTextBlock(squareInfo.DisplayChar.ToString(), state.HasBlackFigure() ? Colors.Green : Colors.LightBlue);

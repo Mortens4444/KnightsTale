@@ -100,6 +100,7 @@ namespace Chess.Rules.Turns
 
         protected virtual void OnChangeTurn(Move lastMove, bool isWhiteTurn)
         {
+            chessTable.FinalizeSquares();
             TurnChanged?.Invoke(this, new TurnControlEventArgs(lastMove, isWhiteTurn));
         }
     }

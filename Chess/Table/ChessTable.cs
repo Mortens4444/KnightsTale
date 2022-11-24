@@ -18,13 +18,15 @@ public class ChessTable
 {
     public SquareList Squares { get; private set; }
 
+    public SquareList FinalizedSquares { get; private set; }
+
     public IList<Column> Columns { get; private set; }
 
     public IList<Rank> Ranks { get; private set; }
 
     public TurnControl TurnControl { get; private set; }
 
-    public DebugMode DebugMode { get; set; } = DebugMode.Debug;
+    public DebugMode DebugMode { get; set; } = DebugMode.None;
 
     public Action<string> DebugWriter { get; set; }
 
@@ -94,16 +96,19 @@ public class ChessTable
 
         TurnControl.Reset();
         StopwatchWhite.Start();
+        FinalizeSquares();
     }
 
     private void InitializeSquares()
     {
         Squares = new SquareList();
+        FinalizedSquares = new SquareList();
         foreach (var rank in Ranks)
         {
             foreach (var column in Columns)
             {
                 Squares.Add(new Square(column, rank));
+                FinalizedSquares.Add(new Square(column, rank));
             }
         }
     }
@@ -289,5 +294,13 @@ public class ChessTable
     {
         LastMove.Move.Rollback(this, true, false);
         PreviousMoves.Remove(LastMove);
+    }
+
+    public void FinalizeSquares()
+    {
+        for (int i = 0; i < Squares.Count; i++)
+        {
+            FinalizedSquares[i].State = Squares[i].State;
+        }
     }
 }

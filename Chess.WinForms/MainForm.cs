@@ -5,7 +5,6 @@ using Chess.Table;
 using Chess.Table.TableSquare;
 using Chess.Utilities;
 using Chess.WinForms.Extensions;
-using System.CodeDom.Compiler;
 
 namespace Chess.WinForms;
 
@@ -13,7 +12,6 @@ public partial class MainForm : Form
 {
     private readonly BoardPainter boardPainter = new();
     private readonly ChessGame chessGame = new();
-    private readonly ChessTable chessTableToShow = new();
     private Square? fromSquare = null;
     private IArtificalIntelligence? whiteArtificalIntelligence = null;
     private IArtificalIntelligence? blackArtificalIntelligence = null;
@@ -30,7 +28,7 @@ public partial class MainForm : Form
 
     private void PBoard_Paint(object sender, PaintEventArgs e)
     {
-        boardPainter.ShowChessBoard(e, chessTableToShow, fromSquare);
+        boardPainter.ShowChessBoard(e, chessGame.ChessTable.FinalizedSquares, fromSquare);
     }
 
     private void TsmiNewGame_Click(object sender, EventArgs e)
@@ -39,7 +37,6 @@ public partial class MainForm : Form
         lvMoves.Items.Clear();
         rtbMessage.Text = String.Empty;
         GetNextMove();
-        chessTableToShow.CopyStates(chessGame.ChessTable);
     }
 
     private void TsmiLoadGame_Click(object sender, EventArgs e)
@@ -47,7 +44,6 @@ public partial class MainForm : Form
         if (openFileDialog.ShowDialog() == DialogResult.OK)
         {
             chessGame.ChessTable.LoadFromFile(openFileDialog.FileName);
-            chessTableToShow.CopyStates(chessGame.ChessTable);
             pBoard.Invalidate();
         }
     }
@@ -56,7 +52,7 @@ public partial class MainForm : Form
     {
         if (saveFileDialog.ShowDialog() == DialogResult.OK)
         {
-            chessTableToShow.SaveToFile(saveFileDialog.FileName);
+            chessGame.ChessTable.SaveToFile(saveFileDialog.FileName);
             pBoard.Invalidate();
         }
     }
@@ -126,7 +122,6 @@ public partial class MainForm : Form
         item.SubItems.Add(lastMove.Move.ToString());
         item.SubItems.Add(lastMove.Time.ToString());
         item.Tag = lastMove;
-        chessTableToShow.CopyStates(chessGame.ChessTable);
         Invoke(() =>
         {
             lvMoves.Items.Add(item);
@@ -220,7 +215,6 @@ public partial class MainForm : Form
                 lvMoves.Items[i].Remove();
                 chessGame.ChessTable.RemoveLast();
             }
-            chessTableToShow.CopyStates(chessGame.ChessTable);
             chessGame.ChessTable.TurnControl.SendTurnNotification();
             pBoard.Invalidate();
         }
