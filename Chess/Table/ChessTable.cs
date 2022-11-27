@@ -132,6 +132,7 @@ public class ChessTable
     {
         var fileContent = File.ReadAllBytes(filePath);
         LoadByteArray(fileContent);
+        FinalizeSquares();
     }
 
     public void LoadByteArray(byte[] fileContent)

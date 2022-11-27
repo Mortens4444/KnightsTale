@@ -7,4 +7,4 @@
 - Fix tests -> Lvl5 AI
 - WPF UI - New game, Load, Save, Move, Set AI, Show move history
 - UWP UI - Show chessboard, New game, Load, Save, Move, Set AI, Show move history
-- Two king with one bishop/knight => Tie
+- Two king with one bishop/knight => Tie- Send signal (flash and/or sound when move happens) - WinForms
