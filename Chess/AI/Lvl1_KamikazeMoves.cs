@@ -28,12 +28,11 @@ public class Lvl1_KamikazeMoves : IArtificalIntelligence
             return null;
         }
         var hitMoves = validMoves
-            .Where(validMove => validMove.MoveType == MoveType.Hit | validMove.MoveType == MoveType.EnPassant)
-            .Select(validMove => new MoveWithDestinationSquareInfo { ValidMove = validMove, To = validMove.To });
+            .Where(validMove => validMove.MoveType == MoveType.Hit | validMove.MoveType == MoveType.EnPassant);
         if (hitMoves.Any())
         {
             var bestHit = hitMoves.OrderByDescending(hitMove => figureValueCalculator.GetValue(hitMove.To.State)).First();
-            return bestHit.ValidMove;
+            return bestHit;
         }
         return ArtificalIntelligence.GetRandomMove(validMoves);
     }

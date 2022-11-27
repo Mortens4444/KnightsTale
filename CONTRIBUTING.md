@@ -8,3 +8,4 @@
 - WPF UI - New game, Load, Save, Move, Set AI, Show move history
 - UWP UI - Show chessboard, New game, Load, Save, Move, Set AI, Show move history
 - Two king with one bishop/knight => Tie
+- Switch side in WinForms, WPF

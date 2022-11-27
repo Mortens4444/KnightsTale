@@ -128,6 +128,8 @@ public partial class MainForm : Form
         {
             lvMoves.Items.Add(item);
             lvMoves.EnsureVisible(lvMoves.Items.Count - 1);
+            WinApiUtils.Flash(Handle);
+            Console.Beep();
         });
     }
 
@@ -199,12 +201,7 @@ public partial class MainForm : Form
                     message = kingSquare.IsInCheck(chessGame.ChessTable) ? "White won!" : "It's a tie.";
                 }
 
-                Invoke(() =>
-                {
-                    rtbMessage.Text = message;
-                    WinApiUtils.Flash(Handle);
-                    Console.Beep();
-                });
+                Invoke(() => { rtbMessage.Text = message; });
             }
             else
             {

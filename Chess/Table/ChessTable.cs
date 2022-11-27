@@ -14,7 +14,7 @@ using System.Text;
 namespace Chess.Table;
 
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public class ChessTable
+public class ChessTable : ICloneable
 {
     public SquareList Squares { get; private set; }
 
@@ -113,7 +113,7 @@ public class ChessTable
         }
     }
 
-    public void CopyStates(ChessTable chessTable)
+    public void CopyStatesFrom(ChessTable chessTable)
     {
         LoadByteArray(chessTable.GetSquareStates());
     }
@@ -303,5 +303,13 @@ public class ChessTable
         {
             FinalizedSquares[i].State = Squares[i].State;
         }
+    }
+
+    public object Clone()
+    {
+        var chessTable = new ChessTable();
+        chessTable.CopyStatesFrom(this);
+        chessTable.PreviousMoves.AddRange(PreviousMoves);
+        return chessTable;
     }
 }

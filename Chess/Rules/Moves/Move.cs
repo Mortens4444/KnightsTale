@@ -389,4 +389,15 @@ public class Move : IEquatable<Move>
 
         return result;
     }
+
+    public Move Clone(ChessTable chessTable)
+    {
+        return new Move(chessTable.Squares[From.Name], chessTable.Squares[To.Name], MoveType)
+        {
+            CapturedFigure = CapturedFigure,
+            NoMoreCastle = NoMoreCastle,
+            IsEnemyInCheck = IsEnemyInCheck,
+            IsEnemyInCheckMate = IsEnemyInCheckMate
+        };
+    }
 }
