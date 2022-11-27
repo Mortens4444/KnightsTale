@@ -5,6 +5,8 @@ using Chess.Table;
 using Chess.Table.TableSquare;
 using Chess.Utilities;
 using Chess.WinForms.Extensions;
+using Chess.WinForms.WinAPI;
+using System.ComponentModel;
 
 namespace Chess.WinForms;
 
@@ -196,7 +198,13 @@ public partial class MainForm : Form
                 {
                     message = kingSquare.IsInCheck(chessGame.ChessTable) ? "White won!" : "It's a tie.";
                 }
-                Invoke(() => { rtbMessage.Text = message; });
+
+                Invoke(() =>
+                {
+                    rtbMessage.Text = message;
+                    WinApiUtils.Flash(Handle);
+                    Console.Beep();
+                });
             }
             else
             {
