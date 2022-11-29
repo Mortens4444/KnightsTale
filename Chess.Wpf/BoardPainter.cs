@@ -11,14 +11,10 @@ namespace Chess.Wpf
 {
     public class BoardPainter
     {
-        private const int SquareSize = 50;
+        public const int SquareSize = 50;
 
-        public void ShowChessBoard(Grid chessTable, SquareList tableSquares, Square fromSquare)
+        public void CreateChessBoard(Grid chessTable)
         {
-            var columns = Utils.GetEnumValues<Column>().ToList();
-            var ranks = Utils.GetEnumValues<Rank>().ToList();
-            ranks.Sort(new ReverseRankSorter());
-
             for (int i = 0; i < 10; i++)
             {
                 chessTable.RowDefinitions.Add(new RowDefinition()
@@ -30,6 +26,14 @@ namespace Chess.Wpf
                     Width = new GridLength(SquareSize)
                 });
             }
+        }
+
+
+        public void ShowChessBoard(Grid chessTable, SquareList tableSquares, Square fromSquare)
+        {
+            var columns = Utils.GetEnumValues<Column>().ToList();
+            var ranks = Utils.GetEnumValues<Rank>().ToList();
+            ranks.Sort(new ReverseRankSorter());
 
             foreach (var rank in ranks)
             {
@@ -43,9 +47,10 @@ namespace Chess.Wpf
                     SetColumnAndRank(chessTable, leftColumnTextBlock, (int)column, 0);
 
                     var color = ((int)column + (int)rank) % 2 == 0 ? Colors.Black : Colors.White;
+                    var isSelected = fromSquare?.Column == column && fromSquare?.Rank == rank;
                     var square = new Rectangle
                     {
-                        Fill = new SolidColorBrush(color)
+                        Fill = new SolidColorBrush(isSelected ? Colors.Gray : color)
                     };
                     SetColumnAndRank(chessTable, square, (int)column, rowNumber);
 

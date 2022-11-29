@@ -17,6 +17,7 @@
     <None Remove="Resources\ChessTableState - Fix Exception.cgs" />
     <None Remove="Resources\ChessTableState - Kamikaze 2.cgs" />
     <None Remove="Resources\ChessTableState - Kamikaze.cgs" />
+    <None Remove="Resources\ChessTableState - King In Check.cgs" />
     <None Remove="Resources\ChessTableState - New Game.cgs" />
     <None Remove="Resources\ChessTableState - No Castling 2.cgs" />
     <None Remove="Resources\ChessTableState - No Castling.cgs" />
@@ -35,6 +36,7 @@
     <EmbeddedResource Include="Resources\ChessTableState - Check.cgs" />
     <EmbeddedResource Include="Resources\ChessTableState - BestMoveForBlack.cgs" />
     <EmbeddedResource Include="Resources\ChessTableState - Fix Exception.cgs" />
+    <EmbeddedResource Include="Resources\ChessTableState - King In Check.cgs" />
     <EmbeddedResource Include="Resources\ChessTableState - Checkmate.cgs" />
     <EmbeddedResource Include="Resources\ChessTableState - Reveal Check.cgs" />
     <EmbeddedResource Include="Resources\ChessTableState - Kamikaze 2.cgs" />

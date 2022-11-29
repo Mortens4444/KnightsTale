@@ -54,7 +54,7 @@ public static class ArtificalIntelligence
         var gain = figureValueCalculator.GetValue(goodMove.CapturedFigure) ?? 0;
         if (goodMove.IsEnemyInCheck && goodMove.To != enemyMove.To)
         {
-            gain += 10;
+            gain += figureValueCalculator.GetCheckValue();
         }
 
         var enemyGain = figureValueCalculator.GetValue(enemyMove.To.State) ?? 0;

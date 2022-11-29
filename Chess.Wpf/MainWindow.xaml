@@ -15,8 +15,33 @@
                 <MenuItem Header="_Exit" Click="Exit_Click" />
             </MenuItem>
         </Menu>
-        <StackPanel>
-            <Grid x:Name="ChessTable" HorizontalAlignment="Center" VerticalAlignment="Center" Background="LightGray" Margin="5" />
+        <StackPanel Background="LightBlue">
+            <Grid x:Name="ChessTable" HorizontalAlignment="Center" VerticalAlignment="Center" Background="LightGray" Margin="5" PreviewMouseDown="ChessTable_PreviewMouseDown" />
         </StackPanel>
+
+        <Grid Background="LightGray">
+            <Grid.Resources>
+                <Style TargetType="ListViewItem">
+                    <Style.Triggers>
+                        <Trigger Property="ItemsControl.AlternationIndex"  Value="0">
+                            <Setter Property="Background" Value="LightBlue" />
+                        </Trigger>
+                        <Trigger Property="ItemsControl.AlternationIndex"  Value="1">
+                            <Setter Property="Background" Value="Transparent" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Resources>
+            <ListView Name="lvMoves" AlternationCount="2">
+                <ListView.View>
+                    <GridView AllowsColumnReorder="true">
+                        <GridViewColumn DisplayMemberBinding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}, Converter={StaticResource IndexConverter}}" Header="#" Width="30" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Move}" Header="Move" Width="100" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Time}" Header="Time" Width="100" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+
     </DockPanel>
 </Window>

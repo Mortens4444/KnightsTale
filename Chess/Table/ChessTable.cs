@@ -95,6 +95,9 @@ public class ChessTable : ICloneable
         Squares[Column.H, Rank._8].State = SquareState.BlackRookCanCastle;
 
         TurnControl.Reset();
+        StopwatchBlack = new();
+        PreviousMoves = new();
+        StopwatchWhite = new();
         StopwatchWhite.Start();
         FinalizeSquares();
     }

@@ -18,6 +18,7 @@ public class KingMoveProviderTest : FigureMoveProviderTest
     }
 
     [TestCase("Chess.Test.Resources.ChessTableState.cgs", "E1", new string[] { "D2", "F2" })]
+    [TestCase("Chess.Test.Resources.ChessTableState - King In Check.cgs", "E1", new string[] { "D2" })]
     [TestCase("Chess.Test.Resources.ChessTableState - Opposition.cgs", "E4", new string[] { "D4", "F4", "E3", "D3", "F3" })]
     [TestCase("Chess.Test.Resources.ChessTableState - No Castling.cgs", "E1", new string[] { "D1", "F1", "E2" })]
     [TestCase("Chess.Test.Resources.ChessTableState - No Castling 2.cgs", "E1", new string[] { "D1", "F1", "D2", "F2" })]

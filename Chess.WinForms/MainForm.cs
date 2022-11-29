@@ -6,7 +6,6 @@ using Chess.Table.TableSquare;
 using Chess.Utilities;
 using Chess.WinForms.Extensions;
 using Chess.WinForms.WinAPI;
-using System.ComponentModel;
 
 namespace Chess.WinForms;
 
@@ -55,7 +54,6 @@ public partial class MainForm : Form
         if (saveFileDialog.ShowDialog() == DialogResult.OK)
         {
             chessGame.ChessTable.SaveToFile(saveFileDialog.FileName);
-            pBoard.Invalidate();
         }
     }
 
@@ -64,14 +62,14 @@ public partial class MainForm : Form
         Close();
     }
 
-    public static Column GetActualColumn(int horizontal_delta, int x)
+    public static Column GetActualColumn(int horizontalDelta, int x)
     {
-        return (x - horizontal_delta) / BoardPainter.SquareSize + Column.A;
+        return (x - horizontalDelta) / BoardPainter.SquareSize + Column.A;
     }
 
-    public static Rank GetActualRank(int vertical_delta, int y)
+    public static Rank GetActualRank(int verticalDelta, int y)
     {
-        return Rank._8 - (y - vertical_delta) / BoardPainter.SquareSize;
+        return Rank._8 - (y - verticalDelta) / BoardPainter.SquareSize;
     }
 
     private void PBoard_MouseClick(object sender, MouseEventArgs e)
