@@ -1,12 +1,13 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 
-namespace Chess.WinForms.WinAPI
+namespace Chess.WinApi
 {
     [StructLayout(LayoutKind.Sequential)]
 
     public struct FlashInfo
     {
-        public uint cbSize;
+        public uint cbSize = UInt32.MinValue;
 
         public IntPtr Handle;
 

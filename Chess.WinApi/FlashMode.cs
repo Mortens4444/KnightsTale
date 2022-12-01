@@ -1,4 +1,6 @@
-﻿namespace Chess.WinForms.WinAPI
+﻿using System;
+
+namespace Chess.WinApi
 {
     [Flags]
     public enum FlashMode : uint

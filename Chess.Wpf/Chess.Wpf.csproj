@@ -97,6 +97,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Chess.WinApi\Chess.WinApi.csproj">
+      <Project>{5647f388-9c78-49e9-8529-4b343c9c9d61}</Project>
+      <Name>Chess.WinApi</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Chess\Chess.csproj">
       <Project>{2adcbdc3-4563-4cc2-8587-2b1068981c8e}</Project>
       <Name>Chess</Name>

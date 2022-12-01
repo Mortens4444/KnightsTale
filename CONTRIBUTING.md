@@ -32,7 +32,7 @@
 
 # Chess.Wpf
 -----------
-- Set AI for enemy
+- Fix MainWindow TurnControl_TurnChanged
 - Switch side (BoardPainter, MainWindow.GetSquare, MainWindow.GetActualColumn, MainWindow.GetActualRank)
 
 # Chess.WinForms
@@ -40,5 +40,4 @@
 - Switch side (BoardPainter, MainForm.GetSquare, MainForm.GetActualColumn, MainForm.GetActualRank)
 - Delete figures (png files - draw figures like in Chess.WPF)
 - Fix not recognizing checkmate
-- Create a presenter clas, which can be used with Chess.WPF also
-- Delete rtbMessage -> Use MessageBoxes
+- Create a presenter class, which can be used with Chess.WPF also

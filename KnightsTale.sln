@@ -22,7 +22,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chess.Wpf", "Chess.Wpf\Chess.Wpf.csproj", "{3278E363-CBD8-4077-8094-988BDADDEB17}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chess.WebApi", "Chess.WebApi\Chess.WebApi.csproj", "{B4A9FB0F-9283-410B-81C4-BBCA75280993}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chess.WebApi", "Chess.WebApi\Chess.WebApi.csproj", "{B4A9FB0F-9283-410B-81C4-BBCA75280993}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chess.WinApi", "Chess.WinApi\Chess.WinApi.csproj", "{5647F388-9C78-49E9-8529-4B343C9C9D61}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,6 +60,10 @@ Global
 		{B4A9FB0F-9283-410B-81C4-BBCA75280993}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4A9FB0F-9283-410B-81C4-BBCA75280993}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4A9FB0F-9283-410B-81C4-BBCA75280993}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5647F388-9C78-49E9-8529-4B343C9C9D61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5647F388-9C78-49E9-8529-4B343C9C9D61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5647F388-9C78-49E9-8529-4B343C9C9D61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5647F388-9C78-49E9-8529-4B343C9C9D61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,7 +5,8 @@ using Chess.Table;
 using Chess.Table.TableSquare;
 using Chess.Utilities;
 using Chess.WinForms.Extensions;
-using Chess.WinForms.WinAPI;
+using Chess.WinApi;
+using MessageBoxes;
 
 namespace Chess.WinForms;
 
@@ -36,7 +37,6 @@ public partial class MainForm : Form
     {
         chessGame.ChessTable.SetupTable();
         lvMoves.Items.Clear();
-        rtbMessage.Text = String.Empty;
         GetNextMove();
     }
 
@@ -90,11 +90,10 @@ public partial class MainForm : Form
                     if (chessGame.Execute(move))
                     {
                         AddMoveToListView();
-                        rtbMessage.Text = String.Empty;
                     }
                     else
                     {
-                        rtbMessage.Text = $"The move ({move}) is not valid.";
+                        ErrorBox.Show("Invalid move", $"The move ({move}) is not valid.");
                     }
                 }
 
@@ -105,7 +104,7 @@ public partial class MainForm : Form
         catch (Exception ex)
         {
             var message = move == null ? ex.Message : $"{ex.Message} You tried: {move}";
-            rtbMessage.Text = message;
+            ErrorBox.Show("This move is invalid", message);
             fromSquare = null;
         }
     }
@@ -199,7 +198,7 @@ public partial class MainForm : Form
                     message = kingSquare.IsInCheck(chessGame.ChessTable) ? "White won!" : "It's a tie.";
                 }
 
-                Invoke(() => { rtbMessage.Text = message; });
+                Invoke(() => { InfoBox.Show("Game over", message); });
             }
             else
             {

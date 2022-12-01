@@ -37,7 +37,6 @@ partial class MainForm
             this.cbWhite = new System.Windows.Forms.ComboBox();
             this.lblBlack = new System.Windows.Forms.Label();
             this.lblWhite = new System.Windows.Forms.Label();
-            this.rtbMessage = new System.Windows.Forms.RichTextBox();
             this.lvMoves = new System.Windows.Forms.ListView();
             this.chNumber = new System.Windows.Forms.ColumnHeader();
             this.chMove = new System.Windows.Forms.ColumnHeader();
@@ -98,7 +97,6 @@ partial class MainForm
             this.pRight.Controls.Add(this.cbWhite);
             this.pRight.Controls.Add(this.lblBlack);
             this.pRight.Controls.Add(this.lblWhite);
-            this.pRight.Controls.Add(this.rtbMessage);
             this.pRight.Controls.Add(this.lvMoves);
             this.pRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.pRight.Location = new System.Drawing.Point(600, 24);
@@ -144,14 +142,6 @@ partial class MainForm
             this.lblWhite.TabIndex = 2;
             this.lblWhite.Text = "White";
             // 
-            // rtbMessage
-            // 
-            this.rtbMessage.Location = new System.Drawing.Point(3, 65);
-            this.rtbMessage.Name = "rtbMessage";
-            this.rtbMessage.Size = new System.Drawing.Size(194, 51);
-            this.rtbMessage.TabIndex = 1;
-            this.rtbMessage.Text = "";
-            // 
             // lvMoves
             // 
             this.lvMoves.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -163,10 +153,10 @@ partial class MainForm
             this.chTime});
             this.lvMoves.ContextMenuStrip = this.cmsMovesContextMenu;
             this.lvMoves.FullRowSelect = true;
-            this.lvMoves.Location = new System.Drawing.Point(3, 122);
+            this.lvMoves.Location = new System.Drawing.Point(3, 65);
             this.lvMoves.MultiSelect = false;
             this.lvMoves.Name = "lvMoves";
-            this.lvMoves.Size = new System.Drawing.Size(194, 344);
+            this.lvMoves.Size = new System.Drawing.Size(194, 401);
             this.lvMoves.TabIndex = 0;
             this.lvMoves.UseCompatibleStateImageBehavior = false;
             this.lvMoves.View = System.Windows.Forms.View.Details;
@@ -308,7 +298,6 @@ partial class MainForm
     private ColumnHeader chMove;
     private SaveFileDialog saveFileDialog;
     private OpenFileDialog openFileDialog;
-    private RichTextBox rtbMessage;
     private Label lblBlack;
     private Label lblWhite;
     private ComboBox cbBlack;

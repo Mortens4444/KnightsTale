@@ -49,6 +49,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="WinForms.MessageBoxes" Version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Chess.WinApi\Chess.WinApi.csproj" />
     <ProjectReference Include="..\Chess\Chess.csproj" />
   </ItemGroup>
 

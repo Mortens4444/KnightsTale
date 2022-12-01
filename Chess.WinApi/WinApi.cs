@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Chess.WinForms.WinAPI
+namespace Chess.WinApi
 {
     public static class WinApi
     {
