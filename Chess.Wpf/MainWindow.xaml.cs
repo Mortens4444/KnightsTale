@@ -22,6 +22,7 @@ namespace Chess.Wpf
     /// </summary>
     public partial class MainWindow : Window
     {
+        private const string ChessTableName = "ChessTable";
         private readonly BoardPainter boardPainter = new BoardPainter();
         private readonly ChessGame chessGame = new ChessGame();
         private Square fromSquare = null;
@@ -38,7 +39,7 @@ namespace Chess.Wpf
             cbBlackAI.ItemsSource = Enum.GetValues(typeof(Level)).Cast<Level>();
             cbBlackAI.SelectedIndex = 0;
 
-            boardPainter.CreateChessBoard((Grid)FindName("ChessTable"));
+            boardPainter.CreateChessBoard((Grid)FindName(ChessTableName));
             Repaint();
 
             chessGame.ChessTable.TurnControl.TurnChanged += TurnControl_TurnChanged;
@@ -47,6 +48,7 @@ namespace Chess.Wpf
         private void NewGame_Click(object sender, RoutedEventArgs e)
         {
             chessGame.ChessTable.SetupTable();
+            moves.Clear();
             Repaint();
             GetNextMove();
         }
@@ -83,7 +85,11 @@ namespace Chess.Wpf
 
         private void Repaint()
         {
-            boardPainter.ShowChessBoard((Grid)FindName("ChessTable"), chessGame.ChessTable.FinalizedSquares, fromSquare);
+            Dispatcher.Invoke(() =>
+            {
+                var grid = (Grid)FindName(ChessTableName);
+                boardPainter.ShowChessBoard(grid, chessGame.ChessTable.FinalizedSquares, fromSquare);
+            });
         }
 
         private void ChessTable_PreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -169,10 +175,10 @@ namespace Chess.Wpf
 
         private void TurnControl_TurnChanged(object sender, TurnControlEventArgs e)
         {
-            //Task.Factory.StartNew(() =>
+            Task.Factory.StartNew(() =>
             {
                 GetNextMove();
-            }//);
+            });
         }
 
         private void GetNextMove()
@@ -210,7 +216,7 @@ namespace Chess.Wpf
                 }
                 else
                 {
-                    moves.Add(chessGame.ChessTable.LastMove);
+                    Dispatcher.Invoke(() => { moves.Add(chessGame.ChessTable.LastMove); });
                 }
             }
         }

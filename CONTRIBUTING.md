@@ -32,7 +32,6 @@
 
 # Chess.Wpf
 -----------
-- Fix MainWindow TurnControl_TurnChanged
 - Switch side (BoardPainter, MainWindow.GetSquare, MainWindow.GetActualColumn, MainWindow.GetActualRank)
 
 # Chess.WinForms
