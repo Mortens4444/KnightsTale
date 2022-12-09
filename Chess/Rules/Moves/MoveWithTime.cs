@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chess.Table;
+using System;
 
 namespace Chess.Rules.Moves;
 
@@ -12,6 +13,14 @@ public class MoveWithTime
     {
         Move = move;
         Time = time;
+    }
+
+    public MoveWithTime(string moveWithTime, ChessTable chessTable)
+    {
+        var parts = moveWithTime.Split(new string[] { " - " }, StringSplitOptions.RemoveEmptyEntries);
+        Move = new Move(String.Concat(parts[0], parts[1]), chessTable);
+        TimeSpan.TryParse(parts[2], out TimeSpan timeSpan);
+        Time = timeSpan;
     }
 
     public override string ToString()

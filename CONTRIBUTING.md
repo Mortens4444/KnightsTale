@@ -1,6 +1,5 @@
 # General
 ---------
-- Save game should be able to load move history if available
 - Move.Promotion should not be automatic
 - Bad moves (NoMoreCastle, Let enemy to hit my figure, tie)
 - Tie

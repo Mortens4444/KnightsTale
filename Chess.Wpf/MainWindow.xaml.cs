@@ -62,6 +62,11 @@ namespace Chess.Wpf
             if (openFileDialog.ShowDialog() == true)
             {
                 chessGame.ChessTable.LoadFromFile(openFileDialog.FileName);
+                moves.Clear();
+                foreach (var move in chessGame.ChessTable.PreviousMoves)
+                {
+                    moves.Add(move);
+                }
                 Repaint();
             }
         }

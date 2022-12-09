@@ -30,15 +30,17 @@ public class ChessTable : ICloneable
 
     public Action<string> DebugWriter { get; set; }
 
-    public Stopwatch StopwatchWhite = new();
+    public StopwatchWithOffset StopwatchWhite = new();
 
-    public Stopwatch StopwatchBlack = new();
+    public StopwatchWithOffset StopwatchBlack = new();
 
     public List<MoveWithTime> PreviousMoves = new();
 
     public MoveWithTime LastMove => PreviousMoves.Any() ? PreviousMoves[PreviousMoves.Count - 1] : null;
 
     public string DebuggerDisplay { get { return ToString(SquareInfoMode.Notation, true); } }
+
+    private const string NewLine = "\r\n";
 
     private readonly ValidMoveProvider validMoveProvider = new();
 
@@ -123,7 +125,11 @@ public class ChessTable : ICloneable
 
     public byte[] GetSquareStates()
     {
-        return Squares.Select(square => (byte)square.State).ToArray();
+        var squareBytes = Squares.Select(square => (byte)square.State).ToArray();
+        var times = Encoding.ASCII.GetBytes($"{NewLine}{StopwatchWhite.Elapsed}|{StopwatchBlack.Elapsed}");
+        var previousMoves = String.Concat(NewLine, String.Join(NewLine, PreviousMoves.Select(previousMove => previousMove.ToString())));
+        var previousMovesBytes = Encoding.ASCII.GetBytes(previousMoves);
+        return squareBytes.Concat(times).Concat(previousMovesBytes).ToArray();
     }
 
     public void SaveToFile(string filePath)
@@ -140,16 +146,43 @@ public class ChessTable : ICloneable
 
     public void LoadByteArray(byte[] fileContent)
     {
+        StopwatchWhite.Reset();
+        StopwatchBlack.Reset();
         Contract.Requires(fileContent != null);
 
-        for (int i = 0; i < fileContent.Length; i++)
+        var numberOfSquares = Ranks.Count * Columns.Count;
+        for (int i = 0; i < numberOfSquares; i++)
         {
             Squares[i].State = (SquareState)fileContent[i];
         }
 
-        if (Squares.GetBlackKingSquare().State.IsMyTurn())
+        var blackTurn = Squares.GetBlackKingSquare().State.IsMyTurn();
+        if (blackTurn)
         {
             TurnControl.ChangeTurn(null, false);
+        }
+
+        var content = Encoding.ASCII.GetString(fileContent);
+        var lines = content.Split(new string[] { NewLine }, StringSplitOptions.RemoveEmptyEntries);
+        if (lines.Length > 1)
+        {
+            var times = lines[1].Split('|');
+            StopwatchWhite.Elapsed = TimeSpan.Parse(times[0]);
+            StopwatchBlack.Elapsed = TimeSpan.Parse(times[1]);
+
+            for (int i = 2; i < lines.Length; i++)
+            {
+                var move = new MoveWithTime(lines[i], this);
+                PreviousMoves.Add(move);
+            }
+        }
+        if (blackTurn)
+        {
+            StopwatchBlack.Start();
+        }
+        else
+        {
+            StopwatchWhite.Start();
         }
     }
 

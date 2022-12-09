@@ -50,7 +50,7 @@ namespace Chess.WebApi.Controllers
         {
             using var stream = file.OpenReadStream();
             using var binaryReader = new BinaryReader(stream);
-            if (file.Length != chessGame.ChessTable.Squares.Count)
+            if (file.Length < chessGame.ChessTable.Squares.Count)
             {
                 return BadRequest($"Invalid file has been uploaded: {file.FileName}.");
             }

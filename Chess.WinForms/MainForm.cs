@@ -45,6 +45,11 @@ public partial class MainForm : Form
         if (openFileDialog.ShowDialog() == DialogResult.OK)
         {
             chessGame.ChessTable.LoadFromFile(openFileDialog.FileName);
+            lvMoves.Items.Clear();
+            foreach (var move in chessGame.ChessTable.PreviousMoves)
+            {
+                AddMoveToListView(move, false);
+            }            
             pBoard.Invalidate();
         }
     }
@@ -89,7 +94,7 @@ public partial class MainForm : Form
                     move = new Move(fromSquare, toSquare);
                     if (chessGame.Execute(move))
                     {
-                        AddMoveToListView();
+                        AddMoveToListView(chessGame.ChessTable.LastMove, true);
                     }
                     else
                     {
@@ -109,7 +114,7 @@ public partial class MainForm : Form
         }
     }
 
-    private void AddMoveToListView()
+    private void AddMoveToListView(MoveWithTime move, bool alert)
     {
         var number = lvMoves.Items.Count + 1;
         var item = new ListViewItem(number.ToString())
@@ -117,16 +122,18 @@ public partial class MainForm : Form
             BackColor = lvMoves.Items.Count % 2 == 0 ? Color.LightBlue : lvMoves.BackColor
         };
 
-        var lastMove = chessGame.ChessTable.LastMove;
-        item.SubItems.Add(lastMove.Move.ToString());
-        item.SubItems.Add(lastMove.Time.ToString());
-        item.Tag = lastMove;
+        item.SubItems.Add(move.Move.ToString());
+        item.SubItems.Add(move.Time.ToString());
+        item.Tag = move;
         Invoke(() =>
         {
             lvMoves.Items.Add(item);
             lvMoves.EnsureVisible(lvMoves.Items.Count - 1);
-            WinApiUtils.Flash(Handle);
-            Console.Beep();
+            if (alert)
+            {
+                WinApiUtils.Flash(Handle);
+                Console.Beep();
+            }
         });
     }
 
@@ -202,7 +209,7 @@ public partial class MainForm : Form
             }
             else
             {
-                AddMoveToListView();
+                AddMoveToListView(chessGame.ChessTable.LastMove, true);
             }
         }
     }
