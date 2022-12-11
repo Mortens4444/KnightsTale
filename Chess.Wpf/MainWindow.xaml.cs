@@ -22,7 +22,7 @@ namespace Chess.Wpf
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const string ChessTableName = "ChessTable";
+        public const string ChessTableName = "ChessTable";
         private readonly BoardPainter boardPainter = new BoardPainter();
         private readonly ChessGame chessGame = new ChessGame();
         private Square fromSquare = null;
@@ -88,6 +88,12 @@ namespace Chess.Wpf
             Close();
         }
 
+        private void PlayAsBlack_Click(object sender, RoutedEventArgs e)
+        {
+            boardPainter.PlayingAsBlack = tsmiPlayAsBlack.IsChecked;
+            Repaint();
+        }
+
         private void Repaint()
         {
             Dispatcher.Invoke(() =>
@@ -128,7 +134,6 @@ namespace Chess.Wpf
 
                     fromSquare = null;
                 }
-                Repaint();
             }
             catch (Exception ex)
             {
@@ -136,24 +141,17 @@ namespace Chess.Wpf
                 MessageBox.Show(message, "This move is invalid", MessageBoxButton.OK, MessageBoxImage.Error);
                 fromSquare = null;
             }
-
+            finally
+            {
+                Repaint();
+            }
         }
 
         private Square GetSquare(Point clickLocation)
         {
-            var column = GetActualColumn(BoardPainter.SquareSize + (BoardPainter.SquareSize / 2) + 5, clickLocation.X);
-            var rank = GetActualRank(BoardPainter.SquareSize - 1, clickLocation.Y);
+            var column = boardPainter.GetActualColumn(clickLocation.X);
+            var rank = boardPainter.GetActualRank(clickLocation.Y);
             return chessGame.ChessTable.Squares[column, rank];
-        }
-
-        public static Column GetActualColumn(int horizontalDelta, double x)
-        {
-            return (int)Math.Round((x - horizontalDelta) / BoardPainter.SquareSize) + Column.A;
-        }
-
-        public static Rank GetActualRank(int verticalDelta, double y)
-        {
-            return Rank._8 - (int)Math.Round((y - verticalDelta) / BoardPainter.SquareSize - 1);
         }
 
         private void CbWhiteAI_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -22,12 +22,32 @@ public class BoardPainter
     {
        e.Graphics.FillRectangle(frameColor, e.ClipRectangle);
 
-        for (var rank = Rank._8; rank >= Rank._1; rank--)
+        int delta;
+        Rank fromRank;
+        Column fromColumn;
+        if (PlayingAsBlack)
         {
-            var top = (SquareSize + 1) * (8 - (int)rank) + Frame;
-            for (var column = Column.A; column <= Column.H; column++)
+            delta = 1;
+            fromRank = Rank._1;
+            fromColumn = Column.H;
+        }
+        else
+        {
+            delta= -1;
+            fromRank = Rank._8;
+            fromColumn = Column.A;
+        }
+
+        var rankIndex = 0;
+        var rank = fromRank;
+        do
+        {
+            var columnIndex = 0;
+            var top = (SquareSize + 1) * rankIndex + Frame;
+            var column = fromColumn;
+            do
             {
-                var left = SquareSize * ((int)column - 1) + Frame;
+                var left = SquareSize * columnIndex + Frame;
 
                 DrawColumnName(e.Graphics, column, FontSizeHalf, left + SquareSizeHalf - FontSizeHalf);
 
@@ -38,12 +58,20 @@ public class BoardPainter
                 DrawFigure(e.Graphics, top, left, squareState);
 
                 DrawColumnName(e.Graphics, column, (SquareSize + 1) * 8 + Frame + FontSizeHalf, left + SquareSizeHalf - FontSizeHalf);
+                column -= delta;
+                columnIndex++;
             }
+            while (columnIndex < 8);
 
             DrawRankName(e.Graphics, rank, top + SquareSizeHalf - FontSize, FontSizeHalf);
             DrawRankName(e.Graphics, rank, top + SquareSizeHalf - FontSize, 8 * (SquareSize) + Frame + FontSize);
+            rank += delta;
+            rankIndex++;
         }
+        while (rankIndex < 8);
     }
+
+    public bool PlayingAsBlack { get; set; }
 
     private void DrawColumnName(Graphics graphics, Column column, float top, float left)
     {
@@ -86,5 +114,30 @@ public class BoardPainter
         }
 
         return squareColor.ToColor();
+    }
+
+    public Column GetActualColumn(int x)
+    {
+        if (PlayingAsBlack)
+        {
+            return Column.H - ModifiedPosition(x);
+        }
+
+        return Column.A + ModifiedPosition(x);
+    }
+
+    public Rank GetActualRank(int y)
+    {
+        if (PlayingAsBlack)
+        {
+            return Rank._1 + ModifiedPosition(y);
+        }
+
+        return Rank._8 - ModifiedPosition(y);
+    }
+
+    private static int ModifiedPosition(int position)
+    {
+        return (position - Frame) / SquareSize;
     }
 }

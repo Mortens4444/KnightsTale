@@ -17,6 +17,7 @@
 --------------
 - Set AI and get response in Chess.WebApi
 - Fix switching side
+- Add moves list
 
 # Chess.UWP
 -----------
@@ -31,11 +32,9 @@
 
 # Chess.Wpf
 -----------
-- Switch side (BoardPainter, MainWindow.GetSquare, MainWindow.GetActualColumn, MainWindow.GetActualRank)
 
 # Chess.WinForms
 ----------------
-- Switch side (BoardPainter, MainForm.GetSquare, MainForm.GetActualColumn, MainForm.GetActualRank)
 - Delete figures (png files - draw figures like in Chess.WPF)
 - Fix not recognizing checkmate
 - Create a presenter class, which can be used with Chess.WPF also

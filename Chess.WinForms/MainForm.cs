@@ -67,16 +67,6 @@ public partial class MainForm : Form
         Close();
     }
 
-    public static Column GetActualColumn(int horizontalDelta, int x)
-    {
-        return (x - horizontalDelta) / BoardPainter.SquareSize + Column.A;
-    }
-
-    public static Rank GetActualRank(int verticalDelta, int y)
-    {
-        return Rank._8 - (y - verticalDelta) / BoardPainter.SquareSize;
-    }
-
     private void PBoard_MouseClick(object sender, MouseEventArgs e)
     {
         Move? move = null;
@@ -104,13 +94,16 @@ public partial class MainForm : Form
 
                 fromSquare = null;
             }
-            pBoard.Invalidate();
         }
         catch (Exception ex)
         {
             var message = move == null ? ex.Message : $"{ex.Message} You tried: {move}";
             ErrorBox.Show("This move is invalid", message);
             fromSquare = null;
+        }
+        finally
+        {
+            pBoard.Invalidate();
         }
     }
 
@@ -139,8 +132,8 @@ public partial class MainForm : Form
 
     private Square GetSquare(MouseEventArgs e)
     {
-        var column = GetActualColumn(BoardPainter.Frame, e.X);
-        var rank = GetActualRank(BoardPainter.Frame, e.Y);
+        var column = boardPainter.GetActualColumn(e.X);
+        var rank = boardPainter.GetActualRank(e.Y);
         return chessGame.ChessTable.Squares[column, rank];
     }
 
@@ -227,5 +220,11 @@ public partial class MainForm : Form
             chessGame.ChessTable.TurnControl.SendTurnNotification();
             pBoard.Invalidate();
         }
+    }
+
+    private void TsmiPlayingAsBlack_CheckedChanged(object sender, EventArgs e)
+    {
+        boardPainter.PlayingAsBlack = tsmiPlayingAsBlack.Checked;
+        pBoard.Invalidate();
     }
 }

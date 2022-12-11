@@ -44,13 +44,15 @@ partial class MainForm
             this.cmsMovesContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsmiRollback = new System.Windows.Forms.ToolStripMenuItem();
             this.msMenu = new System.Windows.Forms.MenuStrip();
-            this.gameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiGame = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiNewGame = new System.Windows.Forms.ToolStripMenuItem();
             this.separator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmiLoadGame = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiSaveGame = new System.Windows.Forms.ToolStripMenuItem();
             this.separator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmiExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiOptions = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiPlayingAsBlack = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.pMain.SuspendLayout();
@@ -193,25 +195,26 @@ partial class MainForm
             // msMenu
             // 
             this.msMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.gameToolStripMenuItem});
+            this.tsmiGame,
+            this.tsmiOptions});
             this.msMenu.Location = new System.Drawing.Point(0, 0);
             this.msMenu.Name = "msMenu";
             this.msMenu.Size = new System.Drawing.Size(800, 24);
             this.msMenu.TabIndex = 0;
             this.msMenu.Text = "Main menu";
             // 
-            // gameToolStripMenuItem
+            // tsmiGame
             // 
-            this.gameToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmiGame.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiNewGame,
             this.separator1,
             this.tsmiLoadGame,
             this.tsmiSaveGame,
             this.separator2,
             this.tsmiExit});
-            this.gameToolStripMenuItem.Name = "gameToolStripMenuItem";
-            this.gameToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
-            this.gameToolStripMenuItem.Text = "Game";
+            this.tsmiGame.Name = "tsmiGame";
+            this.tsmiGame.Size = new System.Drawing.Size(50, 20);
+            this.tsmiGame.Text = "Game";
             // 
             // tsmiNewGame
             // 
@@ -251,6 +254,22 @@ partial class MainForm
             this.tsmiExit.Text = "Exit";
             this.tsmiExit.Click += new System.EventHandler(this.TsmiExit_Click);
             // 
+            // tsmiOptions
+            // 
+            this.tsmiOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmiPlayingAsBlack});
+            this.tsmiOptions.Name = "tsmiOptions";
+            this.tsmiOptions.Size = new System.Drawing.Size(61, 20);
+            this.tsmiOptions.Text = "Options";
+            // 
+            // tsmiPlayingAsBlack
+            // 
+            this.tsmiPlayingAsBlack.CheckOnClick = true;
+            this.tsmiPlayingAsBlack.Name = "tsmiPlayingAsBlack";
+            this.tsmiPlayingAsBlack.Size = new System.Drawing.Size(180, 22);
+            this.tsmiPlayingAsBlack.Text = "Playing as black";
+            this.tsmiPlayingAsBlack.CheckedChanged += new System.EventHandler(this.TsmiPlayingAsBlack_CheckedChanged);
+            // 
             // saveFileDialog
             // 
             this.saveFileDialog.Filter = "Chess game save|*.cgs";
@@ -284,7 +303,7 @@ partial class MainForm
     #endregion
 
     private MenuStrip msMenu;
-    private ToolStripMenuItem gameToolStripMenuItem;
+    private ToolStripMenuItem tsmiGame;
     private ToolStripMenuItem tsmiNewGame;
     private ToolStripSeparator separator1;
     private ToolStripMenuItem tsmiLoadGame;
@@ -306,4 +325,6 @@ partial class MainForm
     private ColumnHeader chTime;
     private ContextMenuStrip cmsMovesContextMenu;
     private ToolStripMenuItem tsmiRollback;
+    private ToolStripMenuItem tsmiOptions;
+    private ToolStripMenuItem tsmiPlayingAsBlack;
 }
