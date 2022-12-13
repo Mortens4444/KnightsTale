@@ -3,13 +3,15 @@ using Chess.Table;
 using Chess.Utilities;
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 [assembly: CLSCompliant(false)]
+[assembly: InternalsVisibleTo("Chess.Test")]
 namespace Chess;
 
 public class ChessGame
 {
-    public ChessTable ChessTable { get; set; }
+    public ChessTable ChessTable { get; internal set; } = new ChessTable();
 
     private Logger logger;
 
@@ -25,7 +27,7 @@ public class ChessGame
 
     public void NewGame()
     {
-        ChessTable = new ChessTable();
+        ChessTable.SetupTable();
     }
 
     public bool Execute(string move)

@@ -16,7 +16,6 @@
 # Chess.WebApi
 --------------
 - Set AI and get response in Chess.WebApi
-- Fix switching side
 - Add moves list
 
 # Chess.UWP

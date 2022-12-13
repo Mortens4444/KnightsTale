@@ -117,14 +117,14 @@ export class ChessBoardBuilder {
     }
 
 	private getMove(fromSquare: Square, toSquare: Square): string {
-		return fromSquare.toString(this.whiteOnTopWhenShow) + toSquare.toString(this.whiteOnTopWhenShow);
+		return fromSquare.toString() + toSquare.toString();
 	}
 
 	private getSquare(square: HTMLElement): Square {
 		const rank = parseInt(<string>square.id[1]);
 		const column = square .id.charCodeAt(0);
 		return this.isWhiteOnTopInStateRepresentation() ?
-			new Square(h.charCodeAt(0) - column, rank - 1) :
+			new Square(column + a.charCodeAt(0), 8 - rank) :
 			new Square(column - a.charCodeAt(0), 8 - rank);
 	}
 

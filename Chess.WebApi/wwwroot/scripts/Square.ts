@@ -7,10 +7,7 @@
         this.rankIndex = rankIndex;
     }
 
-    public toString(whiteOnTop: boolean): string {
-        if (whiteOnTop) {
-            return String.fromCharCode('H'.charCodeAt(0) - this.columnIndex) + (this.rankIndex - 1);
-        }
+    public toString(): string {
         return String.fromCharCode(this.columnIndex + 'A'.charCodeAt(0)) + (8 - this.rankIndex);
     }
 }
