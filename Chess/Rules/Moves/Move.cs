@@ -10,6 +10,15 @@ namespace Chess.Rules.Moves;
 
 public class Move : IEquatable<Move>
 {
+    const string A1 = "A1";
+    const string D1 = "D1";
+    const string F1 = "F1";
+    const string H1 = "H1";
+    const string A8 = "A8";
+    const string D8 = "D8";
+    const string F8 = "F8";
+    const string H8 = "H8";
+
     public Square From { get; }
 
     public Square To { get; }
@@ -192,14 +201,14 @@ public class Move : IEquatable<Move>
             if (To.Column == Column.C)
             {
                 // Long castle
-                chessTable.Squares["D1"].State = chessTable.Squares["A1"].State;
-                chessTable.Squares["A1"].State = SquareState.Empty;
+                chessTable.Squares[D1].State = chessTable.Squares[A1].State;
+                chessTable.Squares[A1].State = SquareState.Empty;
             }
             else
             {
                 // Short castle
-                chessTable.Squares["F1"].State = chessTable.Squares["H1"].State;
-                chessTable.Squares["H1"].State = SquareState.Empty;
+                chessTable.Squares[F1].State = chessTable.Squares[H1].State;
+                chessTable.Squares[H1].State = SquareState.Empty;
             }
         }
         else
@@ -208,14 +217,14 @@ public class Move : IEquatable<Move>
             if (To.Column == Column.C)
             {
                 // Long castle
-                chessTable.Squares["D8"].State = chessTable.Squares["A8"].State;
-                chessTable.Squares["A8"].State = SquareState.Empty;
+                chessTable.Squares[D8].State = chessTable.Squares[A8].State;
+                chessTable.Squares[A8].State = SquareState.Empty;
             }
             else
             {
                 // Short castle
-                chessTable.Squares["F8"].State = chessTable.Squares["H8"].State;
-                chessTable.Squares["H8"].State = SquareState.Empty;
+                chessTable.Squares[F8].State = chessTable.Squares[H8].State;
+                chessTable.Squares[H8].State = SquareState.Empty;
             }
         }
     }
@@ -296,14 +305,14 @@ public class Move : IEquatable<Move>
             if (To.Column == Column.C)
             {
                 // Long castle
-                chessTable.Squares["A1"].State = chessTable.Squares["D1"].State;
-                chessTable.Squares["D1"].State = SquareState.Empty;
+                chessTable.Squares[A1].State = chessTable.Squares[D1].State;
+                chessTable.Squares[D1].State = SquareState.Empty;
             }
             else
             {
                 // Short castle
-                chessTable.Squares["H1"].State = chessTable.Squares["F1"].State;
-                chessTable.Squares["F1"].State = SquareState.Empty;
+                chessTable.Squares[H1].State = chessTable.Squares[F1].State;
+                chessTable.Squares[F1].State = SquareState.Empty;
             }
         }
         else
@@ -312,14 +321,14 @@ public class Move : IEquatable<Move>
             if (To.Column == Column.C)
             {
                 // Long castle
-                chessTable.Squares["A8"].State = chessTable.Squares["D8"].State;
-                chessTable.Squares["D8"].State = SquareState.Empty;
+                chessTable.Squares[A8].State = chessTable.Squares[D8].State;
+                chessTable.Squares[D8].State = SquareState.Empty;
             }
             else
             {
                 // Short castle
-                chessTable.Squares["H8"].State = chessTable.Squares["F8"].State;
-                chessTable.Squares["F8"].State = SquareState.Empty;
+                chessTable.Squares[H8].State = chessTable.Squares[F8].State;
+                chessTable.Squares[F8].State = SquareState.Empty;
             }
         }
     }
