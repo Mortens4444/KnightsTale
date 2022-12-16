@@ -32,7 +32,7 @@
 
 # Chess.Wpf
 -----------
-- Move.Promotion should not be automatic
+- Move code behind into XAML, where possible
 
 # Chess.WinForms
 ----------------

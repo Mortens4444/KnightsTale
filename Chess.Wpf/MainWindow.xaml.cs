@@ -14,6 +14,7 @@ using Chess.Rules.Turns;
 using System.Threading.Tasks;
 using Chess.Utilities;
 using Chess.Table;
+using Chess.CustomEventArgs;
 
 namespace Chess.Wpf
 {
@@ -42,7 +43,16 @@ namespace Chess.Wpf
             boardPainter.CreateChessBoard((Grid)FindName(ChessTableName));
             Repaint();
 
+            chessGame.PawnPromotionEvent += ChessGame_PawnPromotionEvent;
             chessGame.ChessTable.TurnControl.TurnChanged += TurnControl_TurnChanged;
+        }
+
+        private void ChessGame_PawnPromotionEvent(object sender, PawnPromotionEventArgs e)
+        {
+            var promotePawnForm = new PromotePawnWindow(e.Move);
+            promotePawnForm.ShowDialog();
+            e.Move.To.State = promotePawnForm.ChoosenFigure;
+            chessGame.ChessTable.TurnControl.ChangeTurn(e.Move, true);
         }
 
         private void NewGame_Click(object sender, RoutedEventArgs e)

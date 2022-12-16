@@ -56,7 +56,7 @@ namespace Chess.Wpf
                     var state = tableSquares[column, rank].State;
                     var squareInfo = state.GetSquareInfo();
 
-                    var textBlock = CreateTextBlock(chessTable, squareInfo.DisplayChar.ToString(), state.HasBlackFigure() ? Colors.Green : Colors.LightBlue, $"{columnNumber}{rowNumber}");
+                    var textBlock = CreateTextBlock(chessTable, squareInfo.DisplayChar.ToString(), state.HasBlackFigure() ? Colors.Green : Colors.RoyalBlue, $"{columnNumber}{rowNumber}");
                     SetColumnAndRank(textBlock, columnNumber, rowNumber);
 
                     var rightColumnTextBlock = CreateTextBlock(chessTable, column.ToString(), Colors.Black, $"{columnNumber}9");

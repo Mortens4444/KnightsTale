@@ -6,6 +6,7 @@ namespace Chess.WinForms
     public partial class PromotePawnForm : Form
     {
         private readonly bool white;
+
         public SquareState ChoosenFigure { get; private set; }
 
         public PromotePawnForm(Move move)
