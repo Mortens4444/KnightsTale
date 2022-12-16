@@ -7,6 +7,7 @@ using Chess.Utilities;
 using Chess.WinForms.Extensions;
 using Chess.WinApi;
 using MessageBoxes;
+using Chess.CustomEventArgs;
 
 namespace Chess.WinForms;
 
@@ -25,7 +26,16 @@ public partial class MainForm : Form
         cbWhite.GetValues(Level.Human);
         cbBlack.GetValues(Level.Human);
 
+        chessGame.PawnPromotionEvent += ChessGame_PawnPromotionEvent;
         chessGame.ChessTable.TurnControl.TurnChanged += TurnControl_TurnChanged;
+    }
+
+    private void ChessGame_PawnPromotionEvent(object sender, PawnPromotionEventArgs e)
+    {
+        var promotePawnForm = new PromotePawnForm(e.Move);
+        promotePawnForm.ShowDialog();
+        e.Move.To.State = promotePawnForm.ChoosenFigure;
+        chessGame.ChessTable.TurnControl.ChangeTurn(e.Move, true);
     }
 
     private void PBoard_Paint(object sender, PaintEventArgs e)

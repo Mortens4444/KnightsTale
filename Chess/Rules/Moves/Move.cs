@@ -137,7 +137,7 @@ public class Move : IEquatable<Move>
         return new Move(value, chessTable);
     }
 
-    public void Execute(ChessTable chessTable, bool changeTurn, bool sendTurnChangedEvent)
+    public void Execute(ChessTable chessTable, bool changeTurn, bool sendTurnChangedEvent, bool hasPawnPromotionEvent = false)
     {
         Contract.Requires(chessTable != null);
 
@@ -168,6 +168,10 @@ public class Move : IEquatable<Move>
             case MoveType.HitWithPromotion:
             case MoveType.Promotion:
                 Promotion();
+                if (hasPawnPromotionEvent)
+                {
+                    return;
+                }
                 break;
             case MoveType.Hit:
             case MoveType.CheckMate:

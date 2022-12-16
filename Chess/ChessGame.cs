@@ -1,4 +1,5 @@
-﻿using Chess.Rules.Moves;
+﻿using Chess.CustomEventArgs;
+using Chess.Rules.Moves;
 using Chess.Table;
 using Chess.Utilities;
 using System;
@@ -11,6 +12,10 @@ namespace Chess;
 
 public class ChessGame
 {
+    public delegate void PawnPromotionEventHandler(object sender, PawnPromotionEventArgs e);
+
+    public event PawnPromotionEventHandler PawnPromotionEvent;
+
     public ChessTable ChessTable { get; internal set; } = new ChessTable();
 
     private Logger logger;
@@ -40,7 +45,11 @@ public class ChessGame
         var validMove = GetValidMove(move);
         if (validMove != null)
         {
-            validMove.Execute(ChessTable, true, true);
+            validMove.Execute(ChessTable, true, true, PawnPromotionEvent != null);
+            if (validMove.MoveType == MoveType.Promotion || validMove.MoveType == MoveType.HitWithPromotion)
+            {
+                RaisePawnPromotionEvent(validMove);
+            }
             logger?.Write(validMove);
             return true;
         }
@@ -66,5 +75,10 @@ public class ChessGame
     public bool IsWhiteTurn()
     {
         return ChessTable.TurnControl.IsWhiteTurn();
+    }
+
+    protected virtual void RaisePawnPromotionEvent(Move move)
+    {
+        PawnPromotionEvent?.Invoke(this, new PawnPromotionEventArgs(move));
     }
 }
