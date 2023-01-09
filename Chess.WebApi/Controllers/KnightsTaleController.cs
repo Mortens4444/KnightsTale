@@ -91,11 +91,14 @@ namespace Chess.WebApi.Controllers
 
         [HttpGet]
         [Route("api/game/ai/getmove")]
-        public IActionResult GetMoveFromAI([FromQuery] int level, [FromQuery] int figureValueCalculationMode)
+        public IActionResult GetMoveFromAI([FromQuery] string levelStr, [FromQuery] string figureValueCalculationModeStr)
         {
-            var ai = AIBuilder.GetAI((Level)level, (FigureValueCalculationMode)figureValueCalculationMode);
+            Level.TryParse(levelStr, out Level level);
+            FigureValueCalculationMode.TryParse(figureValueCalculationModeStr, out FigureValueCalculationMode figureValueCalculationMode);
+            var ai = AIBuilder.GetAI(level, figureValueCalculationMode);
             var move = ai.GetMove(chessGame.ChessTable);
-            return Ok(move.ToString());
+            var result = new Chess.WebApi.Dtos.MoveResult($"{move.From.Name}{move.To.Name}", chessGame.ChessTable.TurnControl.IsWhiteTurn());
+            return Ok(result);
         }
     }
 }

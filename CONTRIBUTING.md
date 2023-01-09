@@ -11,10 +11,11 @@
 # Chess.Console
 ---------------
 - Fix two AI play
+- Move.Promotion should not be automatic
 
 # Chess.WebApi
 --------------
-- Set AI and get response in Chess.WebApi
+- Get response from AI
 - Add moves list
 - Move.Promotion should not be automatic
 
