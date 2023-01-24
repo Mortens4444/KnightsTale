@@ -72,7 +72,7 @@
 		item.innerHTML = items[i];
 		myList.appendChild(item);
 	}
-```javascript
+```
 	
 - Move.Promotion should not be automatic - Check in Chess.WinForms or Chess.Wpf
 
