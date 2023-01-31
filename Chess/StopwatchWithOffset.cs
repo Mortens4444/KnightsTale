@@ -1,12 +1,11 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace Chess
 {
-    using System;
-
     public class StopwatchWithOffset : Stopwatch
     {
-        TimeSpan offset = new();
+        private TimeSpan offset;
 
         public StopwatchWithOffset()
         { }

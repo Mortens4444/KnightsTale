@@ -86,6 +86,8 @@ public static class ArtificalIntelligence
 
     public static Move GetMove(ChessTable chessTable, Delegates.MoveDecisionHelperCallback moveDecisionHelperCallback, FigureValueCalculator figureValueCalculator)
     {
+        Contract.Requires(chessTable != null);
+
         var validMoves = chessTable.GetValidMoves();
         var winnerMoves = new List<Move>();
         var veryGoodMoves = new List<Move>();

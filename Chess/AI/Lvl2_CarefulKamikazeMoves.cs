@@ -1,6 +1,7 @@
 ﻿using Chess.FigureValues;
 using Chess.Rules.Moves;
 using Chess.Table;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace Chess.AI;
@@ -25,6 +26,7 @@ public class Lvl2_CarefulKamikazeMoves : IArtificalIntelligence, IMoveChooser
 
     public Move GetMove(ChessTable chessTable)
     {
+        Contract.Requires(chessTable != null);
         chessTable.DebugWriter($"{GetType().Name} searching for move...");
 
         var moveDecisionHelper = GetMoveDecisionHelper(chessTable);

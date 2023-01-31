@@ -93,12 +93,20 @@ namespace Chess.WebApi.Controllers
         [Route("api/game/ai/getmove")]
         public IActionResult GetMoveFromAI([FromQuery] string levelStr, [FromQuery] string figureValueCalculationModeStr)
         {
-            Level.TryParse(levelStr, out Level level);
-            FigureValueCalculationMode.TryParse(figureValueCalculationModeStr, out FigureValueCalculationMode figureValueCalculationMode);
-            var ai = AIBuilder.GetAI(level, figureValueCalculationMode);
-            var move = ai.GetMove(chessGame.ChessTable);
-            var result = new Chess.WebApi.Dtos.MoveResult($"{move.From.Name}{move.To.Name}", chessGame.ChessTable.TurnControl.IsWhiteTurn());
-            return Ok(result);
+            if (Level.TryParse(levelStr, out Level level))
+            {
+                if (FigureValueCalculationMode.TryParse(figureValueCalculationModeStr, out FigureValueCalculationMode figureValueCalculationMode))
+                {
+                    var ai = AIBuilder.GetAI(level, figureValueCalculationMode);
+                    var move = ai.GetMove(chessGame.ChessTable);
+                    var result = new Chess.WebApi.Dtos.MoveResult($"{move.From.Name}{move.To.Name}", chessGame.ChessTable.TurnControl.IsWhiteTurn());
+                    return Ok(result);
+                }
+
+                return BadRequest($"Cannot find 'FigureValueCalculationMode': {figureValueCalculationModeStr}");
+            }
+
+            return BadRequest($"Cannot find 'Level': {levelStr}");
         }
     }
 }

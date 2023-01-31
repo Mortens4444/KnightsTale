@@ -30,11 +30,11 @@ public class ChessTable : ICloneable
 
     public Action<string> DebugWriter { get; set; }
 
-    public StopwatchWithOffset StopwatchWhite = new();
+    public StopwatchWithOffset StopwatchWhite { get; private set; } = new();
 
-    public StopwatchWithOffset StopwatchBlack = new();
+    public StopwatchWithOffset StopwatchBlack { get; private set; } = new();
 
-    public List<MoveWithTime> PreviousMoves = new();
+    public List<MoveWithTime> PreviousMoves { get; private set; } = new();
 
     public MoveWithTime LastMove => PreviousMoves.Any() ? PreviousMoves[PreviousMoves.Count - 1] : null;
 
@@ -120,6 +120,7 @@ public class ChessTable : ICloneable
 
     public void CopyStatesFrom(ChessTable chessTable)
     {
+        Contract.Requires(chessTable != null);
         LoadByteArray(chessTable.GetSquareStates());
     }
 

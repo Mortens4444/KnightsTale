@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using System.Globalization;
 using System.Linq;
 
 namespace Chess.Table.TableSquare;
@@ -41,10 +42,10 @@ public class Square : IEquatable<Square>
     {
         if (State.HasFigure())
         {
-            return $"{Name.ToLower()} - {State}";
+            return $"{Name.ToLower(CultureInfo.InvariantCulture)} - {State}";
         }
 
-        return Name.ToLower();
+        return Name.ToLower(CultureInfo.InvariantCulture);
     }
 
     public string ToString(Square from)

@@ -13,7 +13,7 @@ public class SquareList : List<Square>
     {
         get
         {
-            foreach (var square in this.Where(square => square.Name.Equals(squareName, StringComparison.InvariantCultureIgnoreCase)))
+            foreach (var square in this.Where(square => square.Name.Equals(squareName, StringComparison.OrdinalIgnoreCase)))
             {
                 return square;
             }

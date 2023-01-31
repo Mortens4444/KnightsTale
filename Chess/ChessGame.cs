@@ -12,9 +12,7 @@ namespace Chess;
 
 public class ChessGame
 {
-    public delegate void PawnPromotionEventHandler(object sender, PawnPromotionEventArgs e);
-
-    public event PawnPromotionEventHandler PawnPromotionEvent;
+    public event EventHandler<PawnPromotionEventArgs> PawnPromotionEvent;
 
     public ChessTable ChessTable { get; internal set; } = new ChessTable();
 
