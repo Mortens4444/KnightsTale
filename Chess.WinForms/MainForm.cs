@@ -30,7 +30,7 @@ public partial class MainForm : Form
         chessGame.ChessTable.TurnControl.TurnChanged += TurnControl_TurnChanged;
     }
 
-    private void ChessGame_PawnPromotionEvent(object sender, PawnPromotionEventArgs e)
+    private void ChessGame_PawnPromotionEvent(object? sender, PawnPromotionEventArgs e)
     {
         var promotePawnForm = new PromotePawnForm(e.Move);
         promotePawnForm.ShowDialog();
