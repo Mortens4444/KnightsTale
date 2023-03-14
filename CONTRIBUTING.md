@@ -26,7 +26,6 @@
 
 # Chess.WebApi
 --------------
-- Get response from AI
 - Add moves list
 	In HTML/JavaScript, you can create a list view by using the <ul> (unordered list) or <ol> (ordered list) element. Each list item should be placed within a <li> (list item) element. Here is an example of an ordered list:
 ```html

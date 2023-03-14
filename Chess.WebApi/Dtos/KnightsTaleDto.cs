@@ -10,6 +10,8 @@ public class KnightsTaleDto
     
     public byte[] StateValues { get; set; } = new byte[64];
 
+    public bool IsWhiteTurn { get; set; } = true;
+
     public static KnightsTaleDto CreateFromGame(ChessGame chessGame)
     {
         var stringBuilder = new StringBuilder();
@@ -21,7 +23,8 @@ public class KnightsTaleDto
         return new KnightsTaleDto
         {
             States = stringBuilder.ToString(),
-            StateValues = chessGame.ChessTable.GetSquareStates()
+            StateValues = chessGame.ChessTable.GetSquareStates(),
+            IsWhiteTurn = chessGame.IsWhiteTurn()
         };
     }
 }

@@ -59,8 +59,16 @@ namespace Chess.WebApi.Controllers
             binaryReader.Read(bytes, 0, bytes.Length);
             chessGame.ChessTable.LoadByteArray(bytes);
 
+            return Refresh();
+        }
+
+        [HttpPost]
+        [Route("api/game/refresh")]
+        public IActionResult Refresh()
+        {
             return Ok(KnightsTaleDto.CreateFromGame(chessGame));
         }
+
 
         [HttpPost]
         [Route("api/game/save")]
@@ -78,7 +86,7 @@ namespace Chess.WebApi.Controllers
             {
                 if (chessGame.Execute(new Move(move, chessGame.ChessTable)))
                 {
-                    return Ok(KnightsTaleDto.CreateFromGame(chessGame));
+                    return Refresh();
                 }
 
                 return BadRequest($"Move ({move}) is not valid.");

@@ -1,3 +1,4 @@
+import type { ChessGame } from './ChessGame.js';
 import { DomManipulator } from './DomManipulator.js';
 import type { KnightsTaleDto } from './Dtos/KnightsTaleDto.js';
 import { RequestCallbacksDto } from './Dtos/RequestCallbacksDto.js';
@@ -41,8 +42,10 @@ export class ChessBoardBuilder {
 	private domManipulator: DomManipulator;
 	private moveFrom: HTMLElement | null;
 	private whiteOnTopWhenShow: boolean;
+	private chessGame: ChessGame;
 
-	public constructor() {
+	public constructor(chessGame: ChessGame) {
+		this.chessGame = chessGame;
 		this.domManipulator = new DomManipulator();
 		this.moveFrom = null;
 		this.whiteOnTopWhenShow = false;
@@ -113,6 +116,12 @@ export class ChessBoardBuilder {
 		RequestSender.execute(`KnightsTale/api/game/move/${move}`, 'POST',
 			new RequestCallbacksDto((knightsTaleDto: KnightsTaleDto) => {
 				this.loadState(knightsTaleDto);
+				if (knightsTaleDto.isWhiteTurn) {
+					this.chessGame.moveWhiteAI(true);
+				} else {
+					this.chessGame.moveBlackAI(true);
+                }
+				
 			}, (request: JQuery.jqXHR<object>) => { RequestSender.showError(request); }), `${move} executed.`);
     }
 

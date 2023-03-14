@@ -17,10 +17,28 @@ export class ChessGame {
 	public selectedBlackFigureValueCalculationMode: ko.Observable<string> = ko.observable('');
 	public selectedWhiteFigureValueCalculationMode: ko.Observable<string> = ko.observable('');
 
+	private readonly self: ChessGame;
+
 	public constructor() {
-		this.chessBoardBuilder = new ChessBoardBuilder();
+		this.chessBoardBuilder = new ChessBoardBuilder(this);
 		this.getPlayerTypes();
 		this.getFigureValueCalculationModes();
+		this.self = this;
+
+		$(document).ready(() => {
+			const chessGame = this.self;
+			if (window.performance && performance.navigation.type === performance.navigation.TYPE_RELOAD) {
+				const callbacks = new RequestCallbacksDto(
+					(knightsTaleDto: KnightsTaleDto) => { chessGame.chessBoardBuilder.loadState(knightsTaleDto); },
+					(request: JQuery.jqXHR<object>) => { RequestSender.showError(request); }
+				);
+				RequestSender.execute('KnightsTale/api/game/refresh', 'POST', callbacks, 'Page refreshed.');
+			}
+		});
+	}
+
+	refreshBoard(): void {
+		this.chessBoardBuilder.showChessBoard();
 	}
 
 	public switchSide(): void {
@@ -50,30 +68,38 @@ export class ChessGame {
 
 	public blackAIChanged(): void {
 		if (this.selectedBlackPlayerType()) {
-			const level = this.selectedBlackPlayerType();
-			if (level !== 'Human') {
-				const figureValueCalculationMode = this.selectedBlackFigureValueCalculationMode();
-				RequestSender.execute(`KnightsTale/api/game/ai/getmove?levelStr=${level}&figureValueCalculationModeStr=${figureValueCalculationMode}`, 'GET', new RequestCallbacksDto((moveResult: MoveResult) => {
-					if (!moveResult.isWhiteTurn) {
-						this.chessBoardBuilder.move(moveResult.move);
-                    }
-				}, (request: JQuery.jqXHR<object>) => { RequestSender.showError(request); }));
-			}
+			this.moveBlackAI(true); // Pass correct value instead of true
 		}
 	}
 
+	public moveBlackAI(blackTurn: boolean): void {
+		const level = this.selectedBlackPlayerType();
+		if ((level !== 'Human') && blackTurn) {
+			const figureValueCalculationMode = this.selectedBlackFigureValueCalculationMode();
+			RequestSender.execute(`KnightsTale/api/game/ai/getmove?levelStr=${level}&figureValueCalculationModeStr=${figureValueCalculationMode}`, 'GET', new RequestCallbacksDto((moveResult: MoveResult) => {
+				if (!moveResult.isWhiteTurn) {
+					this.chessBoardBuilder.move(moveResult.move);
+				}
+			}, (request: JQuery.jqXHR<object>) => { RequestSender.showError(request); }));
+		}
+    }
+
 	public whiteAIChanged(): void {
 		if (this.selectedWhitePlayerType()) {
-			const level = this.selectedWhitePlayerType();
-			if (level !== 'Human') {
-				const figureValueCalculationMode = this.selectedWhiteFigureValueCalculationMode();
-				RequestSender.execute(`KnightsTale/api/game/ai/getmove?levelStr=${level}&figureValueCalculationModeStr=${figureValueCalculationMode}`, 'GET', new RequestCallbacksDto((moveResult: MoveResult) => {
-					if (moveResult.isWhiteTurn) {
-						this.chessBoardBuilder.move(moveResult.move);
-					}
-				}, (request: JQuery.jqXHR<object>) => { RequestSender.showError(request); }));
-			}
+			this.moveWhiteAI(true); // Pass correct value instead of true
         }
+	}
+
+	public moveWhiteAI(whiteTurn: boolean): void {
+		const level = this.selectedWhitePlayerType();
+		if ((level !== 'Human') && whiteTurn) {
+			const figureValueCalculationMode = this.selectedWhiteFigureValueCalculationMode();
+			RequestSender.execute(`KnightsTale/api/game/ai/getmove?levelStr=${level}&figureValueCalculationModeStr=${figureValueCalculationMode}`, 'GET', new RequestCallbacksDto((moveResult: MoveResult) => {
+				if (moveResult.isWhiteTurn) {
+					this.chessBoardBuilder.move(moveResult.move);
+				}
+			}, (request: JQuery.jqXHR<object>) => { RequestSender.showError(request); }));
+		}
 	}
 
 	public saveGame(): void {
