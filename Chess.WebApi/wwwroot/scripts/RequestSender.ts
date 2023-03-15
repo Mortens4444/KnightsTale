@@ -1,4 +1,5 @@
-﻿import * as toast from '../lib/@brenoroosevelt/toast/lib/esm/toast.js';
+﻿import toast from '@brenoroosevelt/toast';
+
 import type { KnightsTaleDto } from './Dtos/KnightsTaleDto.js';
 import type { RequestCallbacksDto } from './Dtos/RequestCallbacksDto.js';
 

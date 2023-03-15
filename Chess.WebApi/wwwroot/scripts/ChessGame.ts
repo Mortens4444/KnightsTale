@@ -1,9 +1,12 @@
+import $ from 'jquery';
+import ko from 'knockout';
+import toast from '@brenoroosevelt/toast';
+
 import { ChessBoardBuilder } from './ChessBoardBuilder.js';
 import type { KnightsTaleDto } from './Dtos/KnightsTaleDto.js';
 import type { MoveResult } from './Dtos/MoveResult.js';
 import { RequestCallbacksDto } from './Dtos/RequestCallbacksDto.js';
 import { RequestSender } from './RequestSender.js';
-import * as toast from '../lib/@brenoroosevelt/toast/lib/esm/toast.js';
 
 export class ChessGame {
 

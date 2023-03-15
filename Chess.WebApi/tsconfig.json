@@ -19,7 +19,7 @@
     "importsNotUsedAsValues": "error",
     "inlineSourceMap": true,
     "inlineSources": true,
-    "module": "EsNext",
+    "module": "esnext",
     "moduleResolution": "node",
     "moduleSuffixes": [ "" ],
     "newLine": "crlf",
@@ -48,6 +48,7 @@
     "strictPropertyInitialization": true,
     "suppressExcessPropertyErrors": false,
     "suppressImplicitAnyIndexErrors": false,
+    "types": [ "jquery", "knockout" ],
     "useUnknownInCatchVariables": true
   },
   "include": [ "**/*.ts" ],
