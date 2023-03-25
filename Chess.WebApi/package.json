@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@brenoroosevelt/toast": "^2.0.3",
-    "jquery": "^3.6.0",
+    "jquery": "^3.6.4",
     "knockout": "^3.5.1"
   },
   "devDependencies": {

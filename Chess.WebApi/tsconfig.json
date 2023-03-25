@@ -6,7 +6,7 @@
     "allowUnusedLabels": false,
     "alwaysStrict": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "./wwwroot/scripts",
+    "baseUrl": "./",
     "checkJs": true,
     "declaration": false,
     "declarationMap": false,
@@ -14,6 +14,7 @@
     "downlevelIteration": true,
     "emitBOM": false,
     "emitDeclarationOnly": false,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
     "importsNotUsedAsValues": "error",
@@ -35,6 +36,11 @@
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "paths": {
+      "*": [
+        "node_modules/*"
+      ]
+    },
     "pretty": true,
     "preserveConstEnums": true,
     "preserveValueImports": true,
@@ -50,7 +56,5 @@
     "suppressImplicitAnyIndexErrors": false,
     "types": [ "jquery", "knockout" ],
     "useUnknownInCatchVariables": true
-  },
-  "include": [ "**/*.ts" ],
-  "exclude": [ "node_modules", "**/*.spec.ts" ]
+  }
 }
