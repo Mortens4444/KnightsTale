@@ -28,7 +28,7 @@ public class Lvl1_KamikazeMoves : IArtificalIntelligence
             return null;
         }
         var hitMoves = validMoves
-            .Where(validMove => validMove.MoveType == MoveType.Hit | validMove.MoveType == MoveType.EnPassant);
+            .Where(validMove => validMove.MoveType == MoveType.Hit | validMove.MoveType == MoveType.EnPassant).ToList();
         if (hitMoves.Any())
         {
             var bestHit = hitMoves.OrderByDescending(hitMove => figureValueCalculator.GetValue(hitMove.To.State)).First();

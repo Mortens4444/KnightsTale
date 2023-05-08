@@ -35,16 +35,22 @@ public class Move : IEquatable<Move>
 
     public Move(string move, ChessTable chessTable)
     {
+        if (chessTable == null)
+        {
+            throw new ArgumentNullException(nameof(chessTable));
+        }
+
         if (move == null)
         {
             throw new ArgumentNullException(nameof(move));
         }
+
         if (move.Length != 4)
         {
             throw new ArgumentException("Move length should be 4 characters", nameof(move));
         }
 
-        From = chessTable.Squares[move.Substring(0, 2)];
+        From = chessTable.Squares[move[..2]];
         To = chessTable.Squares[move.Substring(2, 2)];
 
         MoveType = SetMoveType(GetMoveType());
@@ -339,6 +345,21 @@ public class Move : IEquatable<Move>
     
     public MoveEvaluationResult EvaluateMove(ChessTable chessTable, Delegates.MoveDecisionHelperCallback moveDecisionHelperCallback, FigureValueCalculator figureValueCalculator)
     {
+        if (chessTable == null)
+        {
+            throw new ArgumentNullException(nameof(chessTable));
+        }
+
+        if (moveDecisionHelperCallback == null)
+        {
+            throw new ArgumentNullException(nameof(moveDecisionHelperCallback));
+        }
+
+        if (figureValueCalculator == null)
+        {
+            throw new ArgumentNullException(nameof(figureValueCalculator));
+        }
+
         var result = MoveEvaluationResult.Unknown;
         Execute(chessTable, true, false);
 
@@ -405,6 +426,11 @@ public class Move : IEquatable<Move>
 
     public Move Clone(ChessTable chessTable)
     {
+        if (chessTable == null)
+        {
+            throw new ArgumentNullException(nameof(chessTable));
+        }
+
         return new Move(chessTable.Squares[From.Name], chessTable.Squares[To.Name], MoveType)
         {
             CapturedFigure = CapturedFigure,

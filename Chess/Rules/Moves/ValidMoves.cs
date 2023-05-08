@@ -1,5 +1,6 @@
 ﻿using Chess.Table;
 using Chess.Table.TableSquare;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,11 +8,26 @@ namespace Chess.Rules.Moves
 {
     public class ValidMoves : List<Move>
     {
-        public bool AddValidMoveOnly(Move move, ChessTable chessTable, bool setCheckProperties, IOrderedEnumerable<Square> kings)
+        public bool AddValidMoveOnly(Move move, ChessTable chessTable, bool setCheckProperties, IList<Square> kings)
         {
+            if (move == null)
+            {
+                throw new ArgumentNullException(nameof(move));
+            }
+
+            if (kings == null)
+            {
+                throw new ArgumentNullException(nameof(kings));
+            }
+
+            if (chessTable == null)
+            {
+                throw new ArgumentNullException(nameof(chessTable));
+            }
+
             var result = false;
-            var kingSquare = kings.ElementAt(0);
-            var foeKingSquare = kings.ElementAt(1);
+            var kingSquare = kings[0];
+            var foeKingSquare = kings[1];
 
             if (move.MoveType != MoveType.Castle || !chessTable.IsInCheck(kingSquare))
             {
@@ -53,6 +69,21 @@ namespace Chess.Rules.Moves
 
         public static ValidMoves GetValidMovesFromPossibleMoves(ChessTable chessTable, Square from, PossibleMoves allMoves, bool setCheckProperties, bool stopSearchOnFirstValidMove)
         {
+            if (chessTable == null)
+            {
+                throw new ArgumentNullException(nameof(chessTable));
+            }
+
+            if (from == null)
+            {
+                throw new ArgumentNullException(nameof(from));
+            }
+
+            if (allMoves == null)
+            {
+                throw new ArgumentNullException(nameof(allMoves));
+            }
+
             var result = new ValidMoves();
 
             if (!allMoves.Any())

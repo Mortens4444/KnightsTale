@@ -1,22 +1,21 @@
-﻿using System;
+﻿using KnightsTaleUci.Commands;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using KnightsTaleUci.Commands;
 
 namespace KnightsTaleUci
 {
-	class CommandParser
+    public sealed class CommandParser
 	{
-		private static readonly List<ICommand> commands;
+		private static readonly List<ICommand> commands = CommandListBuilder.GetCommandList();
 
-		static CommandParser()
+		public static ICommand TryParseCommand(string commandText)
 		{
-			var commandListBuilder = new CommandListBuilder();
-			commands = commandListBuilder.GetCommandList();
-		}
+			if (commandText == null)
+			{
+				throw new ArgumentNullException(nameof(commandText));
+			}
 
-		public ICommand TryParseCommand(string commandText)
-		{
 			var commandSegments = commandText.Split(' ', '\t', StringSplitOptions.RemoveEmptyEntries);
 
 			int i = 0;
@@ -28,7 +27,7 @@ namespace KnightsTaleUci
 					var cmd = (Command)commandToExecute.Clone();
 					while (++i < commandSegments.Length)
 					{
-						cmd.Parameters.Add(commandSegments[i].ToLower());
+						cmd.Parameters.Add(commandSegments[i].ToLowerInvariant());
 					}
 					return cmd;
 				}

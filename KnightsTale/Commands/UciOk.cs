@@ -2,10 +2,10 @@
 
 namespace KnightsTaleUci.Commands
 {
-	/// <summary>
-	/// uciok
-	/// </summary>
-	class UciOk : Command
+    /// <summary>
+    /// uciok
+    /// </summary>
+    public sealed class UciOk : Command
 	{
 		protected override List<string> GetResponses()
 		{

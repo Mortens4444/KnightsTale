@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace KnightsTaleUci.Commands
 {
-	abstract class Command : ICommand
+    public abstract class Command : ICommand
 	{
-		public string Name => GetType().Name.ToLower();
+		public string Name => GetType().Name.ToLowerInvariant();
 
-		public virtual List<string> Parameters => new List<string>();
+		public virtual List<string> Parameters => new();
 
 		public virtual Command NextCommand => null;
 

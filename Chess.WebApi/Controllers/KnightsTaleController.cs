@@ -48,6 +48,11 @@ namespace Chess.WebApi.Controllers
         [Route("api/game/load")]
         public IActionResult LoadGame([FromForm] IFormFile file)
         {
+            if (file == null)
+            {
+                throw new ArgumentNullException(nameof(file));
+            }
+
             using var stream = file.OpenReadStream();
             using var binaryReader = new BinaryReader(stream);
             if (file.Length < chessGame.ChessTable.Squares.Count)

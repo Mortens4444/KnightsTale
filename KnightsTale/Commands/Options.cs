@@ -2,7 +2,7 @@
 
 namespace KnightsTaleUci.Commands
 {
-	class Options : Command
+    public sealed class Options : Command
 	{
 		public override Command NextCommand => new UciOk();
 

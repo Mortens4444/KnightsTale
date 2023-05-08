@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net48;net7.0</TargetFrameworks>
+    <TargetFrameworks>net7.0</TargetFrameworks>
     <AnalysisLevel>latest-all</AnalysisLevel>
     <WarningLevel>9999</WarningLevel>
     <LangVersion>10.0</LangVersion>
+    <NoWarn>$(NoWarn);CA1308</NoWarn>
   </PropertyGroup>
 
 </Project>

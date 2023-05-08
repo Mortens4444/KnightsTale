@@ -50,15 +50,15 @@ public class SquareList : List<Square>
         }
     }
 
-    public IOrderedEnumerable<Square> GetKingSquares(bool whiteFirst)
+    public IList<Square> GetKingSquares(bool whiteFirst)
     {
         var kings = this.Where(square => square.State.HasKing());
         if (whiteFirst)
         {
-            return kings.OrderBy(square => (int)square.State);
+            return kings.OrderBy(square => (int)square.State).ToList();
         }
 
-        return kings.OrderByDescending(square => (int)square.State);
+        return kings.OrderByDescending(square => (int)square.State).ToList();
     }
 
     public Square GetWhiteKingSquare()

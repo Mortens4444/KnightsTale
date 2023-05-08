@@ -72,7 +72,7 @@ public static class ArtificalIntelligence
             return new MoveDecisionHelper(validMoves, new List<MoveWithGainInfo>());
         }
 
-        var winnerMoves = validMoves.Where(validMove => validMove.IsEnemyInCheckMate);
+        var winnerMoves = validMoves.Where(validMove => validMove.IsEnemyInCheckMate).ToList();
         if (winnerMoves.Any())
         {
             return new MoveDecisionHelper(validMoves, winnerMoves.Select(winnerMove => new MoveWithGainInfo(winnerMove, Double.MaxValue)).ToList());

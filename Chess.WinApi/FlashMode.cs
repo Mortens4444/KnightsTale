@@ -3,13 +3,12 @@
 namespace Chess.WinApi
 {
     [Flags]
-    public enum FlashMode : uint
+    public enum FlashMode
     {
-        StopFlashing = 0,
+        None = 0,
         FlashWindowTitle = 1,
         FlashTaskbarButton = 2,
-        FlashAll = 3,
         FlashContinuously = 4,
-        FlashUntilNotInForeground = 12
+        FlashUntilNotInForeground = 8
     }
 }

@@ -3,7 +3,7 @@ using KnightsTaleUci.IO;
 
 namespace KnightsTaleUci
 {
-	class CommandExecutor
+    public sealed class CommandExecutor
 	{
 		public bool IsWorking { get; private set; }
 
@@ -29,18 +29,18 @@ namespace KnightsTaleUci
 		{
 			while (IsWorking && !cancellationToken.IsCancellationRequested)
 			{
-				var commandText = commandBuilder.Build(cancellationToken);
+				var commandText = CommandBuilder.Build(cancellationToken);
 				if (!cancellationToken.IsCancellationRequested)
 				{
-					ExecuteCommand(commandText, cancellationToken);
+                    ExecuteCommand(commandText, cancellationToken);
 				}
 			}
 		}
 
-		private async void ExecuteCommand(string commandText, CancellationToken cancellationToken)
+		private static async void ExecuteCommand(string commandText, CancellationToken cancellationToken)
 		{
 			var commandParser = new CommandParser();
-			var command = commandParser.TryParseCommand(commandText);
+			var command = CommandParser.TryParseCommand(commandText);
 
 			while (command != null)
 			{

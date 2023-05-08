@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 [assembly: CLSCompliant(false)]
 namespace KnightsTaleUci
 {
-	/// <summary>
-	/// https://backscattering.de/chess/uci/#engine-option
-	/// </summary>
-	class Program
+    /// <summary>
+    /// https://backscattering.de/chess/uci/#engine-option
+    /// </summary>
+    public sealed class Program
 	{
 		static void Main(string[] args)
 		{

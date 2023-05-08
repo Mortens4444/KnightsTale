@@ -42,10 +42,10 @@ public class Square : IEquatable<Square>
     {
         if (State.HasFigure())
         {
-            return $"{Name.ToLower(CultureInfo.InvariantCulture)} - {State}";
+            return $"{Name.ToLowerInvariant()} - {State}";
         }
 
-        return Name.ToLower(CultureInfo.InvariantCulture);
+        return Name.ToLowerInvariant();
     }
 
     public string ToString(Square from)

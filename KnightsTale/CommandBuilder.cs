@@ -4,9 +4,9 @@ using KnightsTaleUci.IO;
 
 namespace KnightsTaleUci
 {
-	class CommandBuilder
+    public sealed class CommandBuilder
 	{
-		public string Build(CancellationToken cancellationToken)
+		public static string Build(CancellationToken cancellationToken)
 		{
 			int ch;
 			var command = String.Empty;
@@ -24,7 +24,7 @@ namespace KnightsTaleUci
 			return command;
 		}
 
-		private bool IsNewLineChar(int ch)
+		private static bool IsNewLineChar(int ch)
 		{
 			return ch == '\r' || ch == '\n';
 		}

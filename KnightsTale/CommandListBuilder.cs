@@ -5,9 +5,9 @@ using KnightsTaleUci.Commands;
 
 namespace KnightsTaleUci
 {
-	class CommandListBuilder
+    public sealed class CommandListBuilder
 	{
-		public List<ICommand> GetCommandList()
+		public static List<ICommand> GetCommandList()
 		{
 			var result = new List<ICommand>();
 

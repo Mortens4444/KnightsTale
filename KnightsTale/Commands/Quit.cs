@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace KnightsTaleUci.Commands
 {
-	class Quit : Command
+    public sealed class Quit : Command
 	{
 		/// <summary>
 		/// quit

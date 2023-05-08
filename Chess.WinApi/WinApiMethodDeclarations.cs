@@ -2,7 +2,7 @@
 
 namespace Chess.WinApi
 {
-    public static class WinApi
+    public static class WinApiMethodDeclarations
     {
         [DllImport("User32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]

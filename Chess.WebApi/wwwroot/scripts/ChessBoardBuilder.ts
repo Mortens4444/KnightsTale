@@ -101,11 +101,11 @@ export class ChessBoardBuilder {
 
 	private squareOnClick(event: MouseEvent) {
 		if (this.moveFrom == null) {
-			this.moveFrom = <HTMLElement>event.srcElement;
+			this.moveFrom = <HTMLElement>event.target;
 			this.moveFrom.classList.add(selected);
 		} else {
 			this.moveFrom.classList.remove(selected);
-			const toSquare: Square = this.getSquare(<HTMLElement>event.srcElement);
+			const toSquare: Square = this.getSquare(<HTMLElement>event.target);
 			const fromSquare: Square = this.getSquare(this.moveFrom);
 			this.move(this.getMove(fromSquare, toSquare));
 			this.moveFrom = null;

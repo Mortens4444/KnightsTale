@@ -30,7 +30,10 @@ export class ChessGame {
 
 		$(document).ready(() => {
 			const chessGame = this.self;
-			if (window.performance && performance.navigation.type === performance.navigation.TYPE_RELOAD) {
+			const navigationEntries = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
+
+			if (window.performance && navigationEntries.length > 0 && navigationEntries[0]?.type === 'reload') {
+			//if (window.performance && performance.navigation.type === performance.navigation.TYPE_RELOAD) {
 				const callbacks = new RequestCallbacksDto(
 					(knightsTaleDto: KnightsTaleDto) => { chessGame.chessBoardBuilder.loadState(knightsTaleDto); },
 					(request: JQuery.jqXHR<object>) => { RequestSender.showError(request); }

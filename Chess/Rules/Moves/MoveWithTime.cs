@@ -17,10 +17,17 @@ public class MoveWithTime
 
     public MoveWithTime(string moveWithTime, ChessTable chessTable)
     {
+        if (moveWithTime == null)
+        {
+            throw new ArgumentNullException(nameof(moveWithTime));
+        }
+
         var parts = moveWithTime.Split(new string[] { " - " }, StringSplitOptions.RemoveEmptyEntries);
         Move = new Move(String.Concat(parts[0], parts[1]), chessTable);
-        TimeSpan.TryParse(parts[2], out TimeSpan timeSpan);
-        Time = timeSpan;
+        if (TimeSpan.TryParse(parts[2], out TimeSpan timeSpan))
+        {
+            Time = timeSpan;
+        }
     }
 
     public override string ToString()

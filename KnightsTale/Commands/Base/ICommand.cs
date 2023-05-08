@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace KnightsTaleUci.Commands
 {
-	interface ICommand : ICloneable
+    public interface ICommand : ICloneable
 	{
 		string Name { get; }
 

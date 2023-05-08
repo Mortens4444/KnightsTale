@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -36,7 +37,7 @@ public class ChessTable : ICloneable
 
     public List<MoveWithTime> PreviousMoves { get; private set; } = new();
 
-    public MoveWithTime LastMove => PreviousMoves.Any() ? PreviousMoves[PreviousMoves.Count - 1] : null;
+    public MoveWithTime LastMove => PreviousMoves.Any() ? PreviousMoves[^1] : null;
 
     public string DebuggerDisplay { get { return ToString(SquareInfoMode.Notation, true); } }
 
@@ -168,8 +169,8 @@ public class ChessTable : ICloneable
         if (lines.Length > 1)
         {
             var times = lines[1].Split('|');
-            StopwatchWhite.Elapsed = TimeSpan.Parse(times[0]);
-            StopwatchBlack.Elapsed = TimeSpan.Parse(times[1]);
+            StopwatchWhite.Elapsed = TimeSpan.Parse(times[0], CultureInfo.InvariantCulture);
+            StopwatchBlack.Elapsed = TimeSpan.Parse(times[1], CultureInfo.InvariantCulture);
 
             for (int i = 2; i < lines.Length; i++)
             {
@@ -303,11 +304,21 @@ public class ChessTable : ICloneable
 
     public bool IsInCheck(Square kingSquare)
     {
+        if (kingSquare == null)
+        {
+            throw new ArgumentNullException(nameof(kingSquare));
+        }
+
         return kingSquare.IsInCheck(this);
     }
 
     public static string GetMoveDetails(Move move)
     {
+        if (move == null)
+        {
+            throw new ArgumentNullException(nameof(move));
+        }
+
         return $"{move.MoveType} - {move.From} -> {move.To}";
     }
 
