@@ -1,18 +1,17 @@
 ﻿using System.Collections.Generic;
 
-namespace KnightsTaleUci.Commands
+namespace KnightsTaleUci.Commands;
+
+/// <summary>
+/// uciok
+/// </summary>
+public sealed class UciOk : Command
 {
-    /// <summary>
-    /// uciok
-    /// </summary>
-    public sealed class UciOk : Command
+	protected override List<string> GetResponses()
 	{
-		protected override List<string> GetResponses()
+		return new List<string>
 		{
-			return new List<string>
-			{
-				"uciok"
-			};
-		}
+			"uciok"
+		};
 	}
 }

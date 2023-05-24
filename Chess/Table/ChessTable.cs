@@ -296,7 +296,12 @@ public class ChessTable : ICloneable
 
     public bool IsEnemyInCheck(Square square)
     {
-        var kingSquare = Squares[square].State.HasWhiteFigure() ?
+        if (square == null)
+        {
+            throw new ArgumentNullException(nameof(square));
+        }
+
+        var kingSquare = Squares[square.Name].State.HasWhiteFigure() ?
             Squares.GetBlackKingSquare() :
             Squares.GetWhiteKingSquare();
         return IsInCheck(kingSquare);

@@ -1,32 +1,31 @@
-﻿using System;
+﻿using KnightsTaleUci.IO;
+using System;
 using System.Threading;
-using KnightsTaleUci.IO;
 
-namespace KnightsTaleUci
+namespace KnightsTaleUci;
+
+public sealed class CommandBuilder
 {
-    public sealed class CommandBuilder
+	public static string Build(CancellationToken cancellationToken)
 	{
-		public static string Build(CancellationToken cancellationToken)
-		{
-			int ch;
-			var command = String.Empty;
+		int ch;
+		var command = String.Empty;
 
-			do
+		do
+		{
+			ch = Input.Read();
+			if (ch != -1 && !IsNewLineChar(ch))
 			{
-				ch = Input.Read();
-				if (ch != -1 && !IsNewLineChar(ch))
-				{
-					command += (char)ch;
-				}
+				command += (char)ch;
+			}
 
-			} while (!IsNewLineChar(ch) && !cancellationToken.IsCancellationRequested);
+		} while (!IsNewLineChar(ch) && !cancellationToken.IsCancellationRequested);
 
-			return command;
-		}
+		return command;
+	}
 
-		private static bool IsNewLineChar(int ch)
-		{
-			return ch == '\r' || ch == '\n';
-		}
+	private static bool IsNewLineChar(int ch)
+	{
+		return ch == '\r' || ch == '\n';
 	}
 }

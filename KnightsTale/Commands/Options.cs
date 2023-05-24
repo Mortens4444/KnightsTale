@@ -1,21 +1,20 @@
 ﻿using System.Collections.Generic;
 
-namespace KnightsTaleUci.Commands
-{
-    public sealed class Options : Command
-	{
-		public override Command NextCommand => new UciOk();
+namespace KnightsTaleUci.Commands;
 
-		/// <summary>
-		/// Send the options that can be changed.
-		/// </summary>
-		/// <returns></returns>
-		protected override List<string> GetResponses()
+public sealed class Options : Command
+{
+	public override Command NextCommand => new UciOk();
+
+	/// <summary>
+	/// Send the options that can be changed.
+	/// </summary>
+	/// <returns></returns>
+	protected override List<string> GetResponses()
+	{
+		return new List<string>
 		{
-			return new List<string>
-			{
-				"option name Hash type spin default 1 min 1 max 128"
-			};
-		}
+			"option name Hash type spin default 1 min 1 max 128"
+		};
 	}
 }

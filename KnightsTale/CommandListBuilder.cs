@@ -1,7 +1,7 @@
-﻿using System;
+﻿using KnightsTaleUci.Commands;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using KnightsTaleUci.Commands;
 
 namespace KnightsTaleUci
 {

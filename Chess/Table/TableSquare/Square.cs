@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
-using System.Globalization;
 using System.Linq;
 
 namespace Chess.Table.TableSquare;

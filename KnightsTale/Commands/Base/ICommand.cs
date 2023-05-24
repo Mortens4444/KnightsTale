@@ -1,18 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace KnightsTaleUci.Commands
+namespace KnightsTaleUci.Commands;
+
+public interface ICommand : ICloneable
 {
-    public interface ICommand : ICloneable
-	{
-		string Name { get; }
+	string Name { get; }
 
-		List<string> Parameters { get; }
+	Collection<string> Parameters { get; }
 
-		Command NextCommand { get; }
+	Command NextCommand { get; }
 
-		Task<string> DoJobAndGetResponse(CancellationToken cancellationToken);
-	}
+	Task<string> DoJobAndGetResponse(CancellationToken cancellationToken);
 }

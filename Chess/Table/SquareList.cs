@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Chess.FigureValues;
+using Chess.Table.TableSquare;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using Chess.FigureValues;
-using Chess.Table.TableSquare;
 
 namespace Chess.Table;
 
@@ -13,27 +13,10 @@ public class SquareList : List<Square>
     {
         get
         {
-            foreach (var square in this.Where(square => square.Name.Equals(squareName, StringComparison.OrdinalIgnoreCase)))
-            {
-                return square;
-            }
+            Contract.Requires(squareName != null);
 
-            throw new ArgumentOutOfRangeException($"Square not found: {squareName}");
-        }
-    }
-
-    public Square this[Square squareBase]
-    {
-        get
-        {
-            Contract.Requires(squareBase != null);
-
-            foreach (var square in this.Where(square => (square.Column == squareBase.Column) && (square.Rank == squareBase.Rank)))
-            {
-                return square;
-            }
-
-            throw new ArgumentOutOfRangeException($"Square not found with column and rank: {squareBase.Column}, {squareBase.Rank}");
+            var result = this.FirstOrDefault(square => square.Name.Equals(squareName, StringComparison.OrdinalIgnoreCase));
+            return result ?? throw new ArgumentOutOfRangeException($"Square not found: {squareName}");
         }
     }
 
@@ -41,12 +24,8 @@ public class SquareList : List<Square>
     {
         get
         {
-            foreach (var square in this.Where(square => (square.Column == column) && (square.Rank == rank)))
-            {
-                return square;
-            }
-
-            throw new ArgumentOutOfRangeException($"Square not found with column and rank: {column}, {rank}");
+            var result = this.FirstOrDefault(square => (square.Column == column) && (square.Rank == rank));
+            return result ?? throw new ArgumentOutOfRangeException($"Square not found with column and rank: {column}, {rank}");
         }
     }
 

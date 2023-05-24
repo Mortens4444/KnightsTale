@@ -28,7 +28,7 @@ export class ChessGame {
 		this.getFigureValueCalculationModes();
 		this.self = this;
 
-		$(document).ready(() => {
+		$(() => {
 			const chessGame = this.self;
 			const navigationEntries = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
 
