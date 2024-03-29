@@ -1,8 +1,8 @@
 ﻿using Chess.Rules.Moves;
 using Chess.Table;
 using Chess.Table.TableSquare;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace Chess.Rules.MoveProviders;
@@ -43,25 +43,27 @@ public class ValidMoveProvider
 
     public PossibleMoves GetAllMoves(ChessTable chessTable, Square figureSquare)
     {
-        Contract.Requires(chessTable != null && figureSquare != null);
+        ArgumentNullException.ThrowIfNull(chessTable);
+        ArgumentNullException.ThrowIfNull(figureSquare);
 
-        if (!validators.ContainsKey(figureSquare.State))
+        if (!validators.TryGetValue(figureSquare.State, out FigureMoveProvider value))
         {
             return new PossibleMoves();
         }
-        var validator = validators[figureSquare.State];
+        var validator = value;
         return validator.GetAllMoves(chessTable, figureSquare);
     }
 
     public ValidMoves GetValidMoves(ChessTable chessTable, Square figureSquare, bool setCheckProperties, bool stopSearchOnFirstValidMove)
     {
-        Contract.Requires(chessTable != null && figureSquare != null);
+        ArgumentNullException.ThrowIfNull(chessTable);
+        ArgumentNullException.ThrowIfNull(figureSquare);
 
-        if (!validators.ContainsKey(figureSquare.State))
+        if (!validators.TryGetValue(figureSquare.State, out FigureMoveProvider value))
         {
             return new ValidMoves();
         }
-        var validator = validators[figureSquare.State];
+        var validator = value;
         return validator.GetValidMoves(chessTable, figureSquare, setCheckProperties, stopSearchOnFirstValidMove);
     }
 

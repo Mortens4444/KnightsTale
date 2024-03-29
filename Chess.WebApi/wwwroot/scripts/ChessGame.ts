@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import ko from 'knockout';
-import toast from '@brenoroosevelt/toast';
+import { success } from '@brenoroosevelt/toast/lib/esm/toast.js';
 
 import { ChessBoardBuilder } from './ChessBoardBuilder.js';
 import type { KnightsTaleDto } from './Dtos/KnightsTaleDto.js';
@@ -49,7 +49,7 @@ export class ChessGame {
 
 	public switchSide(): void {
 		this.chessBoardBuilder.switchSide();
-		toast.success('Table turned.');
+		success('Table turned.');
 	}
 
 	public newGame(): void {

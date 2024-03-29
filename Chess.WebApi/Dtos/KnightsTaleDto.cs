@@ -13,10 +13,7 @@ public class KnightsTaleDto
 
     public static KnightsTaleDto CreateFromGame(ChessGame chessGame)
     {
-        if (chessGame == null)
-        {
-            throw new ArgumentNullException(nameof(chessGame));
-        }
+        ArgumentNullException.ThrowIfNull(chessGame);
 
         var stringBuilder = new StringBuilder();
         foreach (var square in chessGame.ChessTable.Squares)

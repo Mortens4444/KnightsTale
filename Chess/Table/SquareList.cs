@@ -15,7 +15,7 @@ public class SquareList : List<Square>
         {
             Contract.Requires(squareName != null);
 
-            var result = this.FirstOrDefault(square => square.Name.Equals(squareName, StringComparison.OrdinalIgnoreCase));
+            var result = Find(square => square.Name.Equals(squareName, StringComparison.OrdinalIgnoreCase));
             return result ?? throw new ArgumentOutOfRangeException($"Square not found: {squareName}");
         }
     }
@@ -24,7 +24,7 @@ public class SquareList : List<Square>
     {
         get
         {
-            var result = this.FirstOrDefault(square => (square.Column == column) && (square.Rank == rank));
+            var result = Find(square => (square.Column == column) && (square.Rank == rank));
             return result ?? throw new ArgumentOutOfRangeException($"Square not found with column and rank: {column}, {rank}");
         }
     }
@@ -52,7 +52,7 @@ public class SquareList : List<Square>
 
     public Square GetEnPassantEmptySquare()
     {
-        return this.FirstOrDefault(square => square.State == SquareState.EnPassantEmpty);
+        return Find(square => square.State == SquareState.EnPassantEmpty);
     }
 
     public IEnumerable<Square> GetAll(SquareState squareState)
@@ -82,7 +82,7 @@ public class SquareList : List<Square>
 
     public static double GetFiguresValue(FigureValueCalculationMode figureValueCalculationMode, Func<IEnumerable<Square>> figureProvider)
     {
-        Contract.Requires(figureProvider != null);
+        ArgumentNullException.ThrowIfNull(figureProvider);
 
         var figureValueCalculator = new FigureValueCalculator(figureValueCalculationMode);
         var figureSquares = figureProvider();

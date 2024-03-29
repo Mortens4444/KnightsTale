@@ -1,4 +1,9 @@
 {
+  "exclude": [
+    "webpack.config.js",
+    "node_modules",
+    "dist"
+  ],
   "compilerOptions": {
     "allowJs": true,
     "allowUmdGlobalAccess": true,
@@ -24,6 +29,7 @@
     "moduleResolution": "node",
     "moduleSuffixes": [ "" ],
     "newLine": "crlf",
+    "noEmitOnError": true,
     "noErrorTruncation": true,
     "noFallthroughCasesInSwitch": true,
     "noStrictGenericChecks": false,
@@ -36,6 +42,7 @@
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "outDir": "./dist",
     "paths": {
       "*": [
         "node_modules/*"
@@ -47,6 +54,7 @@
     "removeComments": false,
     "resolveJsonModule": false,
     "rootDir": ".",
+    "sourceMap": false,
     "strict": true,
     "strictBindCallApply": true,
     "strictNullChecks": true,
@@ -54,7 +62,10 @@
     "strictPropertyInitialization": true,
     "suppressExcessPropertyErrors": false,
     "suppressImplicitAnyIndexErrors": false,
-    "types": [ "jquery", "knockout" ],
+    "types": [
+      "jquery",
+      "knockout"
+    ],
     "useUnknownInCatchVariables": true
   }
 }

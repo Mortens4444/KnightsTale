@@ -1,125 +1,116 @@
 using Chess.AI;
 using Chess.FigureValues;
 using Chess.Rules.Moves;
-using Chess.Table;
 using Chess.WebApi.Dto;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using System.Text;
-using System.Net.Mime;
-using System.Buffers.Text;
 
-namespace Chess.WebApi.Controllers
+namespace Chess.WebApi.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class KnightsTaleController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class KnightsTaleController : ControllerBase
+    private readonly ChessGame chessGame;
+
+    public KnightsTaleController(ChessGame chessGame)
     {
-        private readonly ChessGame chessGame;
+        this.chessGame = chessGame;
+    }
 
-        public KnightsTaleController(ChessGame chessGame)
+    [HttpGet]
+    [Route("api/game/new")]
+    public IActionResult NewGame()
+    {
+        chessGame.NewGame();
+        return Ok();
+    }
+
+    [HttpGet]
+    [Route("api/game/playertypes")]
+    public IActionResult GetPlayerTypes()
+    {
+        return Ok(Enum.GetValues<Level>().ToDictionary(value => (int)value, value => value.ToString()));
+    }
+
+    [HttpGet]
+    [Route("api/game/figurevaluecalculationmodes")]
+    public IActionResult GetFigureValueCalculationModes()
+    {
+        return Ok(Enum.GetValues<FigureValueCalculationMode>().ToDictionary(value => (int)value, value => value.ToString()));
+    }
+
+    [HttpPost]
+    [Route("api/game/load")]
+    public IActionResult LoadGame([FromForm] IFormFile file)
+    {
+        ArgumentNullException.ThrowIfNull(file);
+
+        using var stream = file.OpenReadStream();
+        using var binaryReader = new BinaryReader(stream);
+        if (file.Length < chessGame.ChessTable.Squares.Count)
         {
-            this.chessGame = chessGame;
+            return BadRequest($"Invalid file has been uploaded: {file.FileName}.");
         }
 
-        [HttpGet]
-        [Route("api/game/new")]
-        public IActionResult NewGame()
-        {
-            chessGame.NewGame();
-            return Ok();
-        }
+        var bytes = new byte[file.Length];
+        binaryReader.Read(bytes, 0, bytes.Length);
+        chessGame.ChessTable.LoadByteArray(bytes);
 
-        [HttpGet]
-        [Route("api/game/playertypes")]
-        public IActionResult GetPlayerTypes()
-        {
-            return Ok(Enum.GetValues<Level>().Cast<Level>().ToDictionary(value => (int)value, value => value.ToString()));
-        }
+        return Refresh();
+    }
 
-        [HttpGet]
-        [Route("api/game/figurevaluecalculationmodes")]
-        public IActionResult GetFigureValueCalculationModes()
-        {
-            return Ok(Enum.GetValues<FigureValueCalculationMode>().Cast<FigureValueCalculationMode>().ToDictionary(value => (int)value, value => value.ToString()));
-        }
+    [HttpPost]
+    [Route("api/game/refresh")]
+    public IActionResult Refresh()
+    {
+        return Ok(KnightsTaleDto.CreateFromGame(chessGame));
+    }
 
-        [HttpPost]
-        [Route("api/game/load")]
-        public IActionResult LoadGame([FromForm] IFormFile file)
+
+    [HttpPost]
+    [Route("api/game/save")]
+    public IActionResult SaveGame()
+    {
+        var content = chessGame.ChessTable.GetSquareStates();
+        return Ok(Convert.ToBase64String(content));
+    }
+
+    [HttpPost]
+    [Route("api/game/move/{move}")]
+    public IActionResult Move(string move)
+    {
+        try
         {
-            if (file == null)
+            if (chessGame.Execute(new Move(move, chessGame.ChessTable)))
             {
-                throw new ArgumentNullException(nameof(file));
+                return Refresh();
             }
 
-            using var stream = file.OpenReadStream();
-            using var binaryReader = new BinaryReader(stream);
-            if (file.Length < chessGame.ChessTable.Squares.Count)
+            return BadRequest($"Move ({move}) is not valid.");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet]
+    [Route("api/game/ai/getmove")]
+    public IActionResult GetMoveFromAI([FromQuery] string levelStr, [FromQuery] string figureValueCalculationModeStr)
+    {
+        if (Level.TryParse(levelStr, out Level level))
+        {
+            if (FigureValueCalculationMode.TryParse(figureValueCalculationModeStr, out FigureValueCalculationMode figureValueCalculationMode))
             {
-                return BadRequest($"Invalid file has been uploaded: {file.FileName}.");
+                var ai = AIBuilder.GetAI(level, figureValueCalculationMode);
+                var move = ai.GetMove(chessGame.ChessTable);
+                var result = new Chess.WebApi.Dtos.MoveResult($"{move.From.Name}{move.To.Name}", chessGame.ChessTable.TurnControl.IsWhiteTurn());
+                return Ok(result);
             }
 
-            var bytes = new byte[file.Length];
-            binaryReader.Read(bytes, 0, bytes.Length);
-            chessGame.ChessTable.LoadByteArray(bytes);
-
-            return Refresh();
+            return BadRequest($"Cannot find 'FigureValueCalculationMode': {figureValueCalculationModeStr}");
         }
 
-        [HttpPost]
-        [Route("api/game/refresh")]
-        public IActionResult Refresh()
-        {
-            return Ok(KnightsTaleDto.CreateFromGame(chessGame));
-        }
-
-
-        [HttpPost]
-        [Route("api/game/save")]
-        public IActionResult SaveGame()
-        {
-            var content = chessGame.ChessTable.GetSquareStates();
-            return Ok(Convert.ToBase64String(content));
-        }
-
-        [HttpPost]
-        [Route("api/game/move/{move}")]
-        public IActionResult Move(string move)
-        {
-            try
-            {
-                if (chessGame.Execute(new Move(move, chessGame.ChessTable)))
-                {
-                    return Refresh();
-                }
-
-                return BadRequest($"Move ({move}) is not valid.");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet]
-        [Route("api/game/ai/getmove")]
-        public IActionResult GetMoveFromAI([FromQuery] string levelStr, [FromQuery] string figureValueCalculationModeStr)
-        {
-            if (Level.TryParse(levelStr, out Level level))
-            {
-                if (FigureValueCalculationMode.TryParse(figureValueCalculationModeStr, out FigureValueCalculationMode figureValueCalculationMode))
-                {
-                    var ai = AIBuilder.GetAI(level, figureValueCalculationMode);
-                    var move = ai.GetMove(chessGame.ChessTable);
-                    var result = new Chess.WebApi.Dtos.MoveResult($"{move.From.Name}{move.To.Name}", chessGame.ChessTable.TurnControl.IsWhiteTurn());
-                    return Ok(result);
-                }
-
-                return BadRequest($"Cannot find 'FigureValueCalculationMode': {figureValueCalculationModeStr}");
-            }
-
-            return BadRequest($"Cannot find 'Level': {levelStr}");
-        }
+        return BadRequest($"Cannot find 'Level': {levelStr}");
     }
 }

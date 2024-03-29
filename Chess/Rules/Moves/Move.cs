@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Chess.Rules.Moves;
 
-public class Move : IEquatable<Move>
+public sealed class Move : IEquatable<Move>
 {
     const string A1 = "A1";
     const string D1 = "D1";
@@ -35,15 +35,8 @@ public class Move : IEquatable<Move>
 
     public Move(string move, ChessTable chessTable)
     {
-        if (chessTable == null)
-        {
-            throw new ArgumentNullException(nameof(chessTable));
-        }
-
-        if (move == null)
-        {
-            throw new ArgumentNullException(nameof(move));
-        }
+        ArgumentNullException.ThrowIfNull(chessTable);
+        ArgumentNullException.ThrowIfNull(move);
 
         if (move.Length != 4)
         {
@@ -145,7 +138,7 @@ public class Move : IEquatable<Move>
 
     public void Execute(ChessTable chessTable, bool changeTurn, bool sendTurnChangedEvent, bool hasPawnPromotionEvent = false)
     {
-        Contract.Requires(chessTable != null);
+        ArgumentNullException.ThrowIfNull(chessTable);
 
         if (From.State.CanCastle())
         {
@@ -264,7 +257,7 @@ public class Move : IEquatable<Move>
 
     public void Rollback(ChessTable chessTable, bool changeTurn, bool sendTurnChangedEvent)
     {
-        Contract.Requires(chessTable != null);
+        ArgumentNullException.ThrowIfNull(chessTable);
 
         From.State = To.State;
         To.State = SquareState.Empty;
@@ -345,20 +338,9 @@ public class Move : IEquatable<Move>
     
     public MoveEvaluationResult EvaluateMove(ChessTable chessTable, Delegates.MoveDecisionHelperCallback moveDecisionHelperCallback, FigureValueCalculator figureValueCalculator)
     {
-        if (chessTable == null)
-        {
-            throw new ArgumentNullException(nameof(chessTable));
-        }
-
-        if (moveDecisionHelperCallback == null)
-        {
-            throw new ArgumentNullException(nameof(moveDecisionHelperCallback));
-        }
-
-        if (figureValueCalculator == null)
-        {
-            throw new ArgumentNullException(nameof(figureValueCalculator));
-        }
+        ArgumentNullException.ThrowIfNull(chessTable);
+        ArgumentNullException.ThrowIfNull(moveDecisionHelperCallback);
+        ArgumentNullException.ThrowIfNull(figureValueCalculator);
 
         var result = MoveEvaluationResult.Unknown;
         Execute(chessTable, true, false);
@@ -386,9 +368,11 @@ public class Move : IEquatable<Move>
                     {
                         result = MoveEvaluationResult.Questionable;
                     }
-                    else 
-                    // Check is not always a good move!!!
-                    result = MoveEvaluationResult.Good;
+                    else
+                    {
+                        // Check is not always a good move!!!
+                        result = MoveEvaluationResult.Good;
+                    }
                 }
             }
             else
@@ -426,10 +410,7 @@ public class Move : IEquatable<Move>
 
     public Move Clone(ChessTable chessTable)
     {
-        if (chessTable == null)
-        {
-            throw new ArgumentNullException(nameof(chessTable));
-        }
+        ArgumentNullException.ThrowIfNull(chessTable);
 
         return new Move(chessTable.Squares[From.Name], chessTable.Squares[To.Name], MoveType)
         {

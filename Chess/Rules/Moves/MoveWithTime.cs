@@ -1,5 +1,6 @@
 ﻿using Chess.Table;
 using System;
+using System.Globalization;
 
 namespace Chess.Rules.Moves;
 
@@ -9,6 +10,8 @@ public class MoveWithTime
 
     public TimeSpan Time { get; set; }
 
+    private static readonly string[] Separator = new string[] { " - " };
+
     public MoveWithTime(Move move, TimeSpan time)
     {
         Move = move;
@@ -17,14 +20,11 @@ public class MoveWithTime
 
     public MoveWithTime(string moveWithTime, ChessTable chessTable)
     {
-        if (moveWithTime == null)
-        {
-            throw new ArgumentNullException(nameof(moveWithTime));
-        }
+        ArgumentNullException.ThrowIfNull(moveWithTime);
 
-        var parts = moveWithTime.Split(new string[] { " - " }, StringSplitOptions.RemoveEmptyEntries);
+        var parts = moveWithTime.Split(Separator, StringSplitOptions.RemoveEmptyEntries);
         Move = new Move(String.Concat(parts[0], parts[1]), chessTable);
-        if (TimeSpan.TryParse(parts[2], out TimeSpan timeSpan))
+        if (TimeSpan.TryParse(parts[2], CultureInfo.InvariantCulture, out TimeSpan timeSpan))
         {
             Time = timeSpan;
         }

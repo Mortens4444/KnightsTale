@@ -10,20 +10,9 @@ namespace Chess.Rules.Moves
     {
         public bool AddValidMoveOnly(Move move, ChessTable chessTable, bool setCheckProperties, IList<Square> kings)
         {
-            if (move == null)
-            {
-                throw new ArgumentNullException(nameof(move));
-            }
-
-            if (kings == null)
-            {
-                throw new ArgumentNullException(nameof(kings));
-            }
-
-            if (chessTable == null)
-            {
-                throw new ArgumentNullException(nameof(chessTable));
-            }
+            ArgumentNullException.ThrowIfNull(move);
+            ArgumentNullException.ThrowIfNull(kings);
+            ArgumentNullException.ThrowIfNull(chessTable);
 
             var result = false;
             var kingSquare = kings[0];
@@ -69,20 +58,9 @@ namespace Chess.Rules.Moves
 
         public static ValidMoves GetValidMovesFromPossibleMoves(ChessTable chessTable, Square from, PossibleMoves allMoves, bool setCheckProperties, bool stopSearchOnFirstValidMove)
         {
-            if (chessTable == null)
-            {
-                throw new ArgumentNullException(nameof(chessTable));
-            }
-
-            if (from == null)
-            {
-                throw new ArgumentNullException(nameof(from));
-            }
-
-            if (allMoves == null)
-            {
-                throw new ArgumentNullException(nameof(allMoves));
-            }
+            ArgumentNullException.ThrowIfNull(chessTable);
+            ArgumentNullException.ThrowIfNull(from);
+            ArgumentNullException.ThrowIfNull(allMoves);
 
             var result = new ValidMoves();
 

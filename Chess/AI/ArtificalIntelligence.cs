@@ -4,7 +4,6 @@ using Chess.Table;
 using Chess.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,7 +24,10 @@ public static class ArtificalIntelligence
 
     public static bool CheckWhenEnemyHasNoMove(ChessTable chessTable, FigureValueCalculator figureValueCalculator, Move move, IList<MoveWithGainInfo> goodMoves)
     {
-        Contract.Requires(chessTable != null && move != null && goodMoves != null && figureValueCalculator != null);
+        ArgumentNullException.ThrowIfNull(chessTable);
+        ArgumentNullException.ThrowIfNull(move);
+        ArgumentNullException.ThrowIfNull(goodMoves);
+        ArgumentNullException.ThrowIfNull(figureValueCalculator);
 
         if (chessTable.IsEnemyInCheck(move.To))
         {
@@ -49,7 +51,10 @@ public static class ArtificalIntelligence
 
     public static double GetMoveGain(ChessTable chessTable, FigureValueCalculator figureValueCalculator, Move goodMove, Move enemyMove)
     {
-        Contract.Requires(chessTable != null && figureValueCalculator != null && goodMove != null && enemyMove != null);
+        ArgumentNullException.ThrowIfNull(chessTable);
+        ArgumentNullException.ThrowIfNull(figureValueCalculator);
+        ArgumentNullException.ThrowIfNull(goodMove);
+        ArgumentNullException.ThrowIfNull(enemyMove);
 
         var gain = figureValueCalculator.GetValue(goodMove.CapturedFigure) ?? 0;
         if (goodMove.IsEnemyInCheck && goodMove.To != enemyMove.To)
@@ -64,7 +69,7 @@ public static class ArtificalIntelligence
 
     public static MoveDecisionHelper GetGoodMoves(ChessTable chessTable, FigureValueCalculator figureValueCalculator, Func<ChessTable, Move> enemyMoveProvider, bool breakOnCheckMate, Func<Move, bool> movePreFilterPredicate = null)
     {
-        Contract.Requires(chessTable != null);
+        ArgumentNullException.ThrowIfNull(chessTable);
 
         var validMoves = chessTable.GetValidMoves();
         if (!validMoves.Any())
@@ -73,7 +78,7 @@ public static class ArtificalIntelligence
         }
 
         var winnerMoves = validMoves.Where(validMove => validMove.IsEnemyInCheckMate).ToList();
-        if (winnerMoves.Any())
+        if (winnerMoves.Count != 0)
         {
             return new MoveDecisionHelper(validMoves, winnerMoves.Select(winnerMove => new MoveWithGainInfo(winnerMove, Double.MaxValue)).ToList());
         }
@@ -86,7 +91,7 @@ public static class ArtificalIntelligence
 
     public static Move GetMove(ChessTable chessTable, Delegates.MoveDecisionHelperCallback moveDecisionHelperCallback, FigureValueCalculator figureValueCalculator)
     {
-        Contract.Requires(chessTable != null);
+        ArgumentNullException.ThrowIfNull(chessTable);
 
         var validMoves = chessTable.GetValidMoves();
         var winnerMoves = new List<Move>();
@@ -132,9 +137,12 @@ public static class ArtificalIntelligence
         return GetRandomMove(winnerMoves) ?? GetRandomMove(veryGoodMoves) ?? GetRandomMove(goodMoves) ?? GetRandomMove(noMoronMoves) ?? GetRandomMove(validMoves);
     }
 
-    private static IList<MoveWithGainInfo> GetGoodMoves(ChessTable chessTable, FigureValueCalculator figureValueCalculator, IEnumerable<Move> movesToConsider, Func<ChessTable, Move> enemyMoveProvider, bool breakOnCheckMate)
+    private static List<MoveWithGainInfo> GetGoodMoves(ChessTable chessTable, FigureValueCalculator figureValueCalculator, IEnumerable<Move> movesToConsider, Func<ChessTable, Move> enemyMoveProvider, bool breakOnCheckMate)
     {
-        Contract.Requires(chessTable != null && enemyMoveProvider != null);
+        ArgumentNullException.ThrowIfNull(chessTable);
+        ArgumentNullException.ThrowIfNull(enemyMoveProvider);
+        ArgumentNullException.ThrowIfNull(figureValueCalculator);
+        ArgumentNullException.ThrowIfNull(movesToConsider);
 
         var goodMovesWithGainInfo = new List<MoveWithGainInfo>();
         foreach (var move in movesToConsider)

@@ -1,41 +1,36 @@
 ﻿using KnightsTaleUci.Commands;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace KnightsTaleUci
+namespace KnightsTaleUci;
+
+public static class CommandParser
 {
-    public sealed class CommandParser
+	private static readonly List<ICommand> commands = CommandListBuilder.GetCommandList();
+
+	public static ICommand TryParseCommand(string commandText)
 	{
-		private static readonly List<ICommand> commands = CommandListBuilder.GetCommandList();
+            ArgumentNullException.ThrowIfNull(commandText);
 
-		public static ICommand TryParseCommand(string commandText)
+            var commandSegments = commandText.Split(' ', '\t', StringSplitOptions.RemoveEmptyEntries);
+
+		int i = 0;
+		while (i < commandSegments.Length)
 		{
-			if (commandText == null)
+			var commandToExecute = commands.Find(command => command.Name == commandSegments[i]);
+			if (commandToExecute != null)
 			{
-				throw new ArgumentNullException(nameof(commandText));
-			}
-
-			var commandSegments = commandText.Split(' ', '\t', StringSplitOptions.RemoveEmptyEntries);
-
-			int i = 0;
-			while (i < commandSegments.Length)
-			{
-				var commandToExecute = commands.FirstOrDefault(command => command.Name == commandSegments[i]);
-				if (commandToExecute != null)
+				var cmd = (Command)commandToExecute.Clone();
+				while (++i < commandSegments.Length)
 				{
-					var cmd = (Command)commandToExecute.Clone();
-					while (++i < commandSegments.Length)
-					{
-						cmd.Parameters.Add(commandSegments[i].ToLowerInvariant());
-					}
-					return cmd;
+					cmd.Parameters.Add(commandSegments[i].ToLowerInvariant());
 				}
-
-				i++;
+				return cmd;
 			}
 
-			return null;
+			i++;
 		}
+
+		return null;
 	}
 }

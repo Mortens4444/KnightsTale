@@ -1,5 +1,5 @@
 ﻿export class KnightsTaleDto {
-    public states: string = '';
+    public states = '';
     public stateValues: Array<number> = [];
-    public isWhiteTurn: boolean = true;
+    public isWhiteTurn = true;
 }
