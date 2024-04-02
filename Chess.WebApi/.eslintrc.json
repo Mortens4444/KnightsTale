@@ -12,12 +12,17 @@
   "parserOptions": {
     "project": "./tsconfig.json",
     "ecmaVersion": "latest",
-    "sourceType": "module"
+    "sourceType": "module",
+    "exclude": [
+      "webpack.config.js",
+      "node_modules",
+      "dist"
+    ]
   },
   "plugins": [
     "@typescript-eslint"
   ],
-  "ignorePatterns": [ "./node_modules/", "./build/" ],
+  "ignorePatterns": [ "./node_modules/", "./build/", "bundle.js" ],
   "rules": {
     "@typescript-eslint/no-var-requires": "off",
     "linebreak-style": [

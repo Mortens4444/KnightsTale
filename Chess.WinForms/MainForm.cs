@@ -149,23 +149,29 @@ public partial class MainForm : Form
 
     private void CbWhite_SelectedIndexChanged(object sender, EventArgs e)
     {
-        var levelText = ((Level)cbWhite.SelectedItem).GetDescription();
-        if (!String.IsNullOrWhiteSpace(levelText))
+        if (cbWhite.SelectedItem != null)
         {
-            var level = (Level)Enum.Parse(typeof(Level), levelText);
-            whiteArtificalIntelligence = LevelToArtificalIntelligenceConverter.GetArtificalIntelligence(level);
-            GetNextMove();
+            var levelText = ((Level)cbWhite.SelectedItem).GetDescription();
+            if (!String.IsNullOrWhiteSpace(levelText))
+            {
+                var level = (Level)Enum.Parse(typeof(Level), levelText);
+                whiteArtificalIntelligence = LevelToArtificalIntelligenceConverter.GetArtificalIntelligence(level);
+                GetNextMove();
+            }
         }
     }
 
     private void CbBlack_SelectedIndexChanged(object sender, EventArgs e)
     {
-        var levelText = ((Level)cbBlack.SelectedItem).GetDescription();
-        if (!String.IsNullOrWhiteSpace(levelText))
+        if (cbBlack.SelectedItem != null)
         {
-            var level = (Level)Enum.Parse(typeof(Level), levelText);
-            blackArtificalIntelligence = LevelToArtificalIntelligenceConverter.GetArtificalIntelligence(level);
-            GetNextMove();
+            var levelText = ((Level)cbBlack.SelectedItem).GetDescription();
+            if (!String.IsNullOrWhiteSpace(levelText))
+            {
+                var level = (Level)Enum.Parse(typeof(Level), levelText);
+                blackArtificalIntelligence = LevelToArtificalIntelligenceConverter.GetArtificalIntelligence(level);
+                GetNextMove();
+            }
         }
     }
 

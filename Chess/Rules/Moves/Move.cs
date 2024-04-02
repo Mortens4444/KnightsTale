@@ -3,7 +3,6 @@ using Chess.FigureValues;
 using Chess.Table;
 using Chess.Table.TableSquare;
 using System;
-using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace Chess.Rules.Moves;

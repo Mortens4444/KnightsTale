@@ -1,4 +1,5 @@
 ﻿//import toast from '@brenoroosevelt/toast/lib/esm/toast.js';
+import $ from 'jquery';
 import { error, success } from '@brenoroosevelt/toast/lib/esm/toast.js';
 
 import type { KnightsTaleDto } from './Dtos/KnightsTaleDto.js';

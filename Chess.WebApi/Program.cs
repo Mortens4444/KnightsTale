@@ -1,3 +1,5 @@
+using Microsoft.Extensions.FileProviders;
+
 namespace Chess;
 
 public static class Program
@@ -24,7 +26,14 @@ public static class Program
         }
 
         app.UseDefaultFiles();
+
         app.UseStaticFiles();
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "dist")),
+            RequestPath = "/dist"
+        });
+
         app.UseHttpsRedirection();
         app.UseAuthorization();
         app.MapControllers();

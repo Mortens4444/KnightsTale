@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import ko from 'knockout';
 import { success } from '@brenoroosevelt/toast/lib/esm/toast.js';
 
 import { ChessBoardBuilder } from './ChessBoardBuilder.js';
@@ -13,12 +12,12 @@ export class ChessGame {
 	public chessBoardBuilder: ChessBoardBuilder;
 
 	public playerTypes = ko.observableArray<string>([]);
-	public selectedBlackPlayerType: ko.Observable<string> = ko.observable('');
-	public selectedWhitePlayerType: ko.Observable<string> = ko.observable('');
+	public selectedBlackPlayerType = ko.observable('');
+	public selectedWhitePlayerType = ko.observable('');
 
 	public figureValueCalculationModes = ko.observableArray<string>([]);
-	public selectedBlackFigureValueCalculationMode: ko.Observable<string> = ko.observable('');
-	public selectedWhiteFigureValueCalculationMode: ko.Observable<string> = ko.observable('');
+	public selectedBlackFigureValueCalculationMode = ko.observable('');
+	public selectedWhiteFigureValueCalculationMode = ko.observable('');
 
 	private readonly self: ChessGame;
 
