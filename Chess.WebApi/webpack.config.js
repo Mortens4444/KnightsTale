@@ -2,27 +2,19 @@
 
 module.exports = {
     resolve: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        extensions: ['.js', '.jsx', '.ts', '.tsx']
     },
     mode: 'development',
     entry: './wwwroot/scripts/ChessGame.js', // A belépési pont fájl elérési útját itt kell megadni
     output: {
         filename: 'bundle.js',
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'dist')
     },
     module: {
         rules: [
             {
-                //test: /\.js$/,
-                //test: /\.tsx?$/,
                 use: 'ts-loader',
-                exclude: /node_modules/,
-                //use: {
-                //    loader: 'babel-loader',
-                //    options: {
-                //        presets: ['@babel/preset-env']
-                //    }
-                //}
+                exclude: /node_modules/
             }
         ]
     }
