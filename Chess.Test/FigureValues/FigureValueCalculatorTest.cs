@@ -1,6 +1,7 @@
 ﻿using Chess.FigureValues;
 using Chess.Table;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace Chess.Test.FigureValues;
 
@@ -11,6 +12,6 @@ public class FigureValueCalculatorTest
     {
         var figureValueCalculator = new FigureValueCalculator(figureValueCalculationMode);
         var actualValue = figureValueCalculator.GetValue(squareState);
-        Assert.AreEqual(expectedValue, actualValue);
+        ClassicAssert.AreEqual(expectedValue, actualValue);
     }
 }

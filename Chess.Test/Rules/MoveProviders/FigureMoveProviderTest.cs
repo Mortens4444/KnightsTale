@@ -1,6 +1,6 @@
 ﻿using Chess.Rules.MoveProviders;
 using Chess.Rules.Moves;
-using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using System.Linq;
 
 namespace Chess.Test.Rules.MoveProviders;
@@ -15,7 +15,6 @@ public abstract class FigureMoveProviderTest
         var allMoves = FigureMoveProvider.GetAllMoves(chessTable, chessTable.Squares[from!]);
         var expected = allMoveDestinations.Select(validMoveDestination => new Move(chessTable.Squares[from!], chessTable.Squares[validMoveDestination!]));
         CollectionAssert.AreEquivalent(expected, allMoves);
-        Assert.Pass();
     }
 
     public void GetValidMoves(string chessTableResourceName, string from, params string[] validMoveDestinations)
@@ -24,6 +23,5 @@ public abstract class FigureMoveProviderTest
         var validMoves = FigureMoveProvider.GetValidMoves(chessTable, chessTable.Squares[from], true, false);
         var expected = validMoveDestinations.Select(validMoveDestination => new Move(chessTable.Squares[from], chessTable.Squares[validMoveDestination]));
         CollectionAssert.AreEquivalent(expected, validMoves);
-        Assert.Pass();
     }
 }

@@ -3,6 +3,7 @@ using Chess.FigureValues;
 using Chess.Rules.Moves;
 using Chess.Table;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using System;
 
 namespace Chess.Test.AI;
@@ -23,7 +24,7 @@ public class ArtificalIntelligenceMovesTest
         var chessTable = ResourceLoader.GetChessTable(chessTableResourceName);
         var move = GetAIMove(chessTable, artificalIntelligenceType, expectedChosenMoves);
         move.Execute(chessTable, false, false);
-        Assert.IsFalse(chessTable.IsInCheck(chessTable.Squares.GetWhiteKingSquare()));
+        ClassicAssert.IsFalse(chessTable.IsInCheck(chessTable.Squares.GetWhiteKingSquare()));
     }
 
     [TestCase("Chess.Test.Resources.ChessTableState - Checkmate.cgs", typeof(Lvl4_NoMoreMoronMoves), "C3 - B2")]
@@ -40,11 +41,11 @@ public class ArtificalIntelligenceMovesTest
 
         if (expectedChosenMoves.Length == 1)
         {
-            Assert.AreEqual(expectedChosenMoves[0], move!.ToString());
+            ClassicAssert.AreEqual(expectedChosenMoves[0], move!.ToString());
         }
         else
         {
-            Assert.Contains(move!.ToString(), expectedChosenMoves);
+            ClassicAssert.Contains(move!.ToString(), expectedChosenMoves);
         }
 
         return move;
