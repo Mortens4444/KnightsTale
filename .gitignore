@@ -5,3 +5,4 @@ packages/
 **/*.bak
 Chess.WebApi/node_modules/
 Chess.WebApi/wwwroot/lib/
+node_modules/
