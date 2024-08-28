@@ -46,7 +46,7 @@ public class ChessGame
             validMove.Execute(ChessTable, true, true, PawnPromotionEvent != null);
             if (validMove.MoveType == MoveType.Promotion || validMove.MoveType == MoveType.HitWithPromotion)
             {
-                RaisePawnPromotionEvent(validMove);
+                OnPawnPromoted(validMove);
             }
             logger?.Write(validMove);
             return true;
@@ -75,7 +75,7 @@ public class ChessGame
         return ChessTable.TurnControl.IsWhiteTurn();
     }
 
-    protected virtual void RaisePawnPromotionEvent(Move move)
+    protected virtual void OnPawnPromoted(Move move)
     {
         PawnPromotionEvent?.Invoke(this, new PawnPromotionEventArgs(move));
     }

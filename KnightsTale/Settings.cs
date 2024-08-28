@@ -4,8 +4,8 @@ namespace KnightsTaleUci
 {
 	static class Settings
 	{
-		public static bool IsDebug = false;
+		public static bool IsDebug;
 
-		public static Dictionary<string, string> All = new Dictionary<string, string>();
+        public static Dictionary<string, string> All = new();
 	}
 }

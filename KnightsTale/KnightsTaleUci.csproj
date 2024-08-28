@@ -2,11 +2,12 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>KnightsTaleUci</RootNamespace>
     <AnalysisLevel>latest-all</AnalysisLevel>
     <WarningLevel>9999</WarningLevel>
     <LangVersion>10.0</LangVersion>
+    <NoWarn>$(NoWarn);CA1308</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,18 +1,11 @@
-﻿using System.Threading;
-using KnightsTaleUci.IO;
+﻿using KnightsTaleUci.IO;
+using System.Threading;
 
 namespace KnightsTaleUci
 {
-	class CommandExecutor
+    public sealed class CommandExecutor
 	{
 		public bool IsWorking { get; private set; }
-
-		private readonly CommandBuilder commandBuilder;
-
-		public CommandExecutor()
-		{
-			commandBuilder = new CommandBuilder();
-		}
 
 		public void Start(CancellationToken cancellationToken)
 		{
@@ -29,22 +22,21 @@ namespace KnightsTaleUci
 		{
 			while (IsWorking && !cancellationToken.IsCancellationRequested)
 			{
-				var commandText = commandBuilder.Build(cancellationToken);
+				var commandText = CommandBuilder.Build(cancellationToken);
 				if (!cancellationToken.IsCancellationRequested)
 				{
-					ExecuteCommand(commandText, cancellationToken);
+                    ExecuteCommand(commandText, cancellationToken);
 				}
 			}
 		}
 
-		private async void ExecuteCommand(string commandText, CancellationToken cancellationToken)
+		private static async void ExecuteCommand(string commandText, CancellationToken cancellationToken)
 		{
-			var commandParser = new CommandParser();
-			var command = commandParser.TryParseCommand(commandText);
+			var command = CommandParser.TryParseCommand(commandText);
 
 			while (command != null)
 			{
-				var response = await command.DoJobAndGetResponse(cancellationToken);
+				var response = await command.DoJobAndGetResponse(cancellationToken).ConfigureAwait(false);
 				Output.WriteLine(response);
 				command = command.NextCommand;
 			}

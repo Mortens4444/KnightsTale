@@ -1,5 +1,6 @@
 ﻿using Chess.Rules.Moves;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using System;
 
 namespace Chess.Test.Rules;
@@ -19,10 +20,10 @@ public class FigureMoveTest
         {
             if (!chessGame.Execute(move))
             {
-                Assert.Fail($"No valid move exists: {move}");
+                ClassicAssert.Fail($"No valid move exists: {move}");
             }
         }
-        Assert.Pass();
+        ClassicAssert.Pass();
     }
 
     [TestCase("Chess.Test.Resources.ChessTableState - No Castling.cgs", "E1E2", "E8E7", "E2E1", "E7E6", "E1C1")]
@@ -36,7 +37,7 @@ public class FigureMoveTest
         GetValidMove(moves, chessGame);
         var move = moves[^1];
         var validMove = chessGame.GetValidMove(move);
-        Assert.IsNull(validMove);
+        ClassicAssert.IsNull(validMove);
     }
 
     [TestCase("Chess.Test.Resources.ChessTableState.cgs", "E8E7")]
@@ -49,7 +50,7 @@ public class FigureMoveTest
 
         var validMove = GetValidMove(moves, chessGame);
         var move = moves[^1];
-        Assert.Throws<InvalidOperationException>(() => { validMove = chessGame.GetValidMove(move); });
+        ClassicAssert.Throws<InvalidOperationException>(() => { validMove = chessGame.GetValidMove(move); });
     }
 
     [TestCase("Chess.Test.Resources.ChessTableState.cgs", false)]
@@ -59,7 +60,7 @@ public class FigureMoveTest
         var chessTable = ResourceLoader.GetChessTable(chessTableResourceName);
         var whiteKingSquare = chessTable.Squares.GetWhiteKingSquare();
         var isInCheck = whiteKingSquare.IsInCheck(chessTable);
-        Assert.AreEqual(expected, isInCheck);
+        ClassicAssert.AreEqual(expected, isInCheck);
     }
 
     private static Move? GetValidMove(string[] moves, ChessGame chessGame)
@@ -69,7 +70,7 @@ public class FigureMoveTest
         {
             if (!chessGame.Execute(moves[i]))
             {
-                Assert.Fail();
+                ClassicAssert.Fail();
             }
         }
 

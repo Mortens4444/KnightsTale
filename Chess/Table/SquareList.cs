@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Chess.FigureValues;
+using Chess.Table.TableSquare;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using Chess.FigureValues;
-using Chess.Table.TableSquare;
 
 namespace Chess.Table;
 
@@ -13,27 +13,10 @@ public class SquareList : List<Square>
     {
         get
         {
-            foreach (var square in this.Where(square => square.Name.Equals(squareName, StringComparison.OrdinalIgnoreCase)))
-            {
-                return square;
-            }
+            Contract.Requires(squareName != null);
 
-            throw new ArgumentOutOfRangeException($"Square not found: {squareName}");
-        }
-    }
-
-    public Square this[Square squareBase]
-    {
-        get
-        {
-            Contract.Requires(squareBase != null);
-
-            foreach (var square in this.Where(square => (square.Column == squareBase.Column) && (square.Rank == squareBase.Rank)))
-            {
-                return square;
-            }
-
-            throw new ArgumentOutOfRangeException($"Square not found with column and rank: {squareBase.Column}, {squareBase.Rank}");
+            var result = Find(square => square.Name.Equals(squareName, StringComparison.OrdinalIgnoreCase));
+            return result ?? throw new ArgumentOutOfRangeException($"Square not found: {squareName}");
         }
     }
 
@@ -41,24 +24,20 @@ public class SquareList : List<Square>
     {
         get
         {
-            foreach (var square in this.Where(square => (square.Column == column) && (square.Rank == rank)))
-            {
-                return square;
-            }
-
-            throw new ArgumentOutOfRangeException($"Square not found with column and rank: {column}, {rank}");
+            var result = Find(square => (square.Column == column) && (square.Rank == rank));
+            return result ?? throw new ArgumentOutOfRangeException($"Square not found with column and rank: {column}, {rank}");
         }
     }
 
-    public IOrderedEnumerable<Square> GetKingSquares(bool whiteFirst)
+    public IList<Square> GetKingSquares(bool whiteFirst)
     {
         var kings = this.Where(square => square.State.HasKing());
         if (whiteFirst)
         {
-            return kings.OrderBy(square => (int)square.State);
+            return kings.OrderBy(square => (int)square.State).ToList();
         }
 
-        return kings.OrderByDescending(square => (int)square.State);
+        return kings.OrderByDescending(square => (int)square.State).ToList();
     }
 
     public Square GetWhiteKingSquare()
@@ -73,7 +52,7 @@ public class SquareList : List<Square>
 
     public Square GetEnPassantEmptySquare()
     {
-        return this.FirstOrDefault(square => square.State == SquareState.EnPassantEmpty);
+        return Find(square => square.State == SquareState.EnPassantEmpty);
     }
 
     public IEnumerable<Square> GetAll(SquareState squareState)
@@ -103,7 +82,7 @@ public class SquareList : List<Square>
 
     public static double GetFiguresValue(FigureValueCalculationMode figureValueCalculationMode, Func<IEnumerable<Square>> figureProvider)
     {
-        Contract.Requires(figureProvider != null);
+        ArgumentNullException.ThrowIfNull(figureProvider);
 
         var figureValueCalculator = new FigureValueCalculator(figureValueCalculationMode);
         var figureSquares = figureProvider();

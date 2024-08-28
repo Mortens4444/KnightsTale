@@ -1,4 +1,9 @@
 {
+  "exclude": [
+    "webpack.config.js",
+    "node_modules",
+    "dist"
+  ],
   "compilerOptions": {
     "allowJs": true,
     "allowUmdGlobalAccess": true,
@@ -6,7 +11,7 @@
     "allowUnusedLabels": false,
     "alwaysStrict": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "./wwwroot/scripts",
+    "baseUrl": "./",
     "checkJs": true,
     "declaration": false,
     "declarationMap": false,
@@ -14,15 +19,16 @@
     "downlevelIteration": true,
     "emitBOM": false,
     "emitDeclarationOnly": false,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
-    "importsNotUsedAsValues": "error",
     "inlineSourceMap": true,
     "inlineSources": true,
-    "module": "EsNext",
+    "module": "esnext",
     "moduleResolution": "node",
     "moduleSuffixes": [ "" ],
     "newLine": "crlf",
+    "noEmitOnError": true,
     "noErrorTruncation": true,
     "noFallthroughCasesInSwitch": true,
     "noStrictGenericChecks": false,
@@ -35,12 +41,18 @@
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "outDir": "./dist",
+    "paths": {
+      "*": [
+        "node_modules/*"
+      ]
+    },
     "pretty": true,
     "preserveConstEnums": true,
-    "preserveValueImports": true,
     "removeComments": false,
     "resolveJsonModule": false,
     "rootDir": ".",
+    "sourceMap": false,
     "strict": true,
     "strictBindCallApply": true,
     "strictNullChecks": true,
@@ -48,8 +60,13 @@
     "strictPropertyInitialization": true,
     "suppressExcessPropertyErrors": false,
     "suppressImplicitAnyIndexErrors": false,
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
+    "types": [
+      "jquery",
+      "knockout"
+    ],
     "useUnknownInCatchVariables": true
-  },
-  "include": [ "**/*.ts" ],
-  "exclude": [ "node_modules", "**/*.spec.ts" ]
+  }
 }

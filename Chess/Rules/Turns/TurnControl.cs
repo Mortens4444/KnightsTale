@@ -2,6 +2,7 @@
 using Chess.Table;
 using Chess.Table.TableSquare;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
@@ -81,10 +82,10 @@ namespace Chess.Rules.Turns
             }
         }
 
-        private void ChangeTurn(IOrderedEnumerable<Square> kingSquares)
+        private void ChangeTurn(IList<Square> kingSquares)
         {
-            var kingSquarePreviousTurn = kingSquares.ElementAt(0);
-            var kingSquareNewTurn = kingSquares.ElementAt(1);
+            var kingSquarePreviousTurn = kingSquares[0];
+            var kingSquareNewTurn = kingSquares[1];
             kingSquarePreviousTurn.State = kingSquarePreviousTurn.State.SetTurn(false);
             kingSquareNewTurn.State = kingSquareNewTurn.State.SetTurn(true);
 

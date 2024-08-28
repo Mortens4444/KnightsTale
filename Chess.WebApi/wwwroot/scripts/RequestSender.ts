@@ -1,4 +1,6 @@
-﻿import * as toast from '../lib/@brenoroosevelt/toast/lib/esm/toast.js';
+﻿import $ from 'jquery';
+import { error, success } from '@brenoroosevelt/toast/lib/esm/toast.js';
+
 import type { KnightsTaleDto } from './Dtos/KnightsTaleDto.js';
 import type { RequestCallbacksDto } from './Dtos/RequestCallbacksDto.js';
 
@@ -21,14 +23,14 @@ export class RequestSender {
 			type: method,
 			data: requestData,
 			processData: false,
-			contentType: contentType || false,
+			contentType: contentType ?? false,
 			success: (data: KnightsTaleDto | string, text: JQuery.Ajax.SuccessTextStatus) => {
 				if (text != 'success' && console) {
 					console.log(data);
 				}
 
 				if (successMessage) {
-					toast.success(successMessage);
+					success(successMessage);
 				}
 				requestCallbacksDto.processDataCallback(data);
 			},
@@ -43,6 +45,6 @@ export class RequestSender {
 		if (console) {
 			console.error(errorMessager);
         }
-		toast.error(errorMessager);
+		error(errorMessager);
 	}
 }

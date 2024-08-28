@@ -1,34 +1,41 @@
 {
-    "env": {
-        "browser": true,
-        "es2021": true
-    },
-    "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended"
+  "env": {
+    "node": true,
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "exclude": [
+      "webpack.config.js",
+      "node_modules",
+      "dist"
+    ]
+  },
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "ignorePatterns": [ "./node_modules/", "./build/", "bundle.js" ],
+  "rules": {
+    "@typescript-eslint/no-var-requires": "off",
+    "linebreak-style": [
+      "error",
+      "windows"
     ],
-    "overrides": [
+    "quotes": [
+      "error",
+      "single"
     ],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaVersion": "latest",
-        "sourceType": "module"
-    },
-    "plugins": [
-        "@typescript-eslint"
-    ],
-    "rules": {
-        "linebreak-style": [
-            "error",
-            "windows"
-        ],
-        "quotes": [
-            "error",
-            "single"
-        ],
-        "semi": [
-            "error",
-            "always"
-        ]
-    }
+    "semi": [
+      "error",
+      "always"
+    ]
+  }
 }

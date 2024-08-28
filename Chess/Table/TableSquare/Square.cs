@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
-using System.Globalization;
-using System.Linq;
 
 namespace Chess.Table.TableSquare;
 
-public class Square : IEquatable<Square>
+public sealed class Square : IEquatable<Square>
 {
     public SquareState State { get; set; }
 
@@ -42,25 +39,22 @@ public class Square : IEquatable<Square>
     {
         if (State.HasFigure())
         {
-            return $"{Name.ToLower(CultureInfo.InvariantCulture)} - {State}";
+            return $"{Name.ToLowerInvariant()} - {State}";
         }
 
-        return Name.ToLower(CultureInfo.InvariantCulture);
+        return Name.ToLowerInvariant();
     }
 
     public string ToString(Square from)
     {
-        Contract.Requires(from != null);
+        ArgumentNullException.ThrowIfNull(from);
 
         return from.Column == Column ? RankHelper.ToString(Rank) : ToString();
     }
 
     public int GetDistance(Square other)
     {
-        if (other == null)
-        {
-            throw new ArgumentNullException(nameof(other));
-        }
+        ArgumentNullException.ThrowIfNull(other);
 
         return Math.Abs(Column - other.Column) + Math.Abs(Rank - other.Rank);
     }
@@ -72,14 +66,14 @@ public class Square : IEquatable<Square>
 
     public bool IsInCheck(ChessTable chessTable)
     {
-        Contract.Requires(chessTable != null);
+        ArgumentNullException.ThrowIfNull(chessTable);
 
         var enemyFigures = State.HasWhiteFigure() ?
             chessTable.Squares.GetAllBlackFigureSquares() :
             chessTable.Squares.GetAllWhiteFigureSquares();
 
         var enemyMoves = chessTable.GetAllMoves(enemyFigures);
-        return enemyMoves.Any(enemyMove => enemyMove.To == this);
+        return enemyMoves.Exists(enemyMove => enemyMove.To == this);
     }
 
     public Column Column { get; private set; }

@@ -6,8 +6,8 @@ namespace Chess.WinApi
     {
         public static bool Flash(IntPtr handle)
         {
-            var flash = new FlashInfo(handle, FlashMode.FlashAll | FlashMode.FlashUntilNotInForeground);
-            return WinApi.FlashWindowEx(ref flash);
+            var flash = new FlashInfo(handle, FlashMode.FlashWindowTitle | FlashMode.FlashTaskbarButton | FlashMode.FlashContinuously | FlashMode.FlashUntilNotInForeground);
+            return WinApiMethodDeclarations.FlashWindowEx(ref flash);
         }
     }
 }

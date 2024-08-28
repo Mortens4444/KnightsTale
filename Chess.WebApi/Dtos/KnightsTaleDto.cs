@@ -1,4 +1,3 @@
-using Chess;
 using Chess.Table;
 using System.Text;
 
@@ -7,13 +6,15 @@ namespace Chess.WebApi.Dto;
 public class KnightsTaleDto
 {
     public string States { get; set; } = String.Empty;
-    
+
     public byte[] StateValues { get; set; } = new byte[64];
 
     public bool IsWhiteTurn { get; set; } = true;
 
     public static KnightsTaleDto CreateFromGame(ChessGame chessGame)
     {
+        ArgumentNullException.ThrowIfNull(chessGame);
+
         var stringBuilder = new StringBuilder();
         foreach (var square in chessGame.ChessTable.Squares)
         {

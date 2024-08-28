@@ -1,5 +1,6 @@
 ﻿using Chess.Table;
 using Chess.Table.TableSquare;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,11 +8,15 @@ namespace Chess.Rules.Moves
 {
     public class ValidMoves : List<Move>
     {
-        public bool AddValidMoveOnly(Move move, ChessTable chessTable, bool setCheckProperties, IOrderedEnumerable<Square> kings)
+        public bool AddValidMoveOnly(Move move, ChessTable chessTable, bool setCheckProperties, IList<Square> kings)
         {
+            ArgumentNullException.ThrowIfNull(move);
+            ArgumentNullException.ThrowIfNull(kings);
+            ArgumentNullException.ThrowIfNull(chessTable);
+
             var result = false;
-            var kingSquare = kings.ElementAt(0);
-            var foeKingSquare = kings.ElementAt(1);
+            var kingSquare = kings[0];
+            var foeKingSquare = kings[1];
 
             if (move.MoveType != MoveType.Castle || !chessTable.IsInCheck(kingSquare))
             {
@@ -53,6 +58,10 @@ namespace Chess.Rules.Moves
 
         public static ValidMoves GetValidMovesFromPossibleMoves(ChessTable chessTable, Square from, PossibleMoves allMoves, bool setCheckProperties, bool stopSearchOnFirstValidMove)
         {
+            ArgumentNullException.ThrowIfNull(chessTable);
+            ArgumentNullException.ThrowIfNull(from);
+            ArgumentNullException.ThrowIfNull(allMoves);
+
             var result = new ValidMoves();
 
             if (!allMoves.Any())

@@ -24,12 +24,12 @@ namespace Chess.Wpf
     public partial class MainWindow : Window
     {
         public const string ChessTableName = "ChessTable";
-        private readonly BoardPainter boardPainter = new BoardPainter();
-        private readonly ChessGame chessGame = new ChessGame();
-        private Square fromSquare = null;
-        private readonly ObservableCollection<MoveWithTime> moves = new ObservableCollection<MoveWithTime>();
-        private IArtificalIntelligence whiteArtificalIntelligence = null;
-        private IArtificalIntelligence blackArtificalIntelligence = null;
+        private readonly BoardPainter boardPainter = new();
+        private readonly ChessGame chessGame = new();
+        private Square? fromSquare = null;
+        private readonly ObservableCollection<MoveWithTime> moves = new();
+        private IArtificalIntelligence? whiteArtificalIntelligence = null;
+        private IArtificalIntelligence? blackArtificalIntelligence = null;
 
         public MainWindow()
         {
@@ -47,7 +47,7 @@ namespace Chess.Wpf
             chessGame.ChessTable.TurnControl.TurnChanged += TurnControl_TurnChanged;
         }
 
-        private void ChessGame_PawnPromotionEvent(object sender, PawnPromotionEventArgs e)
+        private void ChessGame_PawnPromotionEvent(object? sender, PawnPromotionEventArgs e)
         {
             var promotePawnForm = new PromotePawnWindow(e.Move);
             promotePawnForm.ShowDialog();
@@ -115,7 +115,7 @@ namespace Chess.Wpf
 
         private void ChessTable_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Move move = null;
+            Move? move = null;
             try
             {
                 var clickLocation = Mouse.GetPosition(Application.Current.MainWindow);
@@ -132,7 +132,7 @@ namespace Chess.Wpf
                         if (chessGame.Execute(move))
                         {
                             moves.Add(chessGame.ChessTable.LastMove);
-                            lvMoves.ScrollIntoView(lvMoves.Items[lvMoves.Items.Count - 1]);
+                            lvMoves.ScrollIntoView(lvMoves.Items[^1]);
                             WinApiUtils.Flash(new WindowInteropHelper(this).Handle);
                             Console.Beep();
                         }
@@ -186,7 +186,7 @@ namespace Chess.Wpf
             }
         }
 
-        private void TurnControl_TurnChanged(object sender, TurnControlEventArgs e)
+        private void TurnControl_TurnChanged(object? sender, TurnControlEventArgs e)
         {
             Task.Factory.StartNew(() =>
             {
@@ -207,7 +207,7 @@ namespace Chess.Wpf
             Repaint();
         }
 
-        private void GetNextMove(IArtificalIntelligence artificalIntelligence, Func<Square> kingSquareProvider)
+        private void GetNextMove(IArtificalIntelligence? artificalIntelligence, Func<Square> kingSquareProvider)
         {
             if (artificalIntelligence != null)
             {

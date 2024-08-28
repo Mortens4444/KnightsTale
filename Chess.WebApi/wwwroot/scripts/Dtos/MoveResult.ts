@@ -1,4 +1,4 @@
 ﻿export class MoveResult {
-    public move: string = '';
-    public isWhiteTurn: boolean = false;
+    public move = '';
+    public isWhiteTurn = false;
 }

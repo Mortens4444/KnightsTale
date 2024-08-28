@@ -1,5 +1,6 @@
 ﻿using Chess.Table;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace Chess.Test.Utilities;
 
@@ -12,9 +13,9 @@ public class SquareStateTest
     public void SquareStateToStringTest(SquareState squareState, string displayText, string notationText)
     {
         var text = squareState.ToString();
-        Assert.AreEqual(text, squareState.ToString(SquareInfoMode.LongName));
-        Assert.AreEqual(displayText, squareState.ToString(SquareInfoMode.Display));
-        Assert.AreEqual(notationText, squareState.ToString(SquareInfoMode.Notation));
-        Assert.AreEqual($"{(char)squareState}", squareState.ToString(SquareInfoMode.Store));
+        ClassicAssert.AreEqual(text, squareState.ToString(SquareInfoMode.LongName));
+        ClassicAssert.AreEqual(displayText, squareState.ToString(SquareInfoMode.Display));
+        ClassicAssert.AreEqual(notationText, squareState.ToString(SquareInfoMode.Notation));
+        ClassicAssert.AreEqual($"{(char)squareState}", squareState.ToString(SquareInfoMode.Store));
     }
 }

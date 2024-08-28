@@ -6,7 +6,7 @@ using System.Reflection;
 [assembly: CLSCompliant(false)]
 namespace Chess.Test;
 
-internal class ResourceLoader
+internal static class ResourceLoader
 {
     public static ChessTable GetChessTable(string resourceName)
     {

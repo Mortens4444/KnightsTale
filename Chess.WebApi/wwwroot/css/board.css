@@ -51,6 +51,10 @@
 	overflow: hidden;
 }
 
+.right-floating-button {
+	float: right;
+}
+
 body {
 	background-color: darkseagreen
 }

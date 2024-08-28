@@ -6,7 +6,7 @@ using Chess.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -36,7 +36,7 @@ public class ChessTable : ICloneable
 
     public List<MoveWithTime> PreviousMoves { get; private set; } = new();
 
-    public MoveWithTime LastMove => PreviousMoves.Any() ? PreviousMoves[PreviousMoves.Count - 1] : null;
+    public MoveWithTime LastMove => PreviousMoves.Count != 0 ? PreviousMoves[^1] : null;
 
     public string DebuggerDisplay { get { return ToString(SquareInfoMode.Notation, true); } }
 
@@ -120,7 +120,7 @@ public class ChessTable : ICloneable
 
     public void CopyStatesFrom(ChessTable chessTable)
     {
-        Contract.Requires(chessTable != null);
+        ArgumentNullException.ThrowIfNull(chessTable);
         LoadByteArray(chessTable.GetSquareStates());
     }
 
@@ -147,9 +147,10 @@ public class ChessTable : ICloneable
 
     public void LoadByteArray(byte[] fileContent)
     {
+        ArgumentNullException.ThrowIfNull(fileContent);
+
         StopwatchWhite.Reset();
         StopwatchBlack.Reset();
-        Contract.Requires(fileContent != null);
 
         var numberOfSquares = Ranks.Count * Columns.Count;
         for (int i = 0; i < numberOfSquares; i++)
@@ -168,8 +169,8 @@ public class ChessTable : ICloneable
         if (lines.Length > 1)
         {
             var times = lines[1].Split('|');
-            StopwatchWhite.Elapsed = TimeSpan.Parse(times[0]);
-            StopwatchBlack.Elapsed = TimeSpan.Parse(times[1]);
+            StopwatchWhite.Elapsed = TimeSpan.Parse(times[0], CultureInfo.InvariantCulture);
+            StopwatchBlack.Elapsed = TimeSpan.Parse(times[1], CultureInfo.InvariantCulture);
 
             for (int i = 2; i < lines.Length; i++)
             {
@@ -236,19 +237,9 @@ public class ChessTable : ICloneable
         return result.ToString();
     }
 
-    public IList<Move> GetValidMoves()
-    {
-        var figures =
-            TurnControl.IsWhiteTurn() ? Squares.GetAllWhiteFigureSquares() :
-            TurnControl.IsBlackTurn() ? Squares.GetAllBlackFigureSquares() :
-            Enumerable.Empty<Square>();
-
-        return GetValidMoves(figures);
-    }
-
     public PossibleMoves GetAllMoves(IEnumerable<Square> figures)
     {
-        Contract.Requires(figures != null);
+        ArgumentNullException.ThrowIfNull(figures);
 
         var result = new PossibleMoves();
         foreach (var figure in figures)
@@ -261,14 +252,14 @@ public class ChessTable : ICloneable
 
     public bool HasValidMove(SquareState squareState)
     {
-        var figures =
+        var figureSquares =
             squareState.HasWhiteFigure() ? Squares.GetAllWhiteFigureSquares() :
             squareState.HasBlackFigure() ? Squares.GetAllBlackFigureSquares() :
             throw new InvalidOperationException($"{nameof(squareState)} should contain a figure.");
 
-        foreach (var figure in figures)
+        foreach (var figureSquare in figureSquares)
         {
-            if (validMoveProvider.HasValidMove(this, figure))
+            if (validMoveProvider.HasValidMove(this, figureSquare))
             {
                 return true;
             }
@@ -277,9 +268,19 @@ public class ChessTable : ICloneable
         return false;
     }
 
+    public IList<Move> GetValidMoves()
+    {
+        var figures =
+            TurnControl.IsWhiteTurn() ? Squares.GetAllWhiteFigureSquares() :
+            TurnControl.IsBlackTurn() ? Squares.GetAllBlackFigureSquares() :
+            Enumerable.Empty<Square>();
+
+        return GetValidMoves(figures);
+    }
+
     public ValidMoves GetValidMoves(IEnumerable<Square> figures)
     {
-        Contract.Requires(figures != null);
+        ArgumentNullException.ThrowIfNull(figures);
 
         DebugWriter(DebuggerDisplay);
         var result = new ValidMoves();
@@ -295,7 +296,9 @@ public class ChessTable : ICloneable
 
     public bool IsEnemyInCheck(Square square)
     {
-        var kingSquare = Squares[square].State.HasWhiteFigure() ?
+        ArgumentNullException.ThrowIfNull(square);
+
+        var kingSquare = Squares[square.Name].State.HasWhiteFigure() ?
             Squares.GetBlackKingSquare() :
             Squares.GetWhiteKingSquare();
         return IsInCheck(kingSquare);
@@ -303,11 +306,15 @@ public class ChessTable : ICloneable
 
     public bool IsInCheck(Square kingSquare)
     {
+        ArgumentNullException.ThrowIfNull(kingSquare);
+
         return kingSquare.IsInCheck(this);
     }
 
     public static string GetMoveDetails(Move move)
     {
+        ArgumentNullException.ThrowIfNull(move);
+
         return $"{move.MoveType} - {move.From} -> {move.To}";
     }
 

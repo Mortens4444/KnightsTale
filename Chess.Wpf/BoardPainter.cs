@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using System.Xml.Linq;
 
 namespace Chess.Wpf
 {
@@ -33,7 +32,7 @@ namespace Chess.Wpf
         }
 
 
-        public void ShowChessBoard(Grid chessTable, SquareList tableSquares, Square fromSquare)
+        public void ShowChessBoard(Grid chessTable, SquareList tableSquares, Square? fromSquare)
         {
             var columns = Utils.GetEnumValues<Column>().ToList();
             var ranks = Utils.GetEnumValues<Rank>().ToList();
@@ -68,7 +67,7 @@ namespace Chess.Wpf
             }
         }
 
-        private void CreateColoredSquare(Grid chessTable, Square fromSquare, Rank rank, int rowNumber, Column column, int columnNumber)
+        private static void CreateColoredSquare(Grid chessTable, Square? fromSquare, Rank rank, int rowNumber, Column column, int columnNumber)
         {
             var color = ((int)column + (int)rank) % 2 == 0 ? Colors.Black : Colors.White;
             var isSelected = fromSquare?.Column == column && fromSquare?.Rank == rank;
@@ -80,10 +79,11 @@ namespace Chess.Wpf
             SetColumnAndRank(square, columnNumber, rowNumber);
         }
 
-        private TextBlock CreateTextBlock(Grid grid, string text, Color color, string name)
+        private static TextBlock CreateTextBlock(Grid grid, string text, Color color, string name)
         {
             var result = new TextBlock
             {
+                Name = name,
                 Text = text,
                 FontSize = 25,
                 Foreground = new SolidColorBrush(color),
@@ -94,7 +94,7 @@ namespace Chess.Wpf
             return result;
         }
 
-        private void SetColumnAndRank(FrameworkElement frameworkElement, int column, int rank)
+        private static void SetColumnAndRank(FrameworkElement frameworkElement, int column, int rank)
         {
             Grid.SetRow(frameworkElement, rank);
             Grid.SetColumn(frameworkElement, column);

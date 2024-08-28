@@ -1,21 +1,23 @@
+import $ from 'jquery';
+import { success } from '@brenoroosevelt/toast/lib/esm/toast.js';
+
 import { ChessBoardBuilder } from './ChessBoardBuilder.js';
 import type { KnightsTaleDto } from './Dtos/KnightsTaleDto.js';
 import type { MoveResult } from './Dtos/MoveResult.js';
 import { RequestCallbacksDto } from './Dtos/RequestCallbacksDto.js';
 import { RequestSender } from './RequestSender.js';
-import * as toast from '../lib/@brenoroosevelt/toast/lib/esm/toast.js';
 
 export class ChessGame {
 
 	public chessBoardBuilder: ChessBoardBuilder;
 
 	public playerTypes = ko.observableArray<string>([]);
-	public selectedBlackPlayerType: ko.Observable<string> = ko.observable('');
-	public selectedWhitePlayerType: ko.Observable<string> = ko.observable('');
+	public selectedBlackPlayerType = ko.observable('');
+	public selectedWhitePlayerType = ko.observable('');
 
 	public figureValueCalculationModes = ko.observableArray<string>([]);
-	public selectedBlackFigureValueCalculationMode: ko.Observable<string> = ko.observable('');
-	public selectedWhiteFigureValueCalculationMode: ko.Observable<string> = ko.observable('');
+	public selectedBlackFigureValueCalculationMode = ko.observable('');
+	public selectedWhiteFigureValueCalculationMode = ko.observable('');
 
 	private readonly self: ChessGame;
 
@@ -25,9 +27,12 @@ export class ChessGame {
 		this.getFigureValueCalculationModes();
 		this.self = this;
 
-		$(document).ready(() => {
+		$(() => {
 			const chessGame = this.self;
-			if (window.performance && performance.navigation.type === performance.navigation.TYPE_RELOAD) {
+			const navigationEntries = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
+
+			if (window.performance && navigationEntries.length > 0 && navigationEntries[0]?.type === 'reload') {
+			//if (window.performance && performance.navigation.type === performance.navigation.TYPE_RELOAD) {
 				const callbacks = new RequestCallbacksDto(
 					(knightsTaleDto: KnightsTaleDto) => { chessGame.chessBoardBuilder.loadState(knightsTaleDto); },
 					(request: JQuery.jqXHR<object>) => { RequestSender.showError(request); }
@@ -43,7 +48,7 @@ export class ChessGame {
 
 	public switchSide(): void {
 		this.chessBoardBuilder.switchSide();
-		toast.success('Table turned.');
+		success('Table turned.');
 	}
 
 	public newGame(): void {
